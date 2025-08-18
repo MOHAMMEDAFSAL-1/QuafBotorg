@@ -230,7 +230,7 @@
         
         .navigation-menu {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.3);
@@ -297,6 +297,83 @@
             transition: all 0.3s ease;
         }
         
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1001;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .mobile-menu-btn i {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            padding: 80px 30px 30px;
+        }
+        
+        .mobile-menu.open {
+            left: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: color 0.3s ease;
+        }
+        
+        .mobile-menu-item:hover {
+            color: #667eea;
+        }
         
         .button-container {
             margin-bottom: 50px;
@@ -617,91 +694,75 @@
         }
         
         @media (max-width: 768px) {
-    .arabic-verse {
-        font-size: 1.4rem;
-        line-height: 1.6;
-    }
-    
-    .verse-translation {
-        font-size: 0.9rem;
-    }
-    
-    .btn-primary, .btn-secondary {
-        padding: 12px 20px;
-        font-size: 14px;
-        margin: 0 8px;
-    }
-    
-    .quran-btn {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-    
-    .verse {
-        font-size: 1.2em;
-        padding: 10px;
-    }
-    
-    .quran-zoom-controls,
-    .quran-fullscreen-btn {
-        position: relative;
-        margin: 10px auto;
-    }
-    
-    .button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: nowrap;
-        margin-bottom: 60px;
-    }
-    
-    .gif-showcase {
-        max-width: 90%;
-        margin: 0 auto;
-    }
-    
-    .chapter-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .navigation-menu {
-        bottom: 15px;
-        padding: 6px;
-        gap: 6px;
-    }
-    
-    .nav-btn {
-        padding: 10px 16px;
-        font-size: 13px;
-        border-radius: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .btn-primary, .btn-secondary {
-        padding: 10px 16px;
-        font-size: 13px;
-        margin: 0 6px;
-    }
-    
-    .button-container {
-        gap: 12px;
-    }
-    
-    .navigation-menu {
-        bottom: 15px;
-        padding: 4px;
-        gap: 4px;
-    }
-    
-    .nav-btn {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-}
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .navigation-menu {
+                display: none;
+            }
+            
+            .arabic-verse {
+                font-size: 1.4rem;
+                line-height: 1.6;
+            }
+            
+            .verse-translation {
+                font-size: 0.9rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 0 8px;
+            }
+            
+            .quran-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .verse {
+                font-size: 1.2em;
+                padding: 10px;
+            }
+            
+            .quran-zoom-controls,
+            .quran-fullscreen-btn {
+                position: relative;
+                margin: 10px auto;
+            }
+            
+            .button-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: nowrap;
+                margin-bottom: 60px;
+            }
+            
+            .gif-showcase {
+                max-width: 90%;
+                margin: 0 auto;
+            }
+            
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         
+        @media (max-width: 480px) {
+            .btn-primary, .btn-secondary {
+                padding: 10px 16px;
+                font-size: 13px;
+                margin: 0 6px;
+            }
+            
+            .button-container {
+                gap: 12px;
+            }
+        }
     </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -719,7 +780,20 @@
         <button class="nav-btn" onclick="showSection('quran')">Quran</button>
     </div>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#" class="mobile-menu-item" onclick="showSection('home'); toggleMobileMenu();">Home</a>
+        <a href="#" class="mobile-menu-item" onclick="showSection('quran'); toggleMobileMenu();">Quran</a>
+        <a href="#features" class="mobile-menu-item">Features</a>
+    </div>
+    
+    <!-- Mobile Menu Button -->
+    <div class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </div>
 
     <!-- Speaker Control -->
     <div class="speaker-control" id="speakerControl">
@@ -879,31 +953,31 @@
     <script>
         // Section management
         function showSection(sectionName) {
-    // Hide all sections
-    document.getElementById('homeSection').classList.add('hidden');
-    document.getElementById('quranSection').classList.add('hidden');
-    
-    // Update navigation buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    
-    // Show selected section
-    if (sectionName === 'home') {
-        document.getElementById('homeSection').classList.remove('hidden');
-        document.querySelectorAll('.nav-btn[onclick*="home"]').forEach(btn => btn.classList.add('active'));
-        document.documentElement.setAttribute('dir', 'ltr');
-        document.documentElement.setAttribute('lang', 'en');
-    } else if (sectionName === 'quran') {
-        document.getElementById('quranSection').classList.remove('hidden');
-        document.querySelectorAll('.nav-btn[onclick*="quran"]').forEach(btn => btn.classList.add('active'));
-        document.documentElement.setAttribute('dir', 'rtl');
-        document.documentElement.setAttribute('lang', 'ar');
-        
-        // Initialize Quran if not already loaded
-        if (!window.quranLoaded) {
-            loadQuranData();
+            // Hide all sections
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('quranSection').classList.add('hidden');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            if (sectionName === 'home') {
+                document.getElementById('homeSection').classList.remove('hidden');
+                document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            } else if (sectionName === 'quran') {
+                document.getElementById('quranSection').classList.remove('hidden');
+                document.querySelector('.nav-btn[onclick="showSection(\'quran\')"]').classList.add('active');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+                
+                // Initialize Quran if not already loaded
+                if (!window.quranLoaded) {
+                    loadQuranData();
+                }
+            }
         }
-    }
-}
 
         // Audio Control
         const speakerControl = document.getElementById('speakerControl');
@@ -923,7 +997,18 @@
             }
         });
 
-        
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('open');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
 
         // Scroll animations for home section
         const observerOptions = {
