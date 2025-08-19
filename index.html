@@ -2354,6 +2354,7 @@ let pageVerseData = {
 };
 // Function to find current page based on chapter and verse
 function getCurrentPage(chapter, verse) {
+    // First try to find in pageVerseData (most accurate)
     for (let page = 1; page <= 604; page++) {
         const pageContent = pageVerseData[page];
         if (pageContent && pageContent[chapter]) {
@@ -2363,7 +2364,24 @@ function getCurrentPage(chapter, verse) {
             }
         }
     }
-    return 1; // Default to page 1 if not found
+    
+    // Fallback to pageData if not found
+    for (let page = 1; page <= 604; page++) {
+        if (pageData[page]) {
+            const pageStart = pageData[page];
+            if (pageStart.startChapter === chapter && verse >= pageStart.startVerse) {
+                // Check if this verse is before the next page starts
+                const nextPage = pageData[page + 1];
+                if (!nextPage || 
+                    chapter < nextPage.startChapter || 
+                    (chapter === nextPage.startChapter && verse < nextPage.startVerse)) {
+                    return page;
+                }
+            }
+        }
+    }
+    
+    return 1; // Default fallback
 }
 
 // Current page tracking
@@ -2440,7 +2458,7 @@ function displayPage() {
         }
         
         // Add verses for this chapter in this page
-        for (let verseNum = verseRange[0]; verseNum <= verseRange[1]; verseNum++) {
+        for (let verseNum = verseRange; verseNum <= verseRange[1]; verseNum++) {
             if (chapter[verseNum]) {
                 const isCurrentVerse = (verseNum === currentVerse && chapterNumber === currentChapter);
                 const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
@@ -2688,22 +2706,21 @@ function goToPage(pageNumber) {
     currentChapter = chapterNum;
     currentVerse = verseNumber;
     
-    // Find which page contains this verse
+    // Find which page contains this verse using pageVerseData
     for (let page = 1; page <= 604; page++) {
-        if (pageData[page] && pageData[page + 1]) {
-            const pageStart = pageData[page];
-            const pageEnd = pageData[page + 1];
-            
-            if ((chapterNum > pageStart.startChapter || 
-                (chapterNum === pageStart.startChapter && verseNumber >= pageStart.startVerse)) &&
-                (chapterNum < pageEnd.startChapter || 
-                (chapterNum === pageEnd.startChapter && verseNumber < pageEnd.startVerse))) {
+        const pageContent = pageVerseData[page];
+        if (pageContent && pageContent[chapterNum]) {
+            const verseRange = pageContent[chapterNum];
+            if (verseNumber >= verseRange[0] && verseNumber <= verseRange[1]) {
                 currentPage = page;
-                break;
+                displayPage();
+                return;
             }
         }
     }
     
+    // Fallback: if not found in pageVerseData, use getCurrentPage function
+    currentPage = getCurrentPage(chapterNum, verseNumber);
     displayPage();
 }
 
@@ -3088,18 +3105,33 @@ function normalizeForSearch(text) {
 }
 
 function goToSearchResult(chapterNum, verseNum) {
-    // Clear search and go to the specific verse
+    // Clear search first
     clearSearch();
-    currentChapter = chapterNum;
-    currentVerse = verseNum;
     
-    // Find the correct page for this verse
+    // Set the current verse and find its page
     setCurrentVerse(chapterNum, verseNum);
     
-    // Scroll to the specific verse after a short delay
+    // Scroll to the specific verse after page loads
     setTimeout(() => {
-        scrollToCurrentVerse();
-    }, 500);
+        const verses = document.querySelectorAll('.verse');
+        verses.forEach(verse => {
+            // Find the verse that matches our target
+            if (verse.onclick && verse.onclick.toString().includes(`${chapterNum}, ${verseNum}`)) {
+                verse.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Highlight the verse temporarily
+                verse.style.background = 'rgba(77, 192, 181, 0.3)';
+                verse.style.borderColor = '#4dc0b5';
+                verse.style.boxShadow = '0 0 15px rgba(77, 192, 181, 0.5)';
+                
+                // Remove highlight after 3 seconds
+                setTimeout(() => {
+                    verse.style.background = '';
+                    verse.style.borderColor = '';
+                    verse.style.boxShadow = '';
+                }, 3000);
+            }
+        });
+    }, 300);
 }
 
 function clearSearch() {
