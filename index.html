@@ -926,6 +926,7 @@
                     <button class="quran-btn" onclick="nextVerse()">الآية التالية</button>
                     <button class="quran-btn" onclick="nextChapter()" id="nextBtn">السورة التالية</button>
                     <button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
+                    <button class="quran-btn secondary" onclick="showJuzSelector()">اختر الجزء</button>
                 </div>
 
                 <div class="quran-content-area fade-in" id="content">
@@ -954,6 +955,17 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Juz Selection Modal -->
+            <div id="juzModal" class="modal">
+                 <div class="modal-content">
+                     <span class="close" onclick="hideJuzSelector()">&times;</span>
+                     <h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر الجزء</h2>
+                <div class="chapter-grid" id="juzGrid">
+            <!-- Juz list will be populated here -->
+             </div>
+            </div>
+        </div>
         </div>
     </div>
 
@@ -1072,6 +1084,40 @@
             101: "القارعة", 102: "التكاثر", 103: "العصر", 104: "الهمزة", 105: "الفيل", 106: "قريش", 107: "الماعون", 108: "الكوثر", 109: "الكافرون", 110: "النصر",
             111: "المسد", 112: "الإخلاص", 113: "الفلق", 114: "الناس"
         };
+        
+        // Juz data with starting chapter and verse for each Juz
+let juzData = {
+    1: { name: "الجزء الأول", startChapter: 1, startVerse: 1 },
+    2: { name: "الجزء الثاني", startChapter: 2, startVerse: 142 },
+    3: { name: "الجزء الثالث", startChapter: 2, startVerse: 253 },
+    4: { name: "الجزء الرابع", startChapter: 3, startVerse: 93 },
+    5: { name: "الجزء الخامس", startChapter: 4, startVerse: 24 },
+    6: { name: "الجزء السادس", startChapter: 4, startVerse: 148 },
+    7: { name: "الجزء السابع", startChapter: 5, startVerse: 82 },
+    8: { name: "الجزء الثامن", startChapter: 6, startVerse: 111 },
+    9: { name: "الجزء التاسع", startChapter: 7, startVerse: 88 },
+    10: { name: "الجزء العاشر", startChapter: 8, startVerse: 41 },
+    11: { name: "الجزء الحادي عشر", startChapter: 9, startVerse: 93 },
+    12: { name: "الجزء الثاني عشر", startChapter: 11, startVerse: 6 },
+    13: { name: "الجزء الثالث عشر", startChapter: 12, startVerse: 53 },
+    14: { name: "الجزء الرابع عشر", startChapter: 15, startVerse: 1 },
+    15: { name: "الجزء الخامس عشر", startChapter: 17, startVerse: 1 },
+    16: { name: "الجزء السادس عشر", startChapter: 18, startVerse: 75 },
+    17: { name: "الجزء السابع عشر", startChapter: 21, startVerse: 1 },
+    18: { name: "الجزء الثامن عشر", startChapter: 23, startVerse: 1 },
+    19: { name: "الجزء التاسع عشر", startChapter: 25, startVerse: 21 },
+    20: { name: "الجزء العشرون", startChapter: 27, startVerse: 56 },
+    21: { name: "الجزء الحادي والعشرون", startChapter: 29, startVerse: 46 },
+    22: { name: "الجزء الثاني والعشرون", startChapter: 33, startVerse: 31 },
+    23: { name: "الجزء الثالث والعشرون", startChapter: 36, startVerse: 28 },
+    24: { name: "الجزء الرابع والعشرون", startChapter: 39, startVerse: 32 },
+    25: { name: "الجزء الخامس والعشرون", startChapter: 41, startVerse: 47 },
+    26: { name: "الجزء السادس والعشرون", startChapter: 46, startVerse: 1 },
+    27: { name: "الجزء السابع والعشرون", startChapter: 51, startVerse: 31 },
+    28: { name: "الجزء الثامن والعشرون", startChapter: 58, startVerse: 1 },
+    29: { name: "الجزء التاسع والعشرون", startChapter: 67, startVerse: 1 },
+    30: { name: "الجزء الثلاثون", startChapter: 78, startVerse: 1 }
+};
 
         // Application state
         let currentChapter = 1;
@@ -1185,6 +1231,49 @@
         function hideChapterSelector() {
             document.getElementById('chapterModal').style.display = 'none';
         }
+        
+        // Populate juz selector modal
+function populateJuzSelector() {
+    const juzGrid = document.getElementById('juzGrid');
+    let html = '';
+    
+    Object.keys(juzData).forEach(juzNum => {
+        const num = parseInt(juzNum);
+        const juz = juzData[num];
+        const chapterName = chapterNames[juz.startChapter];
+        
+        html += `
+            <div class="chapter-item" onclick="goToJuz(${num})">
+                <h4>${num}. ${juz.name}</h4>
+                <p>يبدأ من سورة ${chapterName} - آية ${juz.startVerse}</p>
+            </div>
+        `;
+    });
+    
+    juzGrid.innerHTML = html;
+}
+
+// Show juz selector modal
+function showJuzSelector() {
+    populateJuzSelector();
+    document.getElementById('juzModal').style.display = 'block';
+}
+
+// Hide juz selector modal
+function hideJuzSelector() {
+    document.getElementById('juzModal').style.display = 'none';
+}
+
+// Go to specific juz
+function goToJuz(juzNumber) {
+    if (juzNumber && juzNumber >= 1 && juzNumber <= 30 && juzData[juzNumber]) {
+        const juz = juzData[juzNumber];
+        currentChapter = juz.startChapter;
+        currentVerse = juz.startVerse;
+        displayChapter();
+        hideJuzSelector();
+    }
+}
 
         // Go to specific chapter
         function goToChapter(chapterNumber = null) {
@@ -1667,11 +1756,16 @@ function displaySearchMessage(message) {
 
         // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('chapterModal');
-            if (event.target === modal) {
-                hideChapterSelector();
-            }
-        }
+    const chapterModal = document.getElementById('chapterModal');
+    const juzModal = document.getElementById('juzModal');
+    
+    if (event.target === chapterModal) {
+        hideChapterSelector();
+    }
+    if (event.target === juzModal) {
+        hideJuzSelector();
+    }
+}
         
         // Add keyboard shortcuts for search
 document.addEventListener('DOMContentLoaded', function() {
