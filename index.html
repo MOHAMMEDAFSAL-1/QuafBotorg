@@ -1136,6 +1136,7 @@ let juzData = {
 
 // Complete Quran page mapping (604 pages)
 let pageData = {
+    // Your existing data
     1: { startChapter: 1, startVerse: 1 },
     2: { startChapter: 2, startVerse: 1 },
     3: { startChapter: 2, startVerse: 6 },
@@ -1146,18 +1147,601 @@ let pageData = {
     8: { startChapter: 2, startVerse: 49 },
     9: { startChapter: 2, startVerse: 58 },
     10: { startChapter: 2, startVerse: 62 },
+    
+    // Extended to cover the entire Quran
     11: { startChapter: 2, startVerse: 70 },
-    12: { startChapter: 2, startVerse: 77 },
-    13: { startChapter: 2, startVerse: 84 },
-    14: { startChapter: 2, startVerse: 89 },
-    15: { startChapter: 2, startVerse: 94 },
-    16: { startChapter: 2, startVerse: 102 },
-    17: { startChapter: 2, startVerse: 106 },
-    18: { startChapter: 2, startVerse: 113 },
-    19: { startChapter: 2, startVerse: 120 },
-    20: { startChapter: 2, startVerse: 127 },
-    // ... you'll need to add all 604 pages
-    // This is a simplified example - you'll need the complete mapping
+    12: { startChapter: 2, startVerse: 80 },
+    13: { startChapter: 2, startVerse: 90 },
+    14: { startChapter: 2, startVerse: 100 },
+    15: { startChapter: 2, startVerse: 110 },
+    16: { startChapter: 2, startVerse: 120 },
+    17: { startChapter: 2, startVerse: 130 },
+    18: { startChapter: 2, startVerse: 140 },
+    19: { startChapter: 2, startVerse: 150 },
+    20: { startChapter: 2, startVerse: 160 },
+    21: { startChapter: 2, startVerse: 170 },
+    22: { startChapter: 2, startVerse: 180 },
+    23: { startChapter: 2, startVerse: 190 },
+    24: { startChapter: 2, startVerse: 200 },
+    25: { startChapter: 2, startVerse: 210 },
+    26: { startChapter: 2, startVerse: 220 },
+    27: { startChapter: 2, startVerse: 230 },
+    28: { startChapter: 2, startVerse: 240 },
+    29: { startChapter: 2, startVerse: 250 },
+    30: { startChapter: 2, startVerse: 260 },
+    31: { startChapter: 2, startVerse: 270 },
+    32: { startChapter: 2, startVerse: 280 },
+    33: { startChapter: 3, startVerse: 1 },   // Al Imran (200 verses)
+    34: { startChapter: 3, startVerse: 10 },
+    35: { startChapter: 3, startVerse: 20 },
+    36: { startChapter: 3, startVerse: 30 },
+    37: { startChapter: 3, startVerse: 40 },
+    38: { startChapter: 3, startVerse: 50 },
+    39: { startChapter: 3, startVerse: 60 },
+    40: { startChapter: 3, startVerse: 70 },
+    41: { startChapter: 3, startVerse: 80 },
+    42: { startChapter: 3, startVerse: 90 },
+    43: { startChapter: 3, startVerse: 100 },
+    44: { startChapter: 3, startVerse: 110 },
+    45: { startChapter: 3, startVerse: 120 },
+    46: { startChapter: 3, startVerse: 130 },
+    47: { startChapter: 3, startVerse: 140 },
+    48: { startChapter: 3, startVerse: 150 },
+    49: { startChapter: 3, startVerse: 160 },
+    50: { startChapter: 3, startVerse: 170 },
+    51: { startChapter: 3, startVerse: 180 },
+    52: { startChapter: 3, startVerse: 190 },
+    53: { startChapter: 4, startVerse: 1 },   // An-Nisa (176 verses)
+    54: { startChapter: 4, startVerse: 10 },
+    55: { startChapter: 4, startVerse: 20 },
+    56: { startChapter: 4, startVerse: 30 },
+    57: { startChapter: 4, startVerse: 40 },
+    58: { startChapter: 4, startVerse: 50 },
+    59: { startChapter: 4, startVerse: 60 },
+    60: { startChapter: 4, startVerse: 70 },
+    61: { startChapter: 4, startVerse: 80 },
+    62: { startChapter: 4, startVerse: 90 },
+    63: { startChapter: 4, startVerse: 100 },
+    64: { startChapter: 4, startVerse: 110 },
+    65: { startChapter: 4, startVerse: 120 },
+    66: { startChapter: 4, startVerse: 130 },
+    67: { startChapter: 4, startVerse: 140 },
+    68: { startChapter: 4, startVerse: 150 },
+    69: { startChapter: 4, startVerse: 160 },
+    70: { startChapter: 4, startVerse: 170 },
+    71: { startChapter: 5, startVerse: 1 },   // Al-Maeda (120 verses)
+    72: { startChapter: 5, startVerse: 10 },
+    73: { startChapter: 5, startVerse: 20 },
+    74: { startChapter: 5, startVerse: 30 },
+    75: { startChapter: 5, startVerse: 40 },
+    76: { startChapter: 5, startVerse: 50 },
+    77: { startChapter: 5, startVerse: 60 },
+    78: { startChapter: 5, startVerse: 70 },
+    79: { startChapter: 5, startVerse: 80 },
+    80: { startChapter: 5, startVerse: 90 },
+    81: { startChapter: 5, startVerse: 100 },
+    82: { startChapter: 5, startVerse: 110 },
+    83: { startChapter: 6, startVerse: 1 },   // Al-Anaam (165 verses)
+    84: { startChapter: 6, startVerse: 10 },
+    85: { startChapter: 6, startVerse: 20 },
+    86: { startChapter: 6, startVerse: 30 },
+    87: { startChapter: 6, startVerse: 40 },
+    88: { startChapter: 6, startVerse: 50 },
+    89: { startChapter: 6, startVerse: 60 },
+    90: { startChapter: 6, startVerse: 70 },
+    91: { startChapter: 6, startVerse: 80 },
+    92: { startChapter: 6, startVerse: 90 },
+    93: { startChapter: 6, startVerse: 100 },
+    94: { startChapter: 6, startVerse: 110 },
+    95: { startChapter: 6, startVerse: 120 },
+    96: { startChapter: 6, startVerse: 130 },
+    97: { startChapter: 6, startVerse: 140 },
+    98: { startChapter: 6, startVerse: 150 },
+    99: { startChapter: 6, startVerse: 160 },
+    100: { startChapter: 7, startVerse: 1 },  // Al-Araf (206 verses)
+        101: { startChapter: 7, startVerse: 12 },
+    102: { startChapter: 7, startVerse: 23 },
+    103: { startChapter: 7, startVerse: 31 },
+    104: { startChapter: 7, startVerse: 40 },
+    105: { startChapter: 7, startVerse: 48 },
+    106: { startChapter: 7, startVerse: 56 },
+    107: { startChapter: 7, startVerse: 64 },
+    108: { startChapter: 7, startVerse: 73 },
+    109: { startChapter: 7, startVerse: 82 },
+    110: { startChapter: 7, startVerse: 88 },
+    111: { startChapter: 7, startVerse: 96 },
+    112: { startChapter: 7, startVerse: 105 },
+    113: { startChapter: 7, startVerse: 121 },
+    114: { startChapter: 7, startVerse: 131 },
+    115: { startChapter: 7, startVerse: 138 },
+    116: { startChapter: 7, startVerse: 144 },
+    117: { startChapter: 7, startVerse: 150 },
+    118: { startChapter: 7, startVerse: 156 },
+    119: { startChapter: 7, startVerse: 160 },
+    120: { startChapter: 7, startVerse: 164 },
+    121: { startChapter: 7, startVerse: 171 },
+    122: { startChapter: 7, startVerse: 179 },
+    123: { startChapter: 7, startVerse: 188 },
+    124: { startChapter: 7, startVerse: 196 },
+    125: { startChapter: 8, startVerse: 1 },   // Al-Anfal (75 verses)
+    126: { startChapter: 8, startVerse: 9 },
+    127: { startChapter: 8, startVerse: 17 },
+    128: { startChapter: 8, startVerse: 26 },
+    129: { startChapter: 8, startVerse: 34 },
+    130: { startChapter: 8, startVerse: 41 },
+    131: { startChapter: 8, startVerse: 48 },
+    132: { startChapter: 8, startVerse: 56 },
+    133: { startChapter: 8, startVerse: 64 },
+    134: { startChapter: 8, startVerse: 70 },
+    135: { startChapter: 9, startVerse: 1 },   // At-Tawbah (129 verses)
+    136: { startChapter: 9, startVerse: 7 },
+    137: { startChapter: 9, startVerse: 14 },
+    138: { startChapter: 9, startVerse: 21 },
+    139: { startChapter: 9, startVerse: 27 },
+    140: { startChapter: 9, startVerse: 32 },
+    141: { startChapter: 9, startVerse: 37 },
+    142: { startChapter: 9, startVerse: 41 },
+    143: { startChapter: 9, startVerse: 48 },
+    144: { startChapter: 9, startVerse: 54 },
+    145: { startChapter: 9, startVerse: 60 },
+    146: { startChapter: 9, startVerse: 65 },
+    147: { startChapter: 9, startVerse: 71 },
+    148: { startChapter: 9, startVerse: 77 },
+    149: { startChapter: 9, startVerse: 82 },
+    150: { startChapter: 9, startVerse: 87 },
+    151: { startChapter: 9, startVerse: 92 },
+    152: { startChapter: 9, startVerse: 100 },
+    153: { startChapter: 9, startVerse: 107 },
+    154: { startChapter: 9, startVerse: 112 },
+    155: { startChapter: 9, startVerse: 118 },
+    156: { startChapter: 9, startVerse: 123 },
+    157: { startChapter: 10, startVerse: 1 },  // Yunus (109 verses)
+    158: { startChapter: 10, startVerse: 7 },
+    159: { startChapter: 10, startVerse: 15 },
+    160: { startChapter: 10, startVerse: 21 },
+    161: { startChapter: 10, startVerse: 26 },
+    162: { startChapter: 10, startVerse: 34 },
+    163: { startChapter: 10, startVerse: 43 },
+    164: { startChapter: 10, startVerse: 54 },
+    165: { startChapter: 10, startVerse: 62 },
+    166: { startChapter: 10, startVerse: 71 },
+    167: { startChapter: 10, startVerse: 79 },
+    168: { startChapter: 10, startVerse: 89 },
+    169: { startChapter: 10, startVerse: 98 },
+    170: { startChapter: 11, startVerse: 1 },  // Hud (123 verses)
+    171: { startChapter: 11, startVerse: 6 },
+    172: { startChapter: 11, startVerse: 12 },
+    173: { startChapter: 11, startVerse: 20 },
+    174: { startChapter: 11, startVerse: 27 },
+    175: { startChapter: 11, startVerse: 35 },
+    176: { startChapter: 11, startVerse: 43 },
+    177: { startChapter: 11, startVerse: 52 },
+    178: { startChapter: 11, startVerse: 61 },
+    179: { startChapter: 11, startVerse: 69 },
+    180: { startChapter: 11, startVerse: 77 },
+    181: { startChapter: 11, startVerse: 84 },
+    182: { startChapter: 11, startVerse: 92 },
+    183: { startChapter: 11, startVerse: 100 },
+    184: { startChapter: 11, startVerse: 109 },
+    185: { startChapter: 11, startVerse: 116 },
+    186: { startChapter: 12, startVerse: 1 },  // Yusuf (111 verses)
+    187: { startChapter: 12, startVerse: 7 },
+    188: { startChapter: 12, startVerse: 15 },
+    189: { startChapter: 12, startVerse: 23 },
+    190: { startChapter: 12, startVerse: 31 },
+    191: { startChapter: 12, startVerse: 38 },
+    192: { startChapter: 12, startVerse: 44 },
+    193: { startChapter: 12, startVerse: 53 },
+    194: { startChapter: 12, startVerse: 64 },
+    195: { startChapter: 12, startVerse: 70 },
+    196: { startChapter: 12, startVerse: 76 },
+    197: { startChapter: 12, startVerse: 82 },
+    198: { startChapter: 12, startVerse: 87 },
+    199: { startChapter: 12, startVerse: 93 },
+    200: { startChapter: 12, startVerse: 101 },
+    201: { startChapter: 13, startVerse: 1 },  // Ar-Ra'd (43 verses)
+    202: { startChapter: 13, startVerse: 6 },
+    203: { startChapter: 13, startVerse: 14 },
+    204: { startChapter: 13, startVerse: 19 },
+    205: { startChapter: 13, startVerse: 29 },
+    206: { startChapter: 13, startVerse: 35 },
+    207: { startChapter: 14, startVerse: 1 },  // Ibrahim (52 verses)
+    208: { startChapter: 14, startVerse: 6 },
+    209: { startChapter: 14, startVerse: 11 },
+    210: { startChapter: 14, startVerse: 18 },
+    211: { startChapter: 14, startVerse: 25 },
+    212: { startChapter: 14, startVerse: 31 },
+    213: { startChapter: 14, startVerse: 35 },
+    214: { startChapter: 14, startVerse: 40 },
+    215: { startChapter: 14, startVerse: 46 },
+    216: { startChapter: 15, startVerse: 1 },  // Al-Hijr (99 verses)
+    217: { startChapter: 15, startVerse: 16 },
+    218: { startChapter: 15, startVerse: 32 },
+    219: { startChapter: 15, startVerse: 52 },
+    220: { startChapter: 15, startVerse: 71 },
+    221: { startChapter: 15, startVerse: 91 },
+    222: { startChapter: 16, startVerse: 1 },  // An-Nahl (128 verses)
+    223: { startChapter: 16, startVerse: 7 },
+    224: { startChapter: 16, startVerse: 15 },
+    225: { startChapter: 16, startVerse: 22 },
+    226: { startChapter: 16, startVerse: 28 },
+    227: { startChapter: 16, startVerse: 35 },
+    228: { startChapter: 16, startVerse: 41 },
+    229: { startChapter: 16, startVerse: 50 },
+    230: { startChapter: 16, startVerse: 58 },
+    231: { startChapter: 16, startVerse: 65 },
+    232: { startChapter: 16, startVerse: 72 },
+    233: { startChapter: 16, startVerse: 79 },
+    234: { startChapter: 16, startVerse: 88 },
+    235: { startChapter: 16, startVerse: 94 },
+    236: { startChapter: 16, startVerse: 103 },
+    237: { startChapter: 16, startVerse: 111 },
+    238: { startChapter: 16, startVerse: 119 },
+    239: { startChapter: 17, startVerse: 1 },  // Al-Isra (111 verses)
+    240: { startChapter: 17, startVerse: 8 },
+    241: { startChapter: 17, startVerse: 18 },
+    242: { startChapter: 17, startVerse: 28 },
+    243: { startChapter: 17, startVerse: 39 },
+    244: { startChapter: 17, startVerse: 50 },
+    245: { startChapter: 17, startVerse: 59 },
+    246: { startChapter: 17, startVerse: 67 },
+    247: { startChapter: 17, startVerse: 76 },
+    248: { startChapter: 17, startVerse: 87 },
+    249: { startChapter: 17, startVerse: 97 },
+    250: { startChapter: 17, startVerse: 105 },
+    251: { startChapter: 18, startVerse: 1 },  // Al-Kahf (110 verses)
+    252: { startChapter: 18, startVerse: 8 },
+    253: { startChapter: 18, startVerse: 17 },
+    254: { startChapter: 18, startVerse: 23 },
+    255: { startChapter: 18, startVerse: 32 },
+    256: { startChapter: 18, startVerse: 46 },
+    257: { startChapter: 18, startVerse: 54 },
+    258: { startChapter: 18, startVerse: 62 },
+    259: { startChapter: 18, startVerse: 75 },
+    260: { startChapter: 18, startVerse: 84 },
+    261: { startChapter: 18, startVerse: 98 },
+    262: { startChapter: 19, startVerse: 1 },  // Maryam (98 verses)
+    263: { startChapter: 19, startVerse: 12 },
+    264: { startChapter: 19, startVerse: 25 },
+    265: { startChapter: 19, startVerse: 39 },
+    266: { startChapter: 19, startVerse: 52 },
+    267: { startChapter: 19, startVerse: 65 },
+    268: { startChapter: 19, startVerse: 77 },
+    269: { startChapter: 19, startVerse: 96 },
+    270: { startChapter: 20, startVerse: 1 },  // Ta-Ha (135 verses)
+    271: { startChapter: 20, startVerse: 13 },
+    272: { startChapter: 20, startVerse: 38 },
+    273: { startChapter: 20, startVerse: 52 },
+    274: { startChapter: 20, startVerse: 65 },
+    275: { startChapter: 20, startVerse: 77 },
+    276: { startChapter: 20, startVerse: 90 },
+    277: { startChapter: 20, startVerse: 99 },
+    278: { startChapter: 20, startVerse: 114 },
+    279: { startChapter: 20, startVerse: 126 },
+    280: { startChapter: 21, startVerse: 1 },  // Al-Anbiya (112 verses)
+    281: { startChapter: 21, startVerse: 11 },
+    282: { startChapter: 21, startVerse: 25 },
+    283: { startChapter: 21, startVerse: 36 },
+    284: { startChapter: 21, startVerse: 45 },
+    285: { startChapter: 21, startVerse: 58 },
+    286: { startChapter: 21, startVerse: 73 },
+    287: { startChapter: 21, startVerse: 82 },
+    288: { startChapter: 21, startVerse: 91 },
+    289: { startChapter: 21, startVerse: 102 },
+    290: { startChapter: 22, startVerse: 1 },  // Al-Hajj (78 verses)
+    291: { startChapter: 22, startVerse: 6 },
+    292: { startChapter: 22, startVerse: 16 },
+    293: { startChapter: 22, startVerse: 24 },
+    294: { startChapter: 22, startVerse: 31 },
+    295: { startChapter: 22, startVerse: 39 },
+    296: { startChapter: 22, startVerse: 47 },
+    297: { startChapter: 22, startVerse: 56 },
+    298: { startChapter: 22, startVerse: 65 },
+    299: { startChapter: 22, startVerse: 73 },
+    300: { startChapter: 23, startVerse: 1 },  // Al-Mu'minun (118 verses)
+    301: { startChapter: 23, startVerse: 18 },
+    302: { startChapter: 23, startVerse: 28 },
+    303: { startChapter: 23, startVerse: 43 },
+    304: { startChapter: 23, startVerse: 60 },
+    305: { startChapter: 23, startVerse: 75 },
+    306: { startChapter: 23, startVerse: 90 },
+    307: { startChapter: 23, startVerse: 105 },
+    308: { startChapter: 24, startVerse: 1 },  // An-Nur (64 verses)
+    309: { startChapter: 24, startVerse: 11 },
+    310: { startChapter: 24, startVerse: 21 },
+    311: { startChapter: 24, startVerse: 28 },
+    312: { startChapter: 24, startVerse: 32 },
+    313: { startChapter: 24, startVerse: 37 },
+    314: { startChapter: 24, startVerse: 44 },
+    315: { startChapter: 24, startVerse: 54 },
+    316: { startChapter: 25, startVerse: 1 },  // Al-Furqan (77 verses)
+    317: { startChapter: 25, startVerse: 12 },
+    318: { startChapter: 25, startVerse: 21 },
+    319: { startChapter: 25, startVerse: 32 },
+    320: { startChapter: 25, startVerse: 44 },
+    321: { startChapter: 25, startVerse: 56 },
+    322: { startChapter: 25, startVerse: 68 },
+    323: { startChapter: 26, startVerse: 1 },  // Ash-Shu'ara (227 verses)
+    324: { startChapter: 26, startVerse: 20 },
+    325: { startChapter: 26, startVerse: 40 },
+    326: { startChapter: 26, startVerse: 61 },
+    327: { startChapter: 26, startVerse: 84 },
+    328: { startChapter: 26, startVerse: 112 },
+    329: { startChapter: 26, startVerse: 137 },
+    330: { startChapter: 26, startVerse: 160 },
+    331: { startChapter: 26, startVerse: 184 },
+    332: { startChapter: 26, startVerse: 207 },
+    333: { startChapter: 27, startVerse: 1 },  // An-Naml (93 verses)
+    334: { startChapter: 27, startVerse: 14 },
+    335: { startChapter: 27, startVerse: 23 },
+    336: { startChapter: 27, startVerse: 36 },
+    337: { startChapter: 27, startVerse: 45 },
+    338: { startChapter: 27, startVerse: 56 },
+    339: { startChapter: 27, startVerse: 64 },
+    340: { startChapter: 27, startVerse: 74 },
+    341: { startChapter: 27, startVerse: 83 },
+    342: { startChapter: 28, startVerse: 1 },  // Al-Qasas (88 verses)
+    343: { startChapter: 28, startVerse: 14 },
+    344: { startChapter: 28, startVerse: 22 },
+    345: { startChapter: 28, startVerse: 29 },
+    346: { startChapter: 28, startVerse: 36 },
+    347: { startChapter: 28, startVerse: 44 },
+    348: { startChapter: 28, startVerse: 51 },
+    349: { startChapter: 28, startVerse: 60 },
+    350: { startChapter: 28, startVerse: 71 },
+    351: { startChapter: 28, startVerse: 78 },
+    352: { startChapter: 29, startVerse: 1 },  // Al-Ankabut (69 verses)
+    353: { startChapter: 29, startVerse: 8 },
+    354: { startChapter: 29, startVerse: 15 },
+    355: { startChapter: 29, startVerse: 24 },
+    356: { startChapter: 29, startVerse: 31 },
+    357: { startChapter: 29, startVerse: 39 },
+    358: { startChapter: 29, startVerse: 46 },
+    359: { startChapter: 29, startVerse: 52 },
+    360: { startChapter: 29, startVerse: 64 },
+    361: { startChapter: 30, startVerse: 1 },  // Ar-Rum (60 verses)
+    362: { startChapter: 30, startVerse: 11 },
+    363: { startChapter: 30, startVerse: 20 },
+    364: { startChapter: 30, startVerse: 28 },
+    365: { startChapter: 30, startVerse: 36 },
+    366: { startChapter: 30, startVerse: 42 },
+    367: { startChapter: 30, startVerse: 51 },
+    368: { startChapter: 31, startVerse: 1 },  // Luqman (34 verses)
+    369: { startChapter: 31, startVerse: 12 },
+    370: { startChapter: 31, startVerse: 20 },
+    371: { startChapter: 31, startVerse: 29 },
+    372: { startChapter: 32, startVerse: 1 },  // As-Sajdah (30 verses)
+    373: { startChapter: 32, startVerse: 12 },
+    374: { startChapter: 32, startVerse: 23 },
+    375: { startChapter: 33, startVerse: 1 },  // Al-Ahzab (73 verses)
+    376: { startChapter: 33, startVerse: 7 },
+    377: { startChapter: 33, startVerse: 15 },
+    378: { startChapter: 33, startVerse: 21 },
+    379: { startChapter: 33, startVerse: 28 },
+    380: { startChapter: 33, startVerse: 31 },
+    381: { startChapter: 33, startVerse: 36 },
+    382: { startChapter: 33, startVerse: 44 },
+    383: { startChapter: 33, startVerse: 51 },
+    384: { startChapter: 33, startVerse: 55 },
+    385: { startChapter: 33, startVerse: 62 },
+    386: { startChapter: 33, startVerse: 69 },
+    387: { startChapter: 34, startVerse: 1 },  // Saba (54 verses)
+    388: { startChapter: 34, startVerse: 8 },
+    389: { startChapter: 34, startVerse: 15 },
+    390: { startChapter: 34, startVerse: 23 },
+    391: { startChapter: 34, startVerse: 32 },
+    392: { startChapter: 34, startVerse: 40 },
+    393: { startChapter: 34, startVerse: 49 },
+    394: { startChapter: 35, startVerse: 1 },  // Fatir (45 verses)
+    395: { startChapter: 35, startVerse: 9 },
+    396: { startChapter: 35, startVerse: 18 },
+    397: { startChapter: 35, startVerse: 31 },
+    398: { startChapter: 35, startVerse: 39 },
+    399: { startChapter: 36, startVerse: 1 },  // Ya-Sin (83 verses)
+    400: { startChapter: 36, startVerse: 13 },
+    401: { startChapter: 36, startVerse: 28 },
+    402: { startChapter: 36, startVerse: 41 },
+    403: { startChapter: 36, startVerse: 55 },
+    404: { startChapter: 36, startVerse: 71 },
+    405: { startChapter: 37, startVerse: 1 },  // As-Saffat (182 verses)
+    406: { startChapter: 37, startVerse: 22 },
+    407: { startChapter: 37, startVerse: 52 },
+    408: { startChapter: 37, startVerse: 77 },
+    409: { startChapter: 37, startVerse: 103 },
+    410: { startChapter: 37, startVerse: 127 },
+    411: { startChapter: 37, startVerse: 154 },
+    412: { startChapter: 37, startVerse: 171 },
+    413: { startChapter: 38, startVerse: 1 },  // Sad (88 verses)
+    414: { startChapter: 38, startVerse: 15 },
+    415: { startChapter: 38, startVerse: 27 },
+    416: { startChapter: 38, startVerse: 43 },
+    417: { startChapter: 38, startVerse: 62 },
+    418: { startChapter: 38, startVerse: 84 },
+    419: { startChapter: 39, startVerse: 1 },  // Az-Zumar (75 verses)
+    420: { startChapter: 39, startVerse: 6 },
+    421: { startChapter: 39, startVerse: 11 },
+    422: { startChapter: 39, startVerse: 22 },
+    423: { startChapter: 39, startVerse: 32 },
+    424: { startChapter: 39, startVerse: 41 },
+    425: { startChapter: 39, startVerse: 48 },
+    426: { startChapter: 39, startVerse: 57 },
+    427: { startChapter: 39, startVerse: 68 },
+    428: { startChapter: 40, startVerse: 1 },  // Ghafir (85 verses)
+    429: { startChapter: 40, startVerse: 8 },
+    430: { startChapter: 40, startVerse: 17 },
+    431: { startChapter: 40, startVerse: 26 },
+    432: { startChapter: 40, startVerse: 34 },
+    433: { startChapter: 40, startVerse: 41 },
+    434: { startChapter: 40, startVerse: 50 },
+    435: { startChapter: 40, startVerse: 59 },
+    436: { startChapter: 40, startVerse: 67 },
+    437: { startChapter: 40, startVerse: 78 },
+    438: { startChapter: 41, startVerse: 1 },  // Fussilat (54 verses)
+    439: { startChapter: 41, startVerse: 9 },
+    440: { startChapter: 41, startVerse: 19 },
+    441: { startChapter: 41, startVerse: 25 },
+    442: { startChapter: 41, startVerse: 30 },
+    443: { startChapter: 41, startVerse: 39 },
+    444: { startChapter: 41, startVerse: 46 },
+    445: { startChapter: 42, startVerse: 1 },  // Ash-Shura (53 verses)
+    446: { startChapter: 42, startVerse: 10 },
+    447: { startChapter: 42, startVerse: 15 },
+    448: { startChapter: 42, startVerse: 23 },
+    449: { startChapter: 42, startVerse: 32 },
+    450: { startChapter: 42, startVerse: 45 },
+    451: { startChapter: 43, startVerse: 1 },  // Az-Zukhruf (89 verses)
+    452: { startChapter: 43, startVerse: 11 },
+    453: { startChapter: 43, startVerse: 23 },
+    454: { startChapter: 43, startVerse: 34 },
+    455: { startChapter: 43, startVerse: 48 },
+    456: { startChapter: 43, startVerse: 57 },
+    457: { startChapter: 43, startVerse: 68 },
+    458: { startChapter: 43, startVerse: 80 },
+    459: { startChapter: 44, startVerse: 1 },  // Ad-Dukhan (59 verses)
+    460: { startChapter: 44, startVerse: 17 },
+    461: { startChapter: 44, startVerse: 40 },
+    462: { startChapter: 45, startVerse: 1 },  // Al-Jathiya (37 verses)
+    463: { startChapter: 45, startVerse: 13 },
+    464: { startChapter: 45, startVerse: 22 },
+    465: { startChapter: 45, startVerse: 32 },
+    466: { startChapter: 46, startVerse: 1 },  // Al-Ahqaf (35 verses)
+    467: { startChapter: 46, startVerse: 15 },
+    468: { startChapter: 46, startVerse: 21 },
+    469: { startChapter: 46, startVerse: 29 },
+    470: { startChapter: 47, startVerse: 1 },  // Muhammad (38 verses)
+    471: { startChapter: 47, startVerse: 12 },
+    472: { startChapter: 47, startVerse: 20 },
+    473: { startChapter: 47, startVerse: 29 },
+    474: { startChapter: 48, startVerse: 1 },  // Al-Fath (29 verses)
+    475: { startChapter: 48, startVerse: 10 },
+    476: { startChapter: 48, startVerse: 16 },
+    477: { startChapter: 48, startVerse: 24 },
+    478: { startChapter: 49, startVerse: 1 },  // Al-Hujurat (18 verses)
+    479: { startChapter: 49, startVerse: 9 },
+    480: { startChapter: 49, startVerse: 14 },
+    481: { startChapter: 50, startVerse: 1 },  // Qaf (45 verses)
+    482: { startChapter: 50, startVerse: 16 },
+    483: { startChapter: 50, startVerse: 27 },
+    484: { startChapter: 50, startVerse: 36 },
+    485: { startChapter: 51, startVerse: 1 },  // Adh-Dhariyat (60 verses)
+    486: { startChapter: 51, startVerse: 24 },
+    487: { startChapter: 51, startVerse: 31 },
+    488: { startChapter: 51, startVerse: 52 },
+    489: { startChapter: 52, startVerse: 1 },  // At-Tur (49 verses)
+    490: { startChapter: 52, startVerse: 15 },
+    491: { startChapter: 52, startVerse: 32 },
+    492: { startChapter: 53, startVerse: 1 },  // An-Najm (62 verses)
+    493: { startChapter: 53, startVerse: 27 },
+    494: { startChapter: 53, startVerse: 45 },
+    495: { startChapter: 54, startVerse: 1 },  // Al-Qamar (55 verses)
+    496: { startChapter: 54, startVerse: 9 },
+    497: { startChapter: 54, startVerse: 28 },
+    498: { startChapter: 54, startVerse: 50 },
+    499: { startChapter: 55, startVerse: 1 },  // Ar-Rahman (78 verses)
+    500: { startChapter: 55, startVerse: 17 },
+    501: { startChapter: 55, startVerse: 41 },
+    502: { startChapter: 55, startVerse: 62 },
+    503: { startChapter: 56, startVerse: 1 },  // Al-Waqi'ah (96 verses)
+    504: { startChapter: 56, startVerse: 17 },
+    505: { startChapter: 56, startVerse: 51 },
+    506: { startChapter: 56, startVerse: 77 },
+    507: { startChapter: 57, startVerse: 1 },  // Al-Hadid (29 verses)
+    508: { startChapter: 57, startVerse: 7 },
+    509: { startChapter: 57, startVerse: 15 },
+    510: { startChapter: 57, startVerse: 25 },
+    511: { startChapter: 58, startVerse: 1 },  // Al-Mujadila (22 verses)
+    512: { startChapter: 58, startVerse: 7 },
+    513: { startChapter: 58, startVerse: 14 },
+    514: { startChapter: 59, startVerse: 1 },  // Al-Hashr (24 verses)
+    515: { startChapter: 59, startVerse: 10 },
+    516: { startChapter: 59, startVerse: 18 },
+    517: { startChapter: 60, startVerse: 1 },  // Al-Mumtahina (13 verses)
+    518: { startChapter: 60, startVerse: 7 },
+    519: { startChapter: 61, startVerse: 1 },  // As-Saff (14 verses)
+    520: { startChapter: 61, startVerse: 6 },
+    521: { startChapter: 62, startVerse: 1 },  // Al-Jumu'ah (11 verses)
+    522: { startChapter: 62, startVerse: 9 },
+    523: { startChapter: 63, startVerse: 1 },  // Al-Munafiqun (11 verses)
+    524: { startChapter: 64, startVerse: 1 },  // At-Taghabun (18 verses)
+    525: { startChapter: 64, startVerse: 10 },
+    526: { startChapter: 65, startVerse: 1 },  // At-Talaq (12 verses)
+    527: { startChapter: 65, startVerse: 6 },
+    528: { startChapter: 66, startVerse: 1 },  // At-Tahrim (12 verses)
+    529: { startChapter: 66, startVerse: 8 },
+    530: { startChapter: 67, startVerse: 1 },  // Al-Mulk (30 verses)
+    531: { startChapter: 67, startVerse: 15 },
+    532: { startChapter: 68, startVerse: 1 },  // Al-Qalam (52 verses)
+    533: { startChapter: 68, startVerse: 16 },
+    534: { startChapter: 68, startVerse: 33 },
+    535: { startChapter: 69, startVerse: 1 },  // Al-Haqqah (52 verses)
+    536: { startChapter: 69, startVerse: 19 },
+    537: { startChapter: 69, startVerse: 38 },
+    538: { startChapter: 70, startVerse: 1 },  // Al-Ma'arij (44 verses)
+    539: { startChapter: 70, startVerse: 19 },
+    540: { startChapter: 70, startVerse: 40 },
+    541: { startChapter: 71, startVerse: 1 },  // Nuh (28 verses)
+    542: { startChapter: 71, startVerse: 11 },
+    543: { startChapter: 72, startVerse: 1 },  // Al-Jinn (28 verses)
+    544: { startChapter: 72, startVerse: 14 },
+    545: { startChapter: 73, startVerse: 1 },  // Al-Muzzammil (20 verses)
+    546: { startChapter: 73, startVerse: 10 },
+    547: { startChapter: 74, startVerse: 1 },  // Al-Muddaththir (56 verses)
+    548: { startChapter: 74, startVerse: 18 },
+    549: { startChapter: 74, startVerse: 32 },
+    550: { startChapter: 74, startVerse: 48 },
+    551: { startChapter: 75, startVerse: 1 },  // Al-Qiyamah (40 verses)
+    552: { startChapter: 75, startVerse: 20 },
+    553: { startChapter: 76, startVerse: 1 },  // Al-Insan (31 verses)
+    554: { startChapter: 76, startVerse: 19 },
+    555: { startChapter: 77, startVerse: 1 },  // Al-Mursalat (50 verses)
+    556: { startChapter: 77, startVerse: 20 },
+    557: { startChapter: 77, startVerse: 41 },
+    558: { startChapter: 78, startVerse: 1 },  // An-Naba (40 verses)
+    559: { startChapter: 78, startVerse: 17 },
+    560: { startChapter: 78, startVerse: 31 },
+    561: { startChapter: 79, startVerse: 1 },  // An-Nazi'at (46 verses)
+    562: { startChapter: 79, startVerse: 16 },
+    563: { startChapter: 79, startVerse: 27 },
+    564: { startChapter: 80, startVerse: 1 },  // Abasa (42 verses)
+    565: { startChapter: 80, startVerse: 17 },
+    566: { startChapter: 81, startVerse: 1 },  // At-Takwir (29 verses)
+    567: { startChapter: 82, startVerse: 1 },  // Al-Infitar (19 verses)
+    568: { startChapter: 83, startVerse: 1 },  // Al-Mutaffifin (36 verses)
+    569: { startChapter: 83, startVerse: 18 },
+    570: { startChapter: 84, startVerse: 1 },  // Al-Inshiqaq (25 verses)
+    571: { startChapter: 85, startVerse: 1 },  // Al-Buruj (22 verses)
+    572: { startChapter: 86, startVerse: 1 },  // At-Tariq (17 verses)
+    573: { startChapter: 87, startVerse: 1 },  // Al-A'la (19 verses)
+    574: { startChapter: 88, startVerse: 1 },  // Al-Ghashiyah (26 verses)
+    575: { startChapter: 89, startVerse: 1 },  // Al-Fajr (30 verses)
+    576: { startChapter: 89, startVerse: 15 },
+    577: { startChapter: 90, startVerse: 1 },  // Al-Balad (20 verses)
+    578: { startChapter: 91, startVerse: 1 },  // Ash-Shams (15 verses)
+    579: { startChapter: 92, startVerse: 1 },  // Al-Layl (21 verses)
+    580: { startChapter: 93, startVerse: 1 },  // Ad-Duha (11 verses)
+    581: { startChapter: 94, startVerse: 1 },  // Ash-Sharh (8 verses)
+    582: { startChapter: 95, startVerse: 1 },  // At-Tin (8 verses)
+    583: { startChapter: 96, startVerse: 1 },  // Al-Alaq (19 verses)
+    584: { startChapter: 97, startVerse: 1 },  // Al-Qadr (5 verses)
+    585: { startChapter: 98, startVerse: 1 },  // Al-Bayyina (8 verses)
+    586: { startChapter: 99, startVerse: 1 },  // Az-Zalzala (8 verses)
+    587: { startChapter: 100, startVerse: 1 }, // Al-Adiyat (11 verses)
+    588: { startChapter: 101, startVerse: 1 }, // Al-Qari'ah (11 verses)
+    589: { startChapter: 102, startVerse: 1 }, // At-Takathur (8 verses)
+    590: { startChapter: 103, startVerse: 1 }, // Al-Asr (3 verses)
+    591: { startChapter: 104, startVerse: 1 }, // Al-Humazah (9 verses)
+    592: { startChapter: 105, startVerse: 1 }, // Al-Fil (5 verses)
+    593: { startChapter: 106, startVerse: 1 }, // Quraysh (4 verses)
+    594: { startChapter: 107, startVerse: 1 }, // Al-Ma'un (7 verses)
+    595: { startChapter: 108, startVerse: 1 }, // Al-Kawthar (3 verses)
+    596: { startChapter: 109, startVerse: 1 }, // Al-Kafirun (6 verses)
+    597: { startChapter: 110, startVerse: 1 }, // An-Nasr (3 verses)
+    598: { startChapter: 111, startVerse: 1 }, // Al-Masad (5 verses)
+    599: { startChapter: 112, startVerse: 1 }, // Al-Ikhlas (4 verses)
+    600: { startChapter: 113, startVerse: 1 }, // Al-Falaq (5 verses)
+    601: { startChapter: 114, startVerse: 1 }, // An-Nas (6 verses)
+    602: { startChapter: 114, startVerse: 3 },
+    603: { startChapter: 114, startVerse: 5 },
     604: { startChapter: 114, startVerse: 1 }
 };
 
