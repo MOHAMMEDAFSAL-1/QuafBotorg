@@ -518,6 +518,77 @@
             box-shadow: 0 0 10px rgba(77, 192, 181, 0.3);
         }
         
+        .search-results-container {
+    margin-top: 20px;
+}
+
+.search-result-item {
+    background: rgba(77, 192, 181, 0.1);
+    border: 1px solid rgba(77, 192, 181, 0.3);
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-result-item:hover {
+    background: rgba(77, 192, 181, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(77, 192, 181, 0.3);
+}
+
+.search-result-header {
+    color: #4dc0b5;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-result-text {
+    font-size: 1.3em;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.search-highlight {
+    background: linear-gradient(135deg, #4dc0b5, #3a9b91);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(77, 192, 181, 0.3);
+}
+
+.search-stats {
+    text-align: center;
+    color: #888;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.clear-search-btn {
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.clear-search-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+        
         .modal {
             display: none;
             position: fixed;
@@ -837,8 +908,12 @@
                 </div>
 
                 <div class="search-container">
-                    <input type="text" class="search-input" id="searchInput" placeholder="ابحث في القرآن..." onkeyup="searchVerses()" />
-                </div>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <input type="text" class="search-input" id="searchInput" placeholder="ابحث في القرآن الكريم..." onkeyup="handleSearchInput(event)" />
+        <button class="clear-search-btn" onclick="clearSearch()" id="clearSearchBtn" style="display: none;">مسح البحث</button>
+    </div>
+    <div id="searchStats" class="search-stats" style="display: none;"></div>
+</div>
 
                 <div class="quran-controls">
                     <button class="quran-btn" onclick="previousChapter()" id="prevBtn">السورة السابقة</button>
@@ -1260,78 +1335,191 @@
         }
 
         // Search functionality
-        function searchVerses() {
-            const query = document.getElementById('searchInput').value.trim();
+        // Enhanced search functionality
+let searchTimeout;
+let allSearchResults = [];
+let currentSearchQuery = '';
+
+function handleSearchInput(event) {
+    const query = event.target.value.trim();
+    
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+    
+    // If query is empty, restore normal view
+    if (query.length === 0) {
+        clearSearch();
+        return;
+    }
+    
+    // Show clear button
+    document.getElementById('clearSearchBtn').style.display = 'inline-block';
+    
+    // Debounce search to avoid excessive searching while typing
+    searchTimeout = setTimeout(() => {
+        performSearch(query);
+    }, 300);
+}
+
+function performSearch(query) {
+    if (query.length < 2) {
+        displaySearchMessage('يرجى إدخال حرفين على الأقل للبحث');
+        return;
+    }
+    
+    currentSearchQuery = query;
+    allSearchResults = [];
+    
+    // Show loading
+    showSearchLoading();
+    
+    // Search through all chapters and verses
+    Object.keys(quranData).forEach(chapterNum => {
+        const chapter = quranData[chapterNum];
+        Object.keys(chapter).forEach(verseNum => {
+            const verseText = chapter[verseNum];
             
-            if (query.length < 2) {
-                displayChapter();
-                return;
-            }
-            
-            searchResults = [];
-            Object.keys(quranData).forEach(chapterNum => {
-                const chapter = quranData[chapterNum];
-                Object.keys(chapter).forEach(verseNum => {
-                    const verse = chapter[verseNum];
-                    if (verse.includes(query)) {
-                        searchResults.push({
-                            chapter: parseInt(chapterNum),
-                            verse: parseInt(verseNum),
-                            text: verse
-                        });
-                    }
+            // Check if verse contains the search query
+            if (verseText.includes(query)) {
+                allSearchResults.push({
+                    chapter: parseInt(chapterNum),
+                    verse: parseInt(verseNum),
+                    text: verseText,
+                    chapterName: chapterNames[parseInt(chapterNum)]
                 });
-            });
-            
-            displaySearchResults(query);
-        }
-
-        function displaySearchResults(query) {
-            const content = document.getElementById('content');
-            const chapterInfo = document.getElementById('chapterInfo');
-            
-            if (searchResults.length === 0) {
-                content.innerHTML = `
-                    <div class="chapter-title">نتائج البحث</div>
-                    <p style="text-align: center; font-size: 1.2em; color: #888; margin: 50px 0;">
-                        لم يتم العثور على نتائج للبحث: "${query}"
-                    </p>
-                `;
-                chapterInfo.innerHTML = 'لا توجد نتائج';
-                return;
             }
-            
-            let html = `<div class="chapter-title">نتائج البحث: "${query}"</div>`;
-            
-            searchResults.forEach((result, index) => {
-                const chapterName = chapterNames[result.chapter];
-                const highlightedText = result.text.replace(
-                    new RegExp(query, 'g'), 
-                    `<mark style="background: rgba(77, 192, 181, 0.3); color: #4dc0b5; padding: 2px 4px; border-radius: 3px;">${query}</mark>`
-                );
-                
-                html += `
-                    <div class="verse" onclick="goToSearchResult(${result.chapter}, ${result.verse})">
-                        <span class="verse-number">${result.verse}</span>
-                        <small style="color: #4dc0b5; display: block; margin-bottom: 5px;">
-                            سورة ${chapterName} - آية ${result.verse}
-                        </small>
-                        ${highlightedText}
-                    </div>
-                `;
-            });
-            
-            content.innerHTML = html;
-            content.className = 'quran-content-area fade-in';
-            chapterInfo.innerHTML = `${searchResults.length} نتيجة`;
+        });
+    });
+    
+    // Sort results by chapter and verse number
+    allSearchResults.sort((a, b) => {
+        if (a.chapter !== b.chapter) {
+            return a.chapter - b.chapter;
         }
+        return a.verse - b.verse;
+    });
+    
+    displaySearchResults();
+}
 
-        function goToSearchResult(chapterNum, verseNum) {
-            currentChapter = chapterNum;
-            currentVerse = verseNum;
-            document.getElementById('searchInput').value = '';
-            displayChapter();
-        }
+function showSearchLoading() {
+    const content = document.getElementById('content');
+    const searchStats = document.getElementById('searchStats');
+    
+    content.innerHTML = `
+        <div class="chapter-title">جارٍ البحث...</div>
+        <div style="text-align: center; margin: 50px 0;">
+            <div class="loading"></div>
+            <p style="color: #888; margin-top: 20px;">يتم البحث في القرآن الكريم...</p>
+        </div>
+    `;
+    
+    searchStats.style.display = 'none';
+}
+
+function displaySearchResults() {
+    const content = document.getElementById('content');
+    const chapterInfo = document.getElementById('chapterInfo');
+    const searchStats = document.getElementById('searchStats');
+    
+    if (allSearchResults.length === 0) {
+        content.innerHTML = `
+            <div class="chapter-title">نتائج البحث</div>
+            <div style="text-align: center; margin: 50px 0;">
+                <div style="font-size: 3em; margin-bottom: 20px;">🔍</div>
+                <p style="font-size: 1.3em; color: #888;">
+                    لم يتم العثور على نتائج للبحث: "<span style="color: #4dc0b5;">${currentSearchQuery}</span>"
+                </p>
+                <p style="color: #666; margin-top: 10px;">
+                    جرب البحث بكلمات أخرى أو تأكد من الإملاء
+                </p>
+            </div>
+        `;
+        chapterInfo.innerHTML = 'لا توجد نتائج';
+        searchStats.style.display = 'none';
+        return;
+    }
+    
+    // Show search statistics
+    searchStats.innerHTML = `
+        تم العثور على <strong style="color: #4dc0b5;">${allSearchResults.length}</strong> 
+        نتيجة للبحث عن "<strong style="color: #4dc0b5;">${currentSearchQuery}</strong>"
+    `;
+    searchStats.style.display = 'block';
+    
+    let html = `<div class="chapter-title">نتائج البحث</div>`;
+    html += '<div class="search-results-container">';
+    
+    allSearchResults.forEach((result, index) => {
+        // Highlight search term in the verse text
+        const highlightedText = highlightSearchTerm(result.text, currentSearchQuery);
+        
+        html += `
+            <div class="search-result-item" onclick="goToSearchResult(${result.chapter}, ${result.verse})" 
+                 onmouseover="this.style.background='rgba(77, 192, 181, 0.25)'" 
+                 onmouseout="this.style.background='rgba(77, 192, 181, 0.1)'">
+                <div class="search-result-header">
+                    <span>سورة ${result.chapterName}</span>
+                    <span style="background: rgba(77, 192, 181, 0.3); padding: 4px 8px; border-radius: 12px; font-size: 0.9em;">
+                        آية ${result.verse}
+                    </span>
+                </div>
+                <div class="search-result-text">
+                    ${highlightedText}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    content.innerHTML = html;
+    content.className = 'quran-content-area fade-in';
+    chapterInfo.innerHTML = `${allSearchResults.length} نتيجة`;
+}
+
+function highlightSearchTerm(text, searchTerm) {
+    if (!searchTerm || searchTerm.length === 0) return text;
+    
+    // Create a regex to find all occurrences of the search term
+    const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+    return text.replace(regex, '<span class="search-highlight">$1</span>');
+}
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function goToSearchResult(chapterNum, verseNum) {
+    // Clear search and go to the specific verse
+    clearSearch();
+    currentChapter = chapterNum;
+    currentVerse = verseNum;
+    displayChapter();
+    
+    // Scroll to the specific verse after a short delay
+    setTimeout(() => {
+        scrollToCurrentVerse();
+    }, 500);
+}
+
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    document.getElementById('searchStats').style.display = 'none';
+    currentSearchQuery = '';
+    allSearchResults = [];
+    displayChapter(); // Return to normal chapter view
+}
+
+function displaySearchMessage(message) {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+        <div class="chapter-title">البحث</div>
+        <div style="text-align: center; margin: 50px 0;">
+            <p style="font-size: 1.2em; color: #888;">${message}</p>
+        </div>
+    `;
+}
 
         // Scroll to current verse
         function scrollToCurrentVerse() {
@@ -1390,6 +1578,29 @@
                 hideChapterSelector();
             }
         }
+        
+        // Add keyboard shortcuts for search
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('keydown', function(event) {
+        // Ctrl/Cmd + F to focus search
+        if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+            event.preventDefault();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && !document.getElementById('quranSection').classList.contains('hidden')) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+        
+        // Escape key to clear search
+        if (event.key === 'Escape') {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.length > 0) {
+                clearSearch();
+            }
+        }
+    });
+});
     </script>
 </body>
 </html>
