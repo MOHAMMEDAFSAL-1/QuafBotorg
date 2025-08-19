@@ -2538,7 +2538,9 @@ function goToJuz(juzNumber) {
         const juz = juzData[juzNumber];
         currentChapter = juz.startChapter;
         currentVerse = juz.startVerse;
-        displayChapter();
+        // Find the correct page for this juz
+        currentPage = getCurrentPage(currentChapter, currentVerse);
+        displayPage();
         hideJuzSelector();
     }
 }
@@ -2650,7 +2652,9 @@ function updatePageNavigation() {
     if (chapterNumber && chapterNumber >= 1 && chapterNumber <= 114 && quranData[chapterNumber]) {
         currentChapter = chapterNumber;
         currentVerse = 1;
-        displayPage(); // Changed from displayChapter()
+        // Find the correct page for this chapter
+        currentPage = getCurrentPage(currentChapter, currentVerse);
+        displayPage();
         hideChapterSelector();
     }
 }
@@ -2673,7 +2677,7 @@ function goToPage(pageNumber) {
         const pageStart = pageData[pageNumber];
         currentChapter = pageStart.startChapter;
         currentVerse = pageStart.startVerse;
-        displayPage(); // Changed from displayChapter()
+        displayPage();
         updatePageNavigation();
     }
 }
