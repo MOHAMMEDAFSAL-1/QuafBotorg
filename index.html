@@ -921,13 +921,12 @@
 </div>
 
                 <div class="quran-controls">
-                    <button class="quran-btn" onclick="previousChapter()" id="prevBtn">السورة السابقة</button>
-                    <button class="quran-btn" onclick="previousVerse()">الآية السابقة</button>
-                    <button class="quran-btn" onclick="nextVerse()">الآية التالية</button>
-                    <button class="quran-btn" onclick="nextChapter()" id="nextBtn">السورة التالية</button>
-                    <button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
-                    <button class="quran-btn secondary" onclick="showJuzSelector()">اختر الجزء</button>
-                </div>
+    <button class="quran-btn" onclick="previousPage()" id="prevPageBtn">← السابق</button>
+    <button class="quran-btn secondary" onclick="showPageSelector()">اختر الصفحة</button>
+    <button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
+    <button class="quran-btn secondary" onclick="showJuzSelector()">اختر الجزء</button>
+    <button class="quran-btn" onclick="nextPage()" id="nextPageBtn">التالي →</button>
+</div>
 
                 <div class="quran-content-area fade-in" id="content">
                     <div class="loading" style="margin: 50px auto; display: block;"></div>
@@ -935,12 +934,12 @@
                 </div>
 
                 <div class="quran-navigation">
-                    <button class="quran-btn" onclick="previousChapter()" id="prevBtnBottom">← السابق</button>
-                    <div class="chapter-info" id="chapterInfo">
-                        <!-- Chapter info will be displayed here -->
-                    </div>
-                    <button class="quran-btn" onclick="nextChapter()" id="nextBtnBottom">التالي →</button>
-                </div>
+    <button class="quran-btn" onclick="previousPage()" id="prevPageBtnBottom">← السابق</button>
+    <div class="chapter-info" id="chapterInfo">
+        <!-- Page info will be displayed here -->
+    </div>
+    <button class="quran-btn" onclick="nextPage()" id="nextPageBtnBottom">التالي →</button>
+</div>
             </div>
 
             
@@ -966,6 +965,22 @@
              </div>
             </div>
         </div>
+        
+        <!-- Page Selection Modal -->
+<div id="pageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hidePageSelector()">&times;</span>
+        <h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر الصفحة</h2>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <input type="number" id="pageInput" min="1" max="604" placeholder="رقم الصفحة (1-604)" 
+                   style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10px; padding: 10px; color: white; text-align: center; width: 200px;">
+            <button class="quran-btn" onclick="goToPageByInput()" style="margin-right: 10px;">اذهب</button>
+        </div>
+        <div class="chapter-grid" id="pageGrid">
+            <!-- Page list will be populated here -->
+        </div>
+    </div>
+</div>
         </div>
     </div>
 
@@ -1119,6 +1134,44 @@ let juzData = {
     30: { name: "الجزء الثلاثون", startChapter: 78, startVerse: 1 }
 };
 
+        // Quran page data (604 pages total) - simplified version with key pages
+let pageData = {
+    1: { startChapter: 1, startVerse: 1 },
+    2: { startChapter: 2, startVerse: 1 },
+    3: { startChapter: 2, startVerse: 6 },
+    4: { startChapter: 2, startVerse: 17 },
+    5: { startChapter: 2, startVerse: 25 },
+    6: { startChapter: 2, startVerse: 30 },
+    7: { startChapter: 2, startVerse: 38 },
+    8: { startChapter: 2, startVerse: 49 },
+    9: { startChapter: 2, startVerse: 58 },
+    10: { startChapter: 2, startVerse: 62 },
+    // Add more pages as needed - this is a simplified example
+    // You would need the complete 604-page mapping
+    604: { startChapter: 114, startVerse: 6 }
+};
+
+// Function to find current page based on chapter and verse
+function getCurrentPage(chapter, verse) {
+    let currentPage = 1;
+    
+    for (let page = 1; page <= 604; page++) {
+        if (pageData[page]) {
+            const pageStart = pageData[page];
+            if (chapter < pageStart.startChapter || 
+                (chapter === pageStart.startChapter && verse < pageStart.startVerse)) {
+                break;
+            }
+            currentPage = page;
+        }
+    }
+    
+    return currentPage;
+}
+
+// Current page tracking
+let currentPage = 1;
+
         // Application state
         let currentChapter = 1;
         let currentVerse = 1;
@@ -1187,10 +1240,14 @@ let juzData = {
             content.innerHTML = html;
             content.className = 'quran-content-area fade-in';
             
-            // Update chapter info
-            const totalVerses = verses.length;
-            chapterInfo.innerHTML = `سورة ${chapterName} - آية ${currentVerse} من ${totalVerses}`;
-            
+            // Update chapter info (replace the existing chapterInfo.innerHTML line)
+const totalVerses = verses.length;
+currentPage = getCurrentPage(currentChapter, currentVerse);
+chapterInfo.innerHTML = `صفحة ${currentPage} - سورة ${chapterName} - آية ${currentVerse} من ${totalVerses}`;
+
+// Update navigation buttons
+updatePageNavigation();
+
             // Update navigation buttons
             updateNavigationButtons();
             
@@ -1273,6 +1330,103 @@ function goToJuz(juzNumber) {
         displayChapter();
         hideJuzSelector();
     }
+}
+
+        // Page navigation functions
+function nextPage() {
+    if (currentPage < 604) {
+        currentPage++;
+        goToPage(currentPage);
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        goToPage(currentPage);
+    }
+}
+
+function goToPage(pageNumber) {
+    if (pageNumber >= 1 && pageNumber <= 604 && pageData[pageNumber]) {
+        currentPage = pageNumber;
+        const pageStart = pageData[pageNumber];
+        currentChapter = pageStart.startChapter;
+        currentVerse = pageStart.startVerse;
+        displayChapter();
+        updatePageNavigation();
+    }
+}
+
+function goToPageByInput() {
+    const pageInput = document.getElementById('pageInput');
+    const pageNumber = parseInt(pageInput.value);
+    
+    if (pageNumber && pageNumber >= 1 && pageNumber <= 604) {
+        goToPage(pageNumber);
+        hidePageSelector();
+    } else {
+        alert('يرجى إدخال رقم صفحة صحيح من 1 إلى 604');
+    }
+}
+
+// Show page selector modal
+function showPageSelector() {
+    populatePageSelector();
+    document.getElementById('pageModal').style.display = 'block';
+}
+
+// Hide page selector modal
+function hidePageSelector() {
+    document.getElementById('pageModal').style.display = 'none';
+}
+
+// Populate page selector with some key pages
+function populatePageSelector() {
+    const pageGrid = document.getElementById('pageGrid');
+    let html = '';
+    
+    // Show some key pages (every 20th page + juz starting pages)
+    const keyPages = [1, 21, 41, 61, 81, 101, 121, 141, 161, 181, 201, 221, 241, 261, 281, 301, 321, 341, 361, 381, 401, 421, 441, 461, 481, 501, 521, 541, 561, 581, 604];
+    
+    keyPages.forEach(pageNum => {
+        if (pageData[pageNum]) {
+            const pageStart = pageData[pageNum];
+            const chapterName = chapterNames[pageStart.startChapter];
+            
+            html += `
+                <div class="chapter-item" onclick="goToPage(${pageNum})">
+                    <h4>صفحة ${pageNum}</h4>
+                    <p>سورة ${chapterName} - آية ${pageStart.startVerse}</p>
+                </div>
+            `;
+        }
+    });
+    
+    pageGrid.innerHTML = html;
+}
+
+// Update page navigation buttons
+function updatePageNavigation() {
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const prevPageBtnBottom = document.getElementById('prevPageBtnBottom');
+    const nextPageBtnBottom = document.getElementById('nextPageBtnBottom');
+    
+    // Update button states
+    [prevPageBtn, prevPageBtnBottom].forEach(btn => {
+        if (btn) {
+            btn.style.opacity = currentPage === 1 ? '0.5' : '1';
+            btn.disabled = currentPage === 1;
+        }
+    });
+    
+    [nextPageBtn, nextPageBtnBottom].forEach(btn => {
+        if (btn) {
+            btn.style.opacity = currentPage === 604 ? '0.5' : '1';
+            btn.disabled = currentPage === 604;
+        }
+    });
 }
 
         // Go to specific chapter
@@ -1718,52 +1872,58 @@ function displaySearchMessage(message) {
 
         // Save and load Quran preferences
         function saveQuranPreferences() {
-            const preferences = {
-                currentChapter,
-                currentVerse,
-                zoomLevel,
-                isFullscreen
-            };
-            localStorage.setItem('quranReaderPrefs', JSON.stringify(preferences));
-        }
+    const preferences = {
+        currentChapter,
+        currentVerse,
+        currentPage,
+        zoomLevel,
+        isFullscreen
+    };
+    localStorage.setItem('quranReaderPrefs', JSON.stringify(preferences));
+}
 
         function loadQuranPreferences() {
-            const saved = localStorage.getItem('quranReaderPrefs');
-            if (saved) {
-                const preferences = JSON.parse(saved);
-                currentChapter = preferences.currentChapter || 1;
-                currentVerse = preferences.currentVerse || 1;
-                zoomLevel = preferences.zoomLevel || 100;
-                isFullscreen = preferences.isFullscreen || false;
-                
-                // Apply saved zoom
-                applyZoom();
-                
-                // Apply fullscreen state
-                if (isFullscreen) {
-                    const quranContainer = document.querySelector('.quran-container');
-                    quranContainer.style.position = 'fixed';
-                    quranContainer.style.top = '0';
-                    quranContainer.style.left = '0';
-                    quranContainer.style.width = '100vw';
-                    quranContainer.style.height = '100vh';
-                    quranContainer.style.zIndex = '10000';
-                    quranContainer.style.overflow = 'auto';
-                    document.getElementById('fullscreenBtn').textContent = '❌';
-                }
-            }
+    const saved = localStorage.getItem('quranReaderPrefs');
+    if (saved) {
+        const preferences = JSON.parse(saved);
+        currentChapter = preferences.currentChapter || 1;
+        currentVerse = preferences.currentVerse || 1;
+        currentPage = preferences.currentPage || 1;
+        zoomLevel = preferences.zoomLevel || 100;
+        isFullscreen = preferences.isFullscreen || false;
+        
+        // Apply saved zoom
+        applyZoom();
+        
+        // Apply fullscreen state if needed
+        if (isFullscreen) {
+            const quranContainer = document.querySelector('.quran-container');
+            quranContainer.style.position = 'fixed';
+            quranContainer.style.top = '0';
+            quranContainer.style.left = '0';
+            quranContainer.style.width = '100vw';
+            quranContainer.style.height = '100vh';
+            quranContainer.style.zIndex = '10000';
+            quranContainer.style.overflow = 'auto';
+            document.getElementById('fullscreenBtn').textContent = '❌';
         }
+    }
+}
 
         // Close modal when clicking outside
         window.onclick = function(event) {
     const chapterModal = document.getElementById('chapterModal');
     const juzModal = document.getElementById('juzModal');
+    const pageModal = document.getElementById('pageModal');
     
     if (event.target === chapterModal) {
         hideChapterSelector();
     }
     if (event.target === juzModal) {
         hideJuzSelector();
+    }
+    if (event.target === pageModal) {
+        hidePageSelector();
     }
 }
         
