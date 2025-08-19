@@ -2354,20 +2354,16 @@ let pageVerseData = {
 };
 // Function to find current page based on chapter and verse
 function getCurrentPage(chapter, verse) {
-    let currentPage = 1;
-    
     for (let page = 1; page <= 604; page++) {
-        if (pageData[page]) {
-            const pageStart = pageData[page];
-            if (chapter < pageStart.startChapter || 
-                (chapter === pageStart.startChapter && verse < pageStart.startVerse)) {
-                break;
+        const pageContent = pageVerseData[page];
+        if (pageContent && pageContent[chapter]) {
+            const verseRange = pageContent[chapter];
+            if (verse >= verseRange[0] && verse <= verseRange[1]) {
+                return page;
             }
-            currentPage = page;
         }
     }
-    
-    return currentPage;
+    return 1; // Default to page 1 if not found
 }
 
 // Current page tracking
@@ -2419,63 +2415,51 @@ function displayPage() {
         return;
     }
 
-    const pageStart = pageData[currentPage];
-    const pageEnd = pageData[currentPage + 1] || { startChapter: 114, startVerse: 6 };
-    
+    // Use pageVerseData for accurate page content
+    const pageContent = pageVerseData[currentPage];
+    if (!pageContent) {
+        content.innerHTML = '<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">محتوى الصفحة غير متوفر</p>';
+        return;
+    }
+
     let html = '';
-    let currentChapterInPage = pageStart.startChapter;
-    let currentVerseInPage = pageStart.startVerse;
     
-    // Build page content verse by verse
-    while (true) {
-        // Check if we've reached the end of the page
-        if (currentChapterInPage > pageEnd.startChapter || 
-            (currentChapterInPage === pageEnd.startChapter && currentVerseInPage >= pageEnd.startVerse)) {
-            break;
-        }
+    // Process each chapter in the page
+    Object.keys(pageContent).forEach(chapterNum => {
+        const chapterNumber = parseInt(chapterNum);
+        const verseRange = pageContent[chapterNum];
+        const chapter = quranData[chapterNumber];
+        const chapterName = chapterNames[chapterNumber];
         
-        const chapter = quranData[currentChapterInPage];
-        if (!chapter || !chapter[currentVerseInPage]) {
-            currentVerseInPage++;
-            continue;
-        }
+        if (!chapter) return;
         
-        const verse = chapter[currentVerseInPage];
-        const chapterName = chapterNames[currentChapterInPage];
-        
-        // Add chapter title if it's the first verse of a new chapter
-        if (currentVerseInPage === 1 && currentChapterInPage !== 1) {
+        // Add chapter title for new chapter (except continuing chapters)
+        const isNewChapter = verseRange[0] === 1;
+        if (isNewChapter && chapterNumber !== 1) {
             html += `<div class="chapter-title">${chapterName}</div>`;
         }
         
-        // Add verse
-        const isCurrentVerse = (currentVerseInPage === currentVerse && currentChapterInPage === currentChapter);
-        const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
-        
-        html += `
-            <div class="verse" ${highlightClass} onclick="setCurrentVerse(${currentChapterInPage}, ${currentVerseInPage})">
-                <span class="verse-number">${currentVerseInPage}</span>
-                ${verse}
-            </div>
-        `;
-        
-        // Move to next verse
-        const chapterVerses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
-        const maxVerse = Math.max(...chapterVerses);
-        
-        if (currentVerseInPage < maxVerse) {
-            currentVerseInPage++;
-        } else {
-            currentChapterInPage++;
-            currentVerseInPage = 1;
+        // Add verses for this chapter in this page
+        for (let verseNum = verseRange[0]; verseNum <= verseRange[1]; verseNum++) {
+            if (chapter[verseNum]) {
+                const isCurrentVerse = (verseNum === currentVerse && chapterNumber === currentChapter);
+                const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
+                
+                html += `
+                    <div class="verse" ${highlightClass} onclick="setCurrentVerse(${chapterNumber}, ${verseNum})">
+                        <span class="verse-number">${verseNum}</span>
+                        ${chapter[verseNum]}
+                    </div>
+                `;
+            }
         }
-    }
+    });
 
     content.innerHTML = html || '<p style="text-align: center;">لا توجد آيات في هذه الصفحة</p>';
     content.className = 'quran-content-area fade-in';
     
     // Update page info
-    chapterInfo.innerHTML = `صفحة ${currentPage} من ${Object.keys(pageData).length}`;
+    chapterInfo.innerHTML = `صفحة ${currentPage} من 604`;
     
     // Update navigation buttons
     updatePageNavigation();
@@ -2658,18 +2642,41 @@ function updatePageNavigation() {
 
         // Go to specific chapter
         function goToChapter(chapterNumber = null) {
-            if (chapterNumber === null) {
-                const input = prompt('أدخل رقم السورة (1-114):');
-                chapterNumber = parseInt(input);
-            }
-            
-            if (chapterNumber && chapterNumber >= 1 && chapterNumber <= 114 && quranData[chapterNumber]) {
-                currentChapter = chapterNumber;
-                currentVerse = 1;
-                displayChapter();
-                hideChapterSelector();
-            }
-        }
+    if (chapterNumber === null) {
+        const input = prompt('أدخل رقم السورة (1-114):');
+        chapterNumber = parseInt(input);
+    }
+    
+    if (chapterNumber && chapterNumber >= 1 && chapterNumber <= 114 && quranData[chapterNumber]) {
+        currentChapter = chapterNumber;
+        currentVerse = 1;
+        displayPage(); // Changed from displayChapter()
+        hideChapterSelector();
+    }
+}
+
+// In goToJuz function (around line 1050)
+function goToJuz(juzNumber) {
+    if (juzNumber && juzNumber >= 1 && juzNumber <= 30 && juzData[juzNumber]) {
+        const juz = juzData[juzNumber];
+        currentChapter = juz.startChapter;
+        currentVerse = juz.startVerse;
+        displayPage(); // Changed from displayChapter()
+        hideJuzSelector();
+    }
+}
+
+// In goToPage function (around line 990)
+function goToPage(pageNumber) {
+    if (pageNumber >= 1 && pageNumber <= 604 && pageData[pageNumber]) {
+        currentPage = pageNumber;
+        const pageStart = pageData[pageNumber];
+        currentChapter = pageStart.startChapter;
+        currentVerse = pageStart.startVerse;
+        displayPage(); // Changed from displayChapter()
+        updatePageNavigation();
+    }
+}
 
         function setCurrentVerse(chapterNum, verseNumber) {
     currentChapter = chapterNum;
@@ -2696,52 +2703,56 @@ function updatePageNavigation() {
 
         // Navigation functions
         function nextVerse() {
-            const chapter = quranData[currentChapter];
-            if (chapter) {
-                const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
-                const maxVerse = Math.max(...verses);
-                
-                if (currentVerse < maxVerse) {
-                    currentVerse++;
-                    displayChapter();
-                } else {
-                    nextChapter();
-                }
-            }
+    const chapter = quranData[currentChapter];
+    if (chapter) {
+        const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
+        const maxVerse = Math.max(...verses);
+        
+        if (currentVerse < maxVerse) {
+            currentVerse++;
+            displayPage(); // Changed from displayChapter()
+        } else {
+            nextChapter();
         }
+    }
+}
 
-        function previousVerse() {
-            if (currentVerse > 1) {
-                currentVerse--;
-                displayChapter();
-            } else {
-                previousChapter();
-            }
-        }
+function previousVerse() {
+    if (currentVerse > 1) {
+        currentVerse--;
+        displayPage(); // Changed from displayChapter()
+    } else {
+        previousChapter();
+    }
+}
 
-        function nextChapter() {
-            const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
-            const currentIndex = chapterNumbers.indexOf(currentChapter);
-            
-            if (currentIndex < chapterNumbers.length - 1) {
-                currentChapter = chapterNumbers[currentIndex + 1];
-                currentVerse = 1;
-                displayChapter();
-            }
-        }
+function nextChapter() {
+    const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
+    const currentIndex = chapterNumbers.indexOf(currentChapter);
+    
+    if (currentIndex < chapterNumbers.length - 1) {
+        currentChapter = chapterNumbers[currentIndex + 1];
+        currentVerse = 1;
+        // Find the page for this chapter
+        currentPage = getCurrentPage(currentChapter, currentVerse);
+        displayPage(); // Changed from displayChapter()
+    }
+}
 
-        function previousChapter() {
-            const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
-            const currentIndex = chapterNumbers.indexOf(currentChapter);
-            
-            if (currentIndex > 0) {
-                currentChapter = chapterNumbers[currentIndex - 1];
-                const chapter = quranData[currentChapter];
-                const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
-                currentVerse = Math.max(...verses);
-                displayChapter();
-            }
-        }
+function previousChapter() {
+    const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
+    const currentIndex = chapterNumbers.indexOf(currentChapter);
+    
+    if (currentIndex > 0) {
+        currentChapter = chapterNumbers[currentIndex - 1];
+        const chapter = quranData[currentChapter];
+        const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
+        currentVerse = Math.max(...verses);
+        // Find the page for this chapter and verse
+        currentPage = getCurrentPage(currentChapter, currentVerse);
+        displayPage(); // Changed from displayChapter()
+    }
+}
 
         // Update navigation buttons
         function updateNavigationButtons() {
