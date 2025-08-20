@@ -19,6 +19,17 @@ background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
 min-height: 100vh;
 }
 
+ #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      z-index: 9999;
+    }
+
 .enhanced-heading {
 position: relative;
 display: inline-block;
@@ -785,6 +796,10 @@ font-size: 12px;
 <div class="dot"></div>
 </div>
 
+<div id="intro">
+    <img src="https://quafbot.netlify.app/intro.gif" alt="Intro Animation" style="max-width:100%; max-height:100%;">
+  </div>
+
 <!-- Navigation Menu -->
 <div class="navigation-menu">
 <button class="nav-btn active" onclick="showSection('home')">Home</button>
@@ -980,11 +995,17 @@ style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10
 <!-- Page list will be populated here -->
 </div>
 </div>
-</div>
-</div>
+</div> 
+</div> 
 </div>
 
 <script>
+
+setTimeout(() => {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("main").style.display = "block";
+    }, 5000); // adjust time to your GIF duration
+    
 // Section management
 function showSection(sectionName) {
 // Hide all sections
