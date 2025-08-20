@@ -19,7 +19,7 @@ background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
 min-height: 100vh;
 }
 
- #intro {
+  #intro {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
@@ -28,6 +28,12 @@ min-height: 100vh;
       align-items: center;
       background: black;
       z-index: 9999;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover; /* Ensures the video covers the entire screen */
     }
 
 .enhanced-heading {
@@ -791,13 +797,17 @@ font-size: 12px;
 <div class="floating-dots">
 <div class="dot"></div>
 <div class="dot"></div>
-<div class="dot"></div>
+<div class="dot"></div> 
 <div class="dot"></div>
 <div class="dot"></div>
 </div>
 
 <div id="intro">
-    <img src="intro.webm" alt="Intro Animation" style="max-width:100%; max-height:100%;">
+    <video autoplay loop muted playsinline> 
+      <source src="intro.webm" type="video/webm">
+      <!-- Fallback for browsers that don't support WebM -->
+      <source src="intro.mp4" type="video/mp4">
+    </video>
   </div>
 
 <!-- Navigation Menu -->
@@ -1001,10 +1011,10 @@ style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10
 
 <script>
 
-setTimeout(() => {
+ setTimeout(() => {
       document.getElementById("intro").style.display = "none";
       document.getElementById("main").style.display = "block";
-    }, 5000); // adjust time to your GIF duration
+    }, 5000); // Adjust time based on your video length
     
 // Section management
 function showSection(sectionName) {
