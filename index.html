@@ -527,43 +527,64 @@ transform: translateY(0);
 }
 
 .navigation-menu {
-position: fixed;
-bottom: 20px;
-left: 50%;
-transform: translateX(-50%);
-background: rgba(0, 0, 0, 0.3);
-backdrop-filter: blur(10px);
-border-radius: 25px;
-padding: 8px;
-display: flex;
-gap: 8px;
-z-index: 1000;
-border: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  min-width: fit-content;
+  order: 0; /* Add this */
 }
 
 .nav-btn {
-background: transparent;
-color: white;
-border: none;
-padding: 12px 24px;
-border-radius: 20px;
-cursor: pointer;
-font-weight: 500;
-transition: all 0.3s ease;
-font-size: 14px;
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: fit-content;
+  position: relative; /* Add this */
+}
+
+/* Add specific positioning for each button */
+.nav-btn[onclick*="home"] {
+  order: 1;
+}
+
+.nav-btn[onclick*="quran"] {
+  order: 2;
 }
 
 .nav-btn.active {
-background: rgba(102, 126, 234, 0.8);
-box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  background: rgba(102, 126, 234, 0.8);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transform: none; /* Prevent any transform changes */
 }
 
 .nav-btn:hover {
-background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  transform: none; /* Prevent any transform changes */
 }
 
 .nav-btn.active:hover {
-background: rgba(102, 126, 234, 0.9);
+  background: rgba(102, 126, 234, 0.9);
+  transform: none; /* Prevent any transform changes */
 }
 
 .speaker-control {
@@ -1077,6 +1098,57 @@ font-size: 12px;
     100% { transform: scale(1); }
 }
 
+.nav-btn i {
+  margin-right: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.nav-btn.active i {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .nav-btn i {
+    margin-right: 6px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-btn i {
+    margin-right: 4px;
+    font-size: 12px;
+  }
+}
+
+#homeBtn {
+  order: 1;
+}
+
+#quranBtn {
+  order: 2;
+}
+
+.navigation-menu {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-direction: row; /* Force row direction */
+} 
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -1107,8 +1179,12 @@ font-size: 12px;
 
 <!-- Navigation Menu -->
 <div class="navigation-menu">
-<button class="nav-btn active" onclick="showSection('home')">Home</button>
-<button class="nav-btn" onclick="showSection('quran')">Quran</button>
+<button class="nav-btn" id="homeBtn" onclick="showSection('home')">
+  <i class="fas fa-home"></i>Home
+</button>
+<button class="nav-btn" id="quranBtn" onclick="showSection('quran')">
+  <i class="fas fa-book-open"></i>Quran
+</button>
 </div>
 
 
@@ -1233,19 +1309,14 @@ Join Community
 <button class="clear-search-btn" onclick="clearSearch()" id="clearSearchBtn" style="display: none;">مسح البحث</button>
 </div>
 <div id="searchStats" class="search-stats" style="display: none;"></div>
-<div style="text-align: center; margin-top: 10px;">
-<small style="color: #888; font-size: 0.9em;">
-💡 نصيحة: يمكنك البحث بالكلمات بدون حركات أو تشكيل
-</small>
+
 </div>
 </div>
 
 <div class="quran-controls">
-<button class="quran-btn" onclick="previousPage()" id="prevPageBtn">← السابق</button>
 <button class="quran-btn secondary" onclick="showPageSelector()">اختر الصفحة</button>
 <button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
 <button class="quran-btn secondary" onclick="showJuzSelector()">اختر الجزء</button>
-<button class="quran-btn" onclick="nextPage()" id="nextPageBtn">التالي →</button>
 </div>
 
 <div class="quran-content-area fade-in" id="content">
@@ -1313,30 +1384,41 @@ style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10
     
 // Section management
 function showSection(sectionName) {
-// Hide all sections
-document.getElementById('homeSection').classList.add('hidden');
-document.getElementById('quranSection').classList.add('hidden');
+  // Hide all sections
+  document.getElementById('homeSection').classList.add('hidden');
+  document.getElementById('quranSection').classList.add('hidden');
 
-// Update navigation buttons
-document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  // Remove active class from both buttons
+  document.getElementById('homeBtn').classList.remove('active');
+  document.getElementById('quranBtn').classList.remove('active');
 
-// Show selected section
-if (sectionName === 'home') {
-document.getElementById('homeSection').classList.remove('hidden');
-document.querySelectorAll('.nav-btn[onclick*="home"]').forEach(btn => btn.classList.add('active'));
-document.documentElement.setAttribute('dir', 'ltr');
-document.documentElement.setAttribute('lang', 'en');
-} else if (sectionName === 'quran') {
-document.getElementById('quranSection').classList.remove('hidden');
-document.querySelectorAll('.nav-btn[onclick*="quran"]').forEach(btn => btn.classList.add('active'));
-document.documentElement.setAttribute('dir', 'rtl');
-document.documentElement.setAttribute('lang', 'ar');
+  // Show selected section and activate corresponding button
+  if (sectionName === 'home') {
+    document.getElementById('homeSection').classList.remove('hidden');
+    document.getElementById('homeBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
+  } else if (sectionName === 'quran') {
+    document.getElementById('quranSection').classList.remove('hidden');
+    document.getElementById('quranBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'ar');
+    document.body.style.overflow = 'auto';
 
-// Initialize Quran if not already loaded
-if (!window.quranLoaded) {
-loadQuranData();
-}
-}
+    // Initialize Quran if not already loaded
+    if (!window.quranLoaded) {
+      loadQuranData();
+    }
+  }
+  
+  // Ensure navigation menu stays visible and properly positioned
+  const navMenu = document.querySelector('.navigation-menu');
+  if (navMenu) {
+    navMenu.style.display = 'flex';
+    navMenu.style.zIndex = '1000';
+    navMenu.style.position = 'fixed';
+  }
 }
 
 // Audio Control
@@ -3627,6 +3709,10 @@ document.addEventListener('DOMContentLoaded', function() {
     hideLoadingScreen();
   }
 });
+// Initialize with Home active
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('homeBtn').classList.add('active');
+}); 
 
 </script>
 </div>
