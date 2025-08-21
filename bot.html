@@ -1123,6 +1123,32 @@ font-size: 12px;
   }
 }
 
+#homeBtn {
+  order: 1;
+}
+
+#quranBtn {
+  order: 2;
+}
+
+.navigation-menu {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-direction: row; /* Force row direction */
+} 
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -1153,10 +1179,10 @@ font-size: 12px;
 
 <!-- Navigation Menu -->
 <div class="navigation-menu">
-<button class="nav-btn active" onclick="showSection('home')" data-section="home">
+<button class="nav-btn" id="homeBtn" onclick="showSection('home')">
   <i class="fas fa-home"></i>Home
 </button>
-<button class="nav-btn" onclick="showSection('quran')" data-section="quran">
+<button class="nav-btn" id="quranBtn" onclick="showSection('quran')">
   <i class="fas fa-book-open"></i>Quran
 </button>
 </div>
@@ -1367,21 +1393,20 @@ function showSection(sectionName) {
   document.getElementById('homeSection').classList.add('hidden');
   document.getElementById('quranSection').classList.add('hidden');
 
-  // Remove active class from all buttons
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
+  // Remove active class from both buttons
+  document.getElementById('homeBtn').classList.remove('active');
+  document.getElementById('quranBtn').classList.remove('active');
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
     document.getElementById('homeSection').classList.remove('hidden');
-    document.querySelector('.nav-btn[data-section="home"]').classList.add('active');
+    document.getElementById('homeBtn').classList.add('active');
     document.documentElement.setAttribute('dir', 'ltr');
     document.documentElement.setAttribute('lang', 'en');
     document.body.style.overflow = 'auto';
   } else if (sectionName === 'quran') {
     document.getElementById('quranSection').classList.remove('hidden');
-    document.querySelector('.nav-btn[data-section="quran"]').classList.add('active');
+    document.getElementById('quranBtn').classList.add('active');
     document.documentElement.setAttribute('dir', 'rtl');
     document.documentElement.setAttribute('lang', 'ar');
     document.body.style.overflow = 'auto';
@@ -3689,6 +3714,10 @@ document.addEventListener('DOMContentLoaded', function() {
     hideLoadingScreen();
   }
 });
+// Initialize with Home active
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('homeBtn').classList.add('active');
+}); 
 
 </script>
 </div>
