@@ -1148,6 +1148,158 @@ font-size: 12px;
   min-width: fit-content;
   flex-direction: row; /* Force row direction */
 } 
+/* Translation Section Styles */
+.translation-section {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  margin: 15px 0;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.5s ease;
+}
+
+.translation-section.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.translation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(77, 192, 181, 0.3);
+}
+
+.translation-title {
+  color: #4dc0b5;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.close-translation {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-translation:hover {
+  background: rgba(231, 76, 60, 0.2);
+  transform: scale(1.1);
+}
+
+.language-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.language-btn {
+  background: linear-gradient(145deg, #4dc0b5, #3a9b91);
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(77, 192, 181, 0.3);
+}
+
+.language-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(77, 192, 181, 0.5);
+  background: linear-gradient(145deg, #5dd4c7, #4dc0b5);
+}
+
+.language-btn.active {
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+}
+
+.language-flag {
+  width: 20px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.translation-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 15px;
+  border-right: 4px solid #4dc0b5;
+  line-height: 1.8;
+  font-size: 1.1em;
+  color: #e0e0e0;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.translation-loading {
+  color: #4dc0b5;
+  font-style: italic;
+}
+
+.translation-error {
+  color: #e74c3c;
+  font-style: italic;
+}
+
+.translation-text {
+  text-align: right;
+  direction: rtl;
+  font-size: 1.2em;
+  line-height: 2;
+}
+
+/* Scrollbar for language buttons */
+.language-buttons::-webkit-scrollbar {
+  width: 8px;
+}
+
+.language-buttons::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.language-buttons::-webkit-scrollbar-thumb {
+  background: rgba(77, 192, 181, 0.5);
+  border-radius: 4px;
+}
+
+.language-buttons::-webkit-scrollbar-thumb:hover {
+  background: rgba(77, 192, 181, 0.8);
+} 
 
 </style>
 </head>
@@ -2830,6 +2982,7 @@ window.quranLoaded = true;
 displayPage();
 populateChapterSelector();
 loadQuranPreferences();
+initializeTranslations();
 } catch (error) {
 console.error('Error loading Quran data:', error);
 document.getElementById('content').innerHTML = 
@@ -2878,11 +3031,15 @@ const isCurrentVerse = (verseNum === currentVerse && chapterNumber === currentCh
 const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
 
 html += `
-                   <div class="verse" ${highlightClass} onclick="setCurrentVerse(${chapterNumber}, ${verseNum})">
-                       <span class="verse-number">${verseNum}</span>
-                       ${chapter[verseNum]}
-                   </div>
-               `;
+    <div class="verse" ${highlightClass} data-chapter="${chapterNumber}" data-verse="${verseNum}" onclick="setCurrentVerse(${chapterNumber}, ${verseNum})">
+        <span class="verse-number">${verseNum}</span>
+        ${chapter[verseNum]}
+        <div class="verse-meta" style="font-size: 0.8em; color: #888; margin-top: 10px; cursor: pointer;" onclick="event.stopPropagation(); showTranslation(${chapterNumber}, ${verseNum});">
+            <i class="fas fa-language" style="margin-right: 5px;"></i>
+            انقر لعرض الترجمات
+        </div>
+    </div>
+`;
 }
 }
 });
@@ -3712,6 +3869,233 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('homeBtn').classList.add('active');
 }); 
+// Translation Data Storage
+let translationData = {};
+let languageFiles = {
+  'arabic': 'ar.jalalayn.txt',
+  // Placeholder for other languages - you'll add these later
+  'albanian': 'al.translation.txt',
+  'amazigh': 'am.translation.txt',
+  'amharic': 'amh.translation.txt',
+  'azerbaijani': 'az.translation.txt',
+  'bengali': 'bn.translation.txt',
+  'bosnian': 'bs.translation.txt',
+  'bulgarian': 'bg.translation.txt',
+  'chinese_simplified': 'zh_cn.translation.txt',
+  'chinese_traditional': 'zh_tw.translation.txt',
+  'czech': 'cs.translation.txt',
+  'divehi': 'dv.translation.txt',
+  'dutch': 'nl.translation.txt',
+  'english': 'en.translation.txt',
+  'french': 'fr.translation.txt',
+  'german': 'de.translation.txt',
+  'hausa': 'ha.translation.txt',
+  'hindi': 'hi.translation.txt',
+  'indonesian': 'id.translation.txt',
+  'italian': 'it.translation.txt',
+  'japanese': 'ja.translation.txt',
+  'korean': 'ko.translation.txt',
+  'kurdish': 'ku.translation.txt',
+  'malay': 'ms.translation.txt',
+  'malayalam': 'ml.translation.txt',
+  'norwegian': 'no.translation.txt',
+  'pashto': 'ps.translation.txt',
+  'persian': 'fa.translation.txt',
+  'polish': 'pl.translation.txt',
+  'portuguese': 'pt.translation.txt',
+  'romanian': 'ro.translation.txt',
+  'russian': 'ru.translation.txt',
+  'sindhi': 'sd.translation.txt',
+  'somali': 'so.translation.txt',
+  'spanish': 'es.translation.txt',
+  'swahili': 'sw.translation.txt',
+  'swedish': 'sv.translation.txt',
+  'tajik': 'tg.translation.txt',
+  'tamil': 'ta.translation.txt',
+  'tatar': 'tt.translation.txt',
+  'thai': 'th.translation.txt',
+  'turkish': 'tr.translation.txt',
+  'urdu': 'ur.translation.txt',
+  'uyghur': 'ug.translation.txt',
+  'uzbek': 'uz.translation.txt'
+};
+
+let languageInfo = {
+  'arabic': { name: 'العربية', flag: '🇸🇦' },
+  'albanian': { name: 'Albanian', flag: '🇦🇱' },
+  'amazigh': { name: 'Amazigh', flag: '🇲🇦' },
+  'amharic': { name: 'Amharic', flag: '🇪🇹' },
+  'azerbaijani': { name: 'Azerbaijani', flag: '🇦🇿' },
+  'bengali': { name: 'Bengali', flag: '🇧🇩' },
+  'bosnian': { name: 'Bosnian', flag: '🇧🇦' },
+  'bulgarian': { name: 'Bulgarian', flag: '🇧🇬' },
+  'chinese_simplified': { name: 'Chinese (S)', flag: '🇨🇳' },
+  'chinese_traditional': { name: 'Chinese (T)', flag: '🇹🇼' },
+  'czech': { name: 'Czech', flag: '🇨🇿' },
+  'divehi': { name: 'Divehi', flag: '🇲🇻' },
+  'dutch': { name: 'Dutch', flag: '🇳🇱' },
+  'english': { name: 'English', flag: '🇺🇸' },
+  'french': { name: 'French', flag: '🇫🇷' },
+  'german': { name: 'German', flag: '🇩🇪' },
+  'hausa': { name: 'Hausa', flag: '🇳🇬' },
+  'hindi': { name: 'Hindi', flag: '🇮🇳' },
+  'indonesian': { name: 'Indonesian', flag: '🇮🇩' },
+  'italian': { name: 'Italian', flag: '🇮🇹' },
+  'japanese': { name: 'Japanese', flag: '🇯🇵' },
+  'korean': { name: 'Korean', flag: '🇰🇷' },
+  'kurdish': { name: 'Kurdish', flag: '🇮🇶' },
+  'malay': { name: 'Malay', flag: '🇲🇾' },
+  'malayalam': { name: 'Malayalam', flag: '🇮🇳' },
+  'norwegian': { name: 'Norwegian', flag: '🇳🇴' },
+  'pashto': { name: 'Pashto', flag: '🇦🇫' },
+  'persian': { name: 'Persian', flag: '🇮🇷' },
+  'polish': { name: 'Polish', flag: '🇵🇱' },
+  'portuguese': { name: 'Portuguese', flag: '🇵🇹' },
+  'romanian': { name: 'Romanian', flag: '🇷🇴' },
+  'russian': { name: 'Russian', flag: '🇷🇺' },
+  'sindhi': { name: 'Sindhi', flag: '🇵🇰' },
+  'somali': { name: 'Somali', flag: '🇸🇴' },
+  'spanish': { name: 'Spanish', flag: '🇪🇸' },
+  'swahili': { name: 'Swahili', flag: '🇹🇿' },
+  'swedish': { name: 'Swedish', flag: '🇸🇪' },
+  'tajik': { name: 'Tajik', flag: '🇹🇯' },
+  'tamil': { name: 'Tamil', flag: '🇮🇳' },
+  'tatar': { name: 'Tatar', flag: '🇷🇺' },
+  'thai': { name: 'Thai', flag: '🇹🇭' },
+  'turkish': { name: 'Turkish', flag: '🇹🇷' },
+  'urdu': { name: 'Urdu', flag: '🇵🇰' },
+  'uyghur': { name: 'Uyghur', flag: '🇨🇳' },
+  'uzbek': { name: 'Uzbek', flag: '🇺🇿' }
+};
+
+// Load translation data
+async function loadTranslationData(language) {
+  if (translationData[language]) return translationData[language];
+  
+  const fileName = languageFiles[language];
+  if (!fileName) {
+    console.log(`Translation file not found for language: ${language}`);
+    return null;
+  }
+  
+  try {
+    const response = await fetch(fileName);
+    if (!response.ok) {
+      throw new Error(`Failed to load ${fileName}`);
+    }
+    
+    const text = await response.text();
+    const translations = {};
+    
+    // Parse the translation file
+    const lines = text.split('\n');
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed) {
+        const parts = trimmed.split('|');
+        if (parts.length >= 3) {
+          const chapter = parseInt(parts[0]);
+          const verse = parseInt(parts[1]);
+          const translation = parts.slice(2).join('|');
+          
+          if (!translations[chapter]) {
+            translations[chapter] = {};
+          }
+          translations[chapter][verse] = translation;
+        }
+      }
+    });
+    
+    translationData[language] = translations;
+    return translations;
+  } catch (error) {
+    console.error(`Error loading translation for ${language}:`, error);
+    return null;
+  }
+}
+
+// Show translation section for a verse
+function showTranslation(chapterNum, verseNum) {
+  const verseElement = document.querySelector(`[data-chapter="${chapterNum}"][data-verse="${verseNum}"]`);
+  if (!verseElement) return;
+  
+  let translationSection = verseElement.querySelector('.translation-section');
+  if (translationSection) {
+    translationSection.classList.toggle('show');
+    return;
+  }
+  
+  // Create translation section
+  translationSection = document.createElement('div');
+  translationSection.className = 'translation-section';
+  translationSection.innerHTML = `
+    <div class="translation-header">
+      <div class="translation-title">الترجمات - سورة ${chapterNames[chapterNum]} آية ${verseNum}</div>
+      <button class="close-translation" onclick="closeTranslation(this)">×</button>
+    </div>
+    <div class="language-buttons">
+      ${Object.keys(languageInfo).map(lang => `
+        <button class="language-btn" onclick="selectTranslation('${lang}', ${chapterNum}, ${verseNum}, this)">
+          <span class="language-flag">${languageInfo[lang].flag}</span>
+          ${languageInfo[lang].name}
+        </button>
+      `).join('')}
+    </div>
+    <div class="translation-content">
+      <div class="translation-loading">اختر لغة لعرض الترجمة</div>
+    </div>
+  `;
+  
+  verseElement.appendChild(translationSection);
+  setTimeout(() => translationSection.classList.add('show'), 100);
+}
+
+// Close translation section
+function closeTranslation(closeBtn) {
+  const translationSection = closeBtn.closest('.translation-section');
+  translationSection.classList.remove('show');
+  setTimeout(() => translationSection.remove(), 500);
+}
+
+// Select and load translation
+async function selectTranslation(language, chapterNum, verseNum, buttonElement) {
+  const translationSection = buttonElement.closest('.translation-section');
+  const contentDiv = translationSection.querySelector('.translation-content');
+  const allButtons = translationSection.querySelectorAll('.language-btn');
+  
+  // Update button states
+  allButtons.forEach(btn => btn.classList.remove('active'));
+  buttonElement.classList.add('active');
+  
+  // Show loading
+  contentDiv.innerHTML = '<div class="translation-loading">جارٍ تحميل الترجمة...</div>';
+  
+  try {
+    const translations = await loadTranslationData(language);
+    
+    if (!translations || !translations[chapterNum] || !translations[chapterNum][verseNum]) {
+      contentDiv.innerHTML = '<div class="translation-error">الترجمة غير متوفرة لهذه الآية</div>';
+      return;
+    }
+    
+    const translation = translations[chapterNum][verseNum];
+    contentDiv.innerHTML = `<div class="translation-text">${translation}</div>`;
+    
+  } catch (error) {
+    console.error('Error loading translation:', error);
+    contentDiv.innerHTML = '<div class="translation-error">خطأ في تحميل الترجمة</div>';
+  }
+}
+
+// Initialize translation system when Quran section loads
+function initializeTranslations() {
+  // Pre-load Arabic translation data
+  loadTranslationData('arabic').then(() => {
+    console.log('Arabic translation loaded');
+  }).catch(error => {
+    console.error('Failed to load Arabic translation:', error);
+  });
+} 
 
 </script>
 </div>
