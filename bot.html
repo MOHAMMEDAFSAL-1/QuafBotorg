@@ -1044,6 +1044,12 @@ font-size: 12px;
 }
 }
 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -2647,16 +2653,41 @@ let pageVerseData = {
 };
 // Function to find current page based on chapter and verse
 function getCurrentPage(chapter, verse) {
-for (let page = 1; page <= 604; page++) {
-const pageContent = pageVerseData[page];
-if (pageContent && pageContent[chapter]) {
-const verseRange = pageContent[chapter];
-if (verse >= verseRange[0] && verse <= verseRange[1]) {
-return page;
-}
-}
-}
-return 1; // Default to page 1 if not found
+    // Direct lookup in pageVerseData
+    for (let page = 1; page <= 604; page++) {
+        const pageContent = pageVerseData[page];
+        if (pageContent && pageContent[chapter]) {
+            const verseRange = pageContent[chapter];
+            if (verse >= verseRange[0] && verse <= verseRange[1]) {
+                return page;
+            }
+        }
+    }
+    
+    // If not found in pageVerseData, use pageData as fallback
+    for (let page = 1; page <= 604; page++) {
+        if (pageData[page] && pageData[page + 1]) {
+            const currentPageStart = pageData[page];
+            const nextPageStart = pageData[page + 1];
+            
+            if (chapter < nextPageStart.startChapter || 
+                (chapter === nextPageStart.startChapter && verse < nextPageStart.startVerse)) {
+                if (chapter > currentPageStart.startChapter || 
+                    (chapter === currentPageStart.startChapter && verse >= currentPageStart.startVerse)) {
+                    return page;
+                }
+            }
+        }
+    }
+    
+    // Handle last page
+    const lastPageData = pageData[604];
+    if (lastPageData && (chapter > lastPageData.startChapter || 
+        (chapter === lastPageData.startChapter && verse >= lastPageData.startVerse))) {
+        return 604;
+    }
+    
+    return 1; // Default fallback
 }
 
 // Current page tracking
@@ -2979,26 +3010,18 @@ updatePageNavigation();
 }
 
 function setCurrentVerse(chapterNum, verseNumber) {
-currentChapter = chapterNum;
-currentVerse = verseNumber;
-
-// Find which page contains this verse
-for (let page = 1; page <= 604; page++) {
-if (pageData[page] && pageData[page + 1]) {
-const pageStart = pageData[page];
-const pageEnd = pageData[page + 1];
-
-if ((chapterNum > pageStart.startChapter || 
-(chapterNum === pageStart.startChapter && verseNumber >= pageStart.startVerse)) &&
-(chapterNum < pageEnd.startChapter || 
-(chapterNum === pageEnd.startChapter && verseNumber < pageEnd.startVerse))) {
-currentPage = page;
-break;
-}
-}
-}
-
-displayPage();
+    currentChapter = chapterNum;
+    currentVerse = verseNumber;
+    
+    // Find the correct page using the improved getCurrentPage function
+    currentPage = getCurrentPage(chapterNum, verseNumber);
+    
+    displayPage();
+    
+    // Scroll to the specific verse after display
+    setTimeout(() => {
+        scrollToCurrentVerse();
+    }, 100);
 }
 
 // Navigation functions
@@ -3382,27 +3405,35 @@ return normalized;
 }
 
 function goToSearchResult(chapterNum, verseNum) {
-// Clear search and go to the specific verse
-clearSearch();
-currentChapter = chapterNum;
-currentVerse = verseNum;
-
-// Find the correct page for this verse
-setCurrentVerse(chapterNum, verseNum);
-
-// Scroll to the specific verse after a short delay
-setTimeout(() => {
-scrollToCurrentVerse();
-}, 500);
+    // Clear search first
+    clearSearch();
+    
+    // Set the current position
+    currentChapter = chapterNum;
+    currentVerse = verseNum;
+    
+    // Find and set the correct page
+    currentPage = getCurrentPage(chapterNum, verseNum);
+    
+    // Display the page
+    displayPage();
+    
+    // Highlight and scroll to the specific verse
+    setTimeout(() => {
+        highlightAndScrollToVerse(chapterNum, verseNum);
+    }, 200);
 }
 
 function clearSearch() {
-document.getElementById('searchInput').value = '';
-document.getElementById('clearSearchBtn').style.display = 'none';
-document.getElementById('searchStats').style.display = 'none';
-currentSearchQuery = '';
-allSearchResults = [];
-displayPage(); // Change from displayChapter() to displayPage()
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    document.getElementById('searchStats').style.display = 'none';
+    currentSearchQuery = '';
+    allSearchResults = [];
+    
+    // Make sure we're on the correct page for current chapter/verse
+    currentPage = getCurrentPage(currentChapter, currentVerse);
+    displayPage();
 }
 
 function displaySearchMessage(message) {
@@ -3425,6 +3456,41 @@ verse.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 });
 }, 100);
+}
+
+// Enhanced function to highlight and scroll to specific verse
+function highlightAndScrollToVerse(chapterNum, verseNum) {
+    const verses = document.querySelectorAll('.verse');
+    let targetVerse = null;
+    
+    verses.forEach(verse => {
+        // Remove existing highlights
+        verse.style.background = '';
+        verse.style.borderColor = '';
+        verse.style.boxShadow = '';
+        
+        // Check if this is the target verse by looking at the onclick attribute
+        const onclickAttr = verse.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(`setCurrentVerse(${chapterNum}, ${verseNum})`)) {
+            // Highlight the target verse
+            verse.style.background = 'rgba(77, 192, 181, 0.3)';
+            verse.style.borderColor = '#4dc0b5';
+            verse.style.boxShadow = '0 0 20px rgba(77, 192, 181, 0.5)';
+            targetVerse = verse;
+        }
+    });
+    
+    // Scroll to the highlighted verse
+    if (targetVerse) {
+        targetVerse.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+        });
+        
+        // Add a pulsing effect
+        targetVerse.style.animation = 'pulse 2s ease-in-out 3';
+    }
 }
 
 // Save and load Quran preferences
