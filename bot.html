@@ -2819,7 +2819,7 @@ window.quranLoaded = false;
 // Load Quran data from JSON file
 async function loadQuranData() {
 try {
-const response = await fetch('quran_structured.json');
+const response = await fetch('trns/ar_jalalayn.json');
 quranData = await response.json();
 
 // Convert verse numbers from strings to integers for easier handling
