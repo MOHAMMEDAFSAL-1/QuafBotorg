@@ -18,23 +18,303 @@ body {
 background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
 min-height: 100vh;
 }
+ 
+  /* Loading Screen Styles */
+#loadingScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+}
 
-  #intro {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: black;
-      z-index: 9999;
-    }
+#loadingScreen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
 
-    video {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: cover; /* Ensures the video covers the entire screen */
-    }
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.loader-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loadingVideo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 2;
+  position: relative;
+  filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.3));
+}
+
+.loading-border {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #667eea 30deg,
+    #764ba2 90deg,
+    #a8e6cf 150deg,
+    #ff9a9e 210deg,
+    #fecfef 270deg,
+    #667eea 330deg,
+    transparent 360deg
+  );
+  animation: rotate 2s linear infinite;
+  z-index: 1;
+  filter: blur(1px);
+}
+
+.loading-border::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.loading-border::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg,
+    rgba(102, 126, 234, 0.3) 45deg,
+    rgba(118, 75, 162, 0.4) 90deg,
+    rgba(168, 230, 207, 0.3) 135deg,
+    rgba(255, 154, 158, 0.4) 180deg,
+    rgba(254, 207, 239, 0.3) 225deg,
+    rgba(102, 126, 234, 0.4) 270deg,
+    transparent 360deg
+  );
+  animation: rotate 3s linear infinite reverse;
+  z-index: 0;
+  filter: blur(8px);
+}
+
+.loader-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.15) 25%,
+    rgba(168, 230, 207, 0.1) 50%,
+    transparent 70%
+  );
+  animation: pulseGlow 2s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Updated .loading-text with typing effect */
+/* Updated .loading-text with right-to-left typing effect */
+.loading-text {
+  color: #e2e8f0;
+  font-size: 1.5rem; /* Adjust font size */
+  font-weight: 500; 
+  text-align: center;
+  display: inline-block; /* Ensure text flows correctly */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide text beyond the specified width */
+  width: 0; /* Start with no visible text */
+  direction: rtl; /* Right to left text direction */
+  border-left: 3px solid #e2e8f0; /* Blinking cursor effect */
+  animation: typing 2s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite;
+  background: linear-gradient(45deg, #667eea, #764ba2, #a8e6cf);
+  background-size: 200% 200%;
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Typing effect */
+@keyframes typing {
+  0% {
+    width: 0; /* Start with no text */
+  }
+  100% {
+    width: 100%; /* End with full text revealed */
+  }
+}
+
+/* Blinking caret */
+@keyframes blinkCaret {
+  0%, 100% {
+    border-color: transparent; /* Hide caret */
+  }
+  50% {
+    border-color: #e2e8f0; /* Show caret */
+  }
+}
+
+.main-content-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease-in, visibility 0.6s ease-in;
+}
+
+.main-content-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes textGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .loader-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+  
+  #loadingVideo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .loading-border {
+    top: -8px;
+    left: -8px;
+    width: 116px;
+    height: 116px;
+  }
+  
+  .loading-border::before {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+  }
+  
+  .loading-border::after {
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+  }
+  
+  .loader-wrapper::before {
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loader-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+  
+  #loadingVideo {
+    width: 60px;
+    height: 60px;
+  }
+    
+  .loading-border {
+    top: -7px;
+    left: -7px;
+    width: 104px;
+    height: 104px;
+  }
+  
+  .loading-border::before {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+  }
+  
+  .loading-border::after {
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+  }
+  
+  .loader-wrapper::before {
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+  }
+}
 
 .enhanced-heading {
 position: relative;
@@ -791,6 +1071,12 @@ font-size: 12px;
 }
 }
 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -802,13 +1088,22 @@ font-size: 12px;
 <div class="dot"></div>
 </div>
 
-<div id="intro">
-    <video autoplay loop muted playsinline> 
-      <source src="intro.webm" type="video/webm">
-      <!-- Fallback for browsers that don't support WebM -->
-      <source src="intro.mp4" type="video/mp4">
-    </video>
+<!-- Loading Animation -->
+<div id="loadingScreen">
+  <div class="loader-container">
+    <div class="loader-wrapper">
+      <video id="loadingVideo" autoplay loop muted playsinline>
+        <source src="https://quafbot.netlify.app/intro.webm" type="video/webm">
+        <source src="intro.mp4" type="video/mp4">
+      </video>
+      <div class="loading-border"></div>
+    </div>
+    <div class="loading-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
   </div>
+</div>
+
+<!-- Main Content Container -->
+<div id="mainContent" class="main-content-hidden">
 
 <!-- Navigation Menu -->
 <div class="navigation-menu">
@@ -2385,16 +2680,41 @@ let pageVerseData = {
 };
 // Function to find current page based on chapter and verse
 function getCurrentPage(chapter, verse) {
-for (let page = 1; page <= 604; page++) {
-const pageContent = pageVerseData[page];
-if (pageContent && pageContent[chapter]) {
-const verseRange = pageContent[chapter];
-if (verse >= verseRange[0] && verse <= verseRange[1]) {
-return page;
-}
-}
-}
-return 1; // Default to page 1 if not found
+    // Direct lookup in pageVerseData
+    for (let page = 1; page <= 604; page++) {
+        const pageContent = pageVerseData[page];
+        if (pageContent && pageContent[chapter]) {
+            const verseRange = pageContent[chapter];
+            if (verse >= verseRange[0] && verse <= verseRange[1]) {
+                return page;
+            }
+        }
+    }
+    
+    // If not found in pageVerseData, use pageData as fallback
+    for (let page = 1; page <= 604; page++) {
+        if (pageData[page] && pageData[page + 1]) {
+            const currentPageStart = pageData[page];
+            const nextPageStart = pageData[page + 1];
+            
+            if (chapter < nextPageStart.startChapter || 
+                (chapter === nextPageStart.startChapter && verse < nextPageStart.startVerse)) {
+                if (chapter > currentPageStart.startChapter || 
+                    (chapter === currentPageStart.startChapter && verse >= currentPageStart.startVerse)) {
+                    return page;
+                }
+            }
+        }
+    }
+    
+    // Handle last page
+    const lastPageData = pageData[604];
+    if (lastPageData && (chapter > lastPageData.startChapter || 
+        (chapter === lastPageData.startChapter && verse >= lastPageData.startVerse))) {
+        return 604;
+    }
+    
+    return 1; // Default fallback
 }
 
 // Current page tracking
@@ -2717,26 +3037,18 @@ updatePageNavigation();
 }
 
 function setCurrentVerse(chapterNum, verseNumber) {
-currentChapter = chapterNum;
-currentVerse = verseNumber;
-
-// Find which page contains this verse
-for (let page = 1; page <= 604; page++) {
-if (pageData[page] && pageData[page + 1]) {
-const pageStart = pageData[page];
-const pageEnd = pageData[page + 1];
-
-if ((chapterNum > pageStart.startChapter || 
-(chapterNum === pageStart.startChapter && verseNumber >= pageStart.startVerse)) &&
-(chapterNum < pageEnd.startChapter || 
-(chapterNum === pageEnd.startChapter && verseNumber < pageEnd.startVerse))) {
-currentPage = page;
-break;
-}
-}
-}
-
-displayPage();
+    currentChapter = chapterNum;
+    currentVerse = verseNumber;
+    
+    // Find the correct page using the improved getCurrentPage function
+    currentPage = getCurrentPage(chapterNum, verseNumber);
+    
+    displayPage();
+    
+    // Scroll to the specific verse after display
+    setTimeout(() => {
+        scrollToCurrentVerse();
+    }, 100);
 }
 
 // Navigation functions
@@ -3120,27 +3432,35 @@ return normalized;
 }
 
 function goToSearchResult(chapterNum, verseNum) {
-// Clear search and go to the specific verse
-clearSearch();
-currentChapter = chapterNum;
-currentVerse = verseNum;
-
-// Find the correct page for this verse
-setCurrentVerse(chapterNum, verseNum);
-
-// Scroll to the specific verse after a short delay
-setTimeout(() => {
-scrollToCurrentVerse();
-}, 500);
+    // Clear search first
+    clearSearch();
+    
+    // Set the current position
+    currentChapter = chapterNum;
+    currentVerse = verseNum;
+    
+    // Find and set the correct page
+    currentPage = getCurrentPage(chapterNum, verseNum);
+    
+    // Display the page
+    displayPage();
+    
+    // Highlight and scroll to the specific verse
+    setTimeout(() => {
+        highlightAndScrollToVerse(chapterNum, verseNum);
+    }, 200);
 }
 
 function clearSearch() {
-document.getElementById('searchInput').value = '';
-document.getElementById('clearSearchBtn').style.display = 'none';
-document.getElementById('searchStats').style.display = 'none';
-currentSearchQuery = '';
-allSearchResults = [];
-displayPage(); // Change from displayChapter() to displayPage()
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    document.getElementById('searchStats').style.display = 'none';
+    currentSearchQuery = '';
+    allSearchResults = [];
+    
+    // Make sure we're on the correct page for current chapter/verse
+    currentPage = getCurrentPage(currentChapter, currentVerse);
+    displayPage();
 }
 
 function displaySearchMessage(message) {
@@ -3163,6 +3483,41 @@ verse.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 });
 }, 100);
+}
+
+// Enhanced function to highlight and scroll to specific verse
+function highlightAndScrollToVerse(chapterNum, verseNum) {
+    const verses = document.querySelectorAll('.verse');
+    let targetVerse = null;
+    
+    verses.forEach(verse => {
+        // Remove existing highlights
+        verse.style.background = '';
+        verse.style.borderColor = '';
+        verse.style.boxShadow = '';
+        
+        // Check if this is the target verse by looking at the onclick attribute
+        const onclickAttr = verse.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(`setCurrentVerse(${chapterNum}, ${verseNum})`)) {
+            // Highlight the target verse
+            verse.style.background = 'rgba(77, 192, 181, 0.3)';
+            verse.style.borderColor = '#4dc0b5';
+            verse.style.boxShadow = '0 0 20px rgba(77, 192, 181, 0.5)';
+            targetVerse = verse;
+        }
+    });
+    
+    // Scroll to the highlighted verse
+    if (targetVerse) {
+        targetVerse.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+        });
+        
+        // Add a pulsing effect
+        targetVerse.style.animation = 'pulse 2s ease-in-out 3';
+    }
 }
 
 // Save and load Quran preferences
@@ -3222,28 +3577,58 @@ hidePageSelector();
 }
 }
 
-// Add keyboard shortcuts for search
+// Loading Animation Handler
 document.addEventListener('DOMContentLoaded', function() {
-document.addEventListener('keydown', function(event) {
-// Ctrl/Cmd + F to focus search
-if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
-event.preventDefault();
-const searchInput = document.getElementById('searchInput');
-if (searchInput && !document.getElementById('quranSection').classList.contains('hidden')) {
-searchInput.focus();
-searchInput.select();
-}
-}
+  const loadingScreen = document.getElementById('loadingScreen');
+  const mainContent = document.getElementById('mainContent');
+  const loadingVideo = document.getElementById('loadingVideo');
+  
+  // Minimum loading time (3 seconds)
+  const minLoadingTime = 3000;
+  const startTime = Date.now();
+  
+  // Function to hide loading screen
+  function hideLoadingScreen() {
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+    
+    setTimeout(() => {
+      loadingScreen.classList.add('fade-out');
+      
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        mainContent.classList.remove('main-content-hidden'); 
+        mainContent.classList.add('main-content-visible');
+      }, 800); // Wait for fade-out animation
+    }, remainingTime);
+  }
+  
+  // Handle video loading
+  if (loadingVideo) {
+    loadingVideo.addEventListener('loadeddata', function() {
+      // Video is ready, but respect minimum loading time
+      hideLoadingScreen();
+    });
+    
+    loadingVideo.addEventListener('error', function() {
+      // If video fails to load, still hide loading screen
+      console.warn('Loading video failed to load');
+      hideLoadingScreen();
+    });
+    
+    // Fallback: hide loading screen after maximum time even if video doesn't load
+    setTimeout(() => {
+      if (loadingScreen.style.display !== 'none') {
+        hideLoadingScreen();
+      }
+    }, 7000); // 8 second maximum
+  } else {
+    // If no video element found, hide loading screen after minimum time
+    hideLoadingScreen();
+  }
+});
 
-// Escape key to clear search
-if (event.key === 'Escape') {
-const searchInput = document.getElementById('searchInput');
-if (searchInput && searchInput.value.length > 0) {
-clearSearch();
-}
-}
-});
-});
 </script>
+</div>
 </body>
 </html>
