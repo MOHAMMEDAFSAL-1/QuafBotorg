@@ -3978,16 +3978,22 @@ async function loadTranslationData(language) {
     return null;
   }
   
+  let text;
   try {
-    const response = await fetch(fileName);
-    if (!response.ok) {
-      throw new Error(`Failed to load ${fileName}`);
+    // Check for embedded document
+    const embedded = document.querySelector(`document[filename="${fileName}"]`);
+    if (embedded) {
+      text = embedded.innerText;
+    } else {
+      // Fallback to fetch if not embedded
+      const response = await fetch(fileName);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${fileName}`);
+      }
+      text = await response.text();
     }
     
-    const text = await response.text();
     const translations = {};
-    
-    // Parse the translation file
     const lines = text.split('\n');
     lines.forEach(line => {
       const trimmed = line.trim();
