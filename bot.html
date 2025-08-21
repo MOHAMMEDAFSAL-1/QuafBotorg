@@ -541,6 +541,7 @@ transform: translateY(0);
   border: 1px solid rgba(255, 255, 255, 0.1);
   white-space: nowrap;
   min-width: fit-content;
+  order: 0; /* Add this */
 }
 
 .nav-btn {
@@ -558,19 +559,32 @@ transform: translateY(0);
   justify-content: center;
   white-space: nowrap;
   min-width: fit-content;
+  position: relative; /* Add this */
+}
+
+/* Add specific positioning for each button */
+.nav-btn[onclick*="home"] {
+  order: 1;
+}
+
+.nav-btn[onclick*="quran"] {
+  order: 2;
 }
 
 .nav-btn.active {
   background: rgba(102, 126, 234, 0.8);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transform: none; /* Prevent any transform changes */
 }
 
 .nav-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+  transform: none; /* Prevent any transform changes */
 }
 
 .nav-btn.active:hover {
   background: rgba(102, 126, 234, 0.9);
+  transform: none; /* Prevent any transform changes */
 }
 
 .speaker-control {
@@ -1139,10 +1153,10 @@ font-size: 12px;
 
 <!-- Navigation Menu -->
 <div class="navigation-menu">
-<button class="nav-btn active" onclick="showSection('home')">
+<button class="nav-btn active" onclick="showSection('home')" data-section="home">
   <i class="fas fa-home"></i>Home
 </button>
-<button class="nav-btn" onclick="showSection('quran')">
+<button class="nav-btn" onclick="showSection('quran')" data-section="quran">
   <i class="fas fa-book-open"></i>Quran
 </button>
 </div>
@@ -1353,19 +1367,21 @@ function showSection(sectionName) {
   document.getElementById('homeSection').classList.add('hidden');
   document.getElementById('quranSection').classList.add('hidden');
 
-  // Update navigation buttons
-  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+  // Remove active class from all buttons
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
 
-  // Show selected section
+  // Show selected section and activate corresponding button
   if (sectionName === 'home') {
     document.getElementById('homeSection').classList.remove('hidden');
-    document.querySelectorAll('.nav-btn[onclick*="home"]').forEach(btn => btn.classList.add('active'));
+    document.querySelector('.nav-btn[data-section="home"]').classList.add('active');
     document.documentElement.setAttribute('dir', 'ltr');
     document.documentElement.setAttribute('lang', 'en');
     document.body.style.overflow = 'auto';
   } else if (sectionName === 'quran') {
     document.getElementById('quranSection').classList.remove('hidden');
-    document.querySelectorAll('.nav-btn[onclick*="quran"]').forEach(btn => btn.classList.add('active'));
+    document.querySelector('.nav-btn[data-section="quran"]').classList.add('active');
     document.documentElement.setAttribute('dir', 'rtl');
     document.documentElement.setAttribute('lang', 'ar');
     document.body.style.overflow = 'auto';
