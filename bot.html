@@ -4129,13 +4129,22 @@ function populateSurahSelect() {
 function populateVerseSelect(surahNumber) {
     const verseSelect = document.getElementById('verseSelect');
     
-    if (!surahNumber || !quranData[surahNumber]) {
+    if (!surahNumber) {
         verseSelect.innerHTML = '<option value="">Select Verse</option>';
         verseSelect.disabled = true;
         return;
     }
     
-    const verses = Object.keys(quranData[surahNumber]).map(v => parseInt(v)).sort((a, b) => a - b);
+    // Convert to integer
+    const surahNum = parseInt(surahNumber);
+    
+    if (!quranData[surahNum]) {
+        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+        verseSelect.disabled = true;
+        return;
+    }
+    
+    const verses = Object.keys(quranData[surahNum]).map(v => parseInt(v)).sort((a, b) => a - b);
     let html = '<option value="">Select Verse</option>';
     
     verses.forEach(verseNum => {
@@ -4151,15 +4160,21 @@ function setupTranslationEventListeners() {
     const surahSelect = document.getElementById('surahSelect');
     const verseSelect = document.getElementById('verseSelect');
     
-    surahSelect.addEventListener('change', function() {
-        const selectedSurah = this.value;
-        populateVerseSelect(selectedSurah);
-        updateLanguageButtonsState();
-    });
+    if (surahSelect) {
+        surahSelect.addEventListener('change', function() {
+            const selectedSurah = this.value;
+            console.log('Surah selected:', selectedSurah); // Debug log
+            populateVerseSelect(selectedSurah);
+            updateLanguageButtonsState();
+        });
+    }
     
-    verseSelect.addEventListener('change', function() {
-        updateLanguageButtonsState();
-    });
+    if (verseSelect) {
+        verseSelect.addEventListener('change', function() {
+            console.log('Verse selected:', this.value); // Debug log
+            updateLanguageButtonsState();
+        });
+    }
 }
 
 // Populate language grid
