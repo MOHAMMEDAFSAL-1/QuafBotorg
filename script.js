@@ -2419,7 +2419,7 @@ const languages = [
 
 // Language direction configuration
 const languageDirections = {
-    'Albanian': 'ltr', 'Amazigh': 'rtl', 'Arabic': 'rtl', 'Amharic': 'ltr',
+    'Albanian': 'ltr', 'Amazigh': 'rtl','Amharic': 'ltr',
     'Azerbaijani': 'ltr', 'Bengali': 'ltr', 'Bosnian': 'ltr', 'Bulgarian': 'ltr',
     'Chinese (Simplified)': 'ltr', 'Chinese (Traditional)': 'ltr', 'Czech': 'ltr',
     'Divehi': 'rtl', 'Dutch': 'ltr', 'English': 'ltr', 'French': 'ltr',
@@ -2820,7 +2820,7 @@ const exegesisOptions = [
 
 // Exegesis direction configuration (ADD THIS OBJECT)
 const exegesisDirections = {
-    'Tafsir Ibn Kathir': 'rtl', 'Tafsir At-Tabari': 'rtl', 'Tafsir Al-Qurtubi': 'rtl',
+    'Tafsir Al Jalalayn': 'rtl', 'Tafsir At-Tabari': 'rtl', 'Tafsir Al-Qurtubi': 'rtl',
     'Tafsir Al-Baghawi': 'rtl', 'Tafsir Al-Jalalayn': 'rtl', 'Tafsir Fakhr Ar-Razi': 'rtl',
     'Tafsir As-Sa\'di': 'rtl', 'Tafsir Al-Baydhawi': 'rtl', 'Tafsir An-Nasafi': 'rtl',
     'Tafsir Al-Khazin': 'rtl', 'At-Tafsir Al-Muyassar': 'rtl', 'At-Tafsir Al-Wasit': 'rtl'
