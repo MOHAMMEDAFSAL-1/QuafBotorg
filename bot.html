@@ -541,14 +541,14 @@ transform: translateY(0);
   border: 1px solid rgba(255, 255, 255, 0.1);
   white-space: nowrap;
   min-width: fit-content;
-  order: 0; /* Add this */
+  flex-direction: row;
 }
 
 .nav-btn {
   background: transparent;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 12px 20px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
@@ -559,7 +559,7 @@ transform: translateY(0);
   justify-content: center;
   white-space: nowrap;
   min-width: fit-content;
-  position: relative; /* Add this */
+  position: relative;
 }
 
 /* Add specific positioning for each button */
@@ -1131,6 +1131,10 @@ font-size: 12px;
   order: 2;
 }
 
+#translationBtn {
+  order: 3;
+}
+
 .navigation-menu {
   position: fixed;
   bottom: 50px;
@@ -1149,156 +1153,281 @@ font-size: 12px;
   flex-direction: row; /* Force row direction */
 } 
 /* Translation Section Styles */
-.translation-section {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  margin: 15px 0;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: none;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.5s ease;
+.translation-controls {
+display: flex;
+justify-content: center;
+gap: 15px;
+margin: 30px 0;
+flex-wrap: wrap;
+align-items: center;
 }
 
-.translation-section.show {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
+.translation-select {
+background: rgba(0, 0, 0, 0.3);
+border: 1px solid rgba(77, 192, 181, 0.5);
+border-radius: 25px;
+padding: 12px 20px;
+color: #e0e0e0;
+font-size: 16px;
+min-width: 200px;
+text-align: center;
+cursor: pointer;
 }
 
-.translation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid rgba(77, 192, 181, 0.3);
+.translation-select:focus {
+outline: none;
+border-color: #4dc0b5;
+box-shadow: 0 0 10px rgba(77, 192, 181, 0.3);
 }
 
-.translation-title {
-  color: #4dc0b5;
-  font-size: 1.4em;
-  font-weight: bold;
+.translation-select option {
+background: #2d2d2d;
+color: #e0e0e0;
+padding: 10px;
 }
 
-.close-translation {
-  background: none;
-  border: none;
-  color: #e74c3c;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.close-translation:hover {
-  background: rgba(231, 76, 60, 0.2);
-  transform: scale(1.1);
-}
-
-.language-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+.language-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 15px;
+margin: 30px 0;
+padding: 20px;
 }
 
 .language-btn {
-  background: linear-gradient(145deg, #4dc0b5, #3a9b91);
-  color: white;
-  border: none;
-  padding: 12px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-align: left;
-  box-shadow: 0 2px 8px rgba(77, 192, 181, 0.3);
+background: linear-gradient(145deg, rgba(77, 192, 181, 0.1), rgba(77, 192, 181, 0.05));
+border: 2px solid rgba(77, 192, 181, 0.3);
+border-radius: 15px;
+padding: 15px 20px;
+color: #e0e0e0;
+cursor: pointer;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+gap: 12px;
+font-size: 16px;
+font-weight: 500;
+text-align: left;
+backdrop-filter: blur(10px);
+position: relative;
+overflow: hidden;
 }
 
 .language-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(77, 192, 181, 0.5);
-  background: linear-gradient(145deg, #5dd4c7, #4dc0b5);
+background: linear-gradient(145deg, rgba(77, 192, 181, 0.2), rgba(77, 192, 181, 0.1));
+border-color: #4dc0b5;
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(77, 192, 181, 0.3);
 }
 
-.language-btn.active {
-  background: linear-gradient(145deg, #e74c3c, #c0392b);
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5);
+.language-btn:active {
+transform: translateY(0);
 }
 
-.language-flag {
-  width: 20px;
-  height: 15px;
-  object-fit: cover;
-  border-radius: 2px;
-  flex-shrink: 0;
+.language-btn .flag {
+font-size: 24px;
+min-width: 30px;
+text-align: center;
+}
+
+.language-btn .language-name {
+flex: 1;
+font-weight: 600;
+}
+
+.language-btn.disabled {
+opacity: 0.5;
+cursor: not-allowed;
+background: rgba(100, 100, 100, 0.1);
+border-color: rgba(100, 100, 100, 0.3);
+}
+
+.language-btn.disabled:hover {
+transform: none;
+box-shadow: none;
+}
+
+.translation-reading-box {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+border-radius: 20px;
+padding: 0;
+width: 90%;
+max-width: 800px;
+max-height: 80vh;
+overflow: hidden;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+border: 2px solid rgba(77, 192, 181, 0.3);
+z-index: 10002;
+backdrop-filter: blur(15px);
+}
+
+.translation-header {
+background: linear-gradient(135deg, #4dc0b5, #3a9b91);
+padding: 20px 30px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.translation-header h3 {
+color: white;
+margin: 0;
+font-size: 1.4em;
+font-weight: 600;
+}
+
+.close-translation {
+background: rgba(255, 255, 255, 0.2);
+border: none;
+border-radius: 50%;
+width: 35px;
+height: 35px;
+color: white;
+font-size: 20px;
+font-weight: bold;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.close-translation:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: scale(1.1);
 }
 
 .translation-content {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 15px;
-  border-right: 4px solid #4dc0b5;
-  line-height: 1.8;
-  font-size: 1.1em;
-  color: #e0e0e0;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+padding: 30px;
+max-height: 60vh;
+overflow-y: auto;
 }
 
-.translation-loading {
-  color: #4dc0b5;
-  font-style: italic;
-}
-
-.translation-error {
-  color: #e74c3c;
-  font-style: italic;
+.arabic-verse-display {
+font-family: 'Amiri', serif;
+font-size: 2em;
+line-height: 2;
+direction: rtl;
+text-align: center;
+color: #4dc0b5;
+margin-bottom: 25px;
+padding: 20px;
+background: rgba(77, 192, 181, 0.1);
+border-radius: 15px;
+border: 1px solid rgba(77, 192, 181, 0.2);
 }
 
 .translation-text {
-  text-align: right;
-  direction: rtl;
-  font-size: 1.2em;
-  line-height: 2;
+font-size: 1.3em;
+line-height: 1.8;
+color: #e0e0e0;
+text-align: justify;
+padding: 20px;
+background: rgba(255, 255, 255, 0.05);
+border-radius: 15px;
+border-left: 4px solid #4dc0b5;
 }
 
-/* Scrollbar for language buttons */
-.language-buttons::-webkit-scrollbar {
-  width: 8px;
+.translation-loading {
+text-align: center;
+padding: 40px;
+color: #888;
 }
 
-.language-buttons::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+/* Responsive Design */
+@media (max-width: 768px) {
+.translation-controls {
+flex-direction: column;
+gap: 10px;
 }
 
-.language-buttons::-webkit-scrollbar-thumb {
-  background: rgba(77, 192, 181, 0.5);
-  border-radius: 4px;
+.translation-select {
+min-width: 250px;
+width: 90%;
 }
 
-.language-buttons::-webkit-scrollbar-thumb:hover {
-  background: rgba(77, 192, 181, 0.8);
+.language-grid {
+grid-template-columns: 1fr;
+gap: 10px;
+padding: 10px;
+}
+
+.language-btn {
+padding: 12px 15px;
+font-size: 14px;
+}
+
+.language-btn .flag {
+font-size: 20px;
+min-width: 25px;
+}
+
+.translation-reading-box {
+width: 95%;
+max-height: 85vh;
+}
+
+.translation-content {
+padding: 20px;
+}
+
+.arabic-verse-display {
+font-size: 1.6em;
+padding: 15px;
+}
+
+.translation-text {
+font-size: 1.1em;
+padding: 15px;
+}
+}
+
+@media (max-width: 480px) {
+.translation-select {
+padding: 10px 15px;
+font-size: 14px;
+min-width: 200px;
+}
+
+.language-btn {
+padding: 10px 12px;
+font-size: 13px;
+gap: 8px;
+}
+
+.language-btn .flag {
+font-size: 18px;
+min-width: 22px;
+}
+
+.arabic-verse-display {
+font-size: 1.4em;
+line-height: 1.8;
+}
+
+.translation-text {
+font-size: 1em;
+}
+}
+
+/* Loading overlay for translation section */
+.translation-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 10001;
+backdrop-filter: blur(5px);
+}
+
+.translation-overlay.hidden {
+display: none;
 } 
 
 </style>
@@ -1336,6 +1465,9 @@ font-size: 12px;
 </button>
 <button class="nav-btn" id="quranBtn" onclick="showSection('quran')">
   <i class="fas fa-book-open"></i>Quran
+</button>
+<button class="nav-btn" id="translationBtn" onclick="showSection('translation')">
+  <i class="fas fa-language"></i>Translation
 </button>
 </div>
 
@@ -1526,6 +1658,46 @@ style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10
 </div> 
 </div>
 
+<!-- TRANSLATION SECTION -->
+<div id="translationSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Translations</h1>
+<p>Select Surah and Verse, then choose a language</p>
+</div>
+
+<!-- Translation Controls -->
+<div class="translation-controls">
+<select id="surahSelect" class="translation-select">
+<option value="">Select Surah</option>
+</select>
+<select id="verseSelect" class="translation-select" disabled>
+<option value="">Select Verse</option>
+</select>
+<button class="quran-btn" id="loadTranslationBtn" onclick="loadSelectedTranslation()">Load Translation</button>
+</div>
+
+<!-- Language Buttons Grid -->
+<div class="language-grid" id="languageGrid">
+<!-- Languages will be populated here -->
+</div>
+
+<!-- Translation Reading Box -->
+<div id="translationReadingBox" class="translation-reading-box hidden">
+<div class="translation-header">
+<h3 id="translationTitle"></h3>
+<button class="close-translation" onclick="closeTranslationBox()">×</button>
+</div>
+<div class="translation-content">
+<div class="arabic-verse-display" id="arabicVerseDisplay"></div>
+<div class="translation-text" id="translationText"></div>
+</div>
+</div>
+</div>
+</div>
+</div> 
+
 <script>
 
  setTimeout(() => {
@@ -1538,10 +1710,12 @@ function showSection(sectionName) {
   // Hide all sections
   document.getElementById('homeSection').classList.add('hidden');
   document.getElementById('quranSection').classList.add('hidden');
+  document.getElementById('translationSection').classList.add('hidden');
 
-  // Remove active class from both buttons
+  // Remove active class from all buttons
   document.getElementById('homeBtn').classList.remove('active');
   document.getElementById('quranBtn').classList.remove('active');
+  document.getElementById('translationBtn').classList.remove('active');
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
@@ -1560,6 +1734,18 @@ function showSection(sectionName) {
     // Initialize Quran if not already loaded
     if (!window.quranLoaded) {
       loadQuranData();
+    }
+  } else if (sectionName === 'translation') {
+    document.getElementById('translationSection').classList.remove('hidden');
+    document.getElementById('translationBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
+
+    // Initialize translation section
+    if (!window.translationInitialized) {
+      initializeTranslationSection();
+      window.translationInitialized = true;
     }
   }
   
@@ -2982,7 +3168,6 @@ window.quranLoaded = true;
 displayPage();
 populateChapterSelector();
 loadQuranPreferences();
-initializeTranslations();
 } catch (error) {
 console.error('Error loading Quran data:', error);
 document.getElementById('content').innerHTML = 
@@ -3031,15 +3216,11 @@ const isCurrentVerse = (verseNum === currentVerse && chapterNumber === currentCh
 const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
 
 html += `
-    <div class="verse" ${highlightClass} data-chapter="${chapterNumber}" data-verse="${verseNum}" onclick="setCurrentVerse(${chapterNumber}, ${verseNum})">
-        <span class="verse-number">${verseNum}</span>
-        ${chapter[verseNum]}
-        <div class="verse-meta" style="font-size: 0.8em; color: #888; margin-top: 10px; cursor: pointer;" onclick="event.stopPropagation(); showTranslation(${chapterNumber}, ${verseNum});">
-            <i class="fas fa-language" style="margin-right: 5px;"></i>
-            انقر لعرض الترجمات
-        </div>
-    </div>
-`;
+                   <div class="verse" ${highlightClass} onclick="setCurrentVerse(${chapterNumber}, ${verseNum})">
+                       <span class="verse-number">${verseNum}</span>
+                       ${chapter[verseNum]}
+                   </div>
+               `;
 }
 }
 });
@@ -3869,240 +4050,326 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('homeBtn').classList.add('active');
 }); 
-// Translation Data Storage
+ 
+// Translation functionality
 let translationData = {};
-let languageFiles = {
-  'arabic': 'ar.jalalayn.txt',
-  // Placeholder for other languages - you'll add these later
-  'albanian': 'al.translation.txt',
-  'amazigh': 'am.translation.txt',
-  'amharic': 'amh.translation.txt',
-  'azerbaijani': 'az.translation.txt',
-  'bengali': 'bn.translation.txt',
-  'bosnian': 'bs.translation.txt',
-  'bulgarian': 'bg.translation.txt',
-  'chinese_simplified': 'zh_cn.translation.txt',
-  'chinese_traditional': 'zh_tw.translation.txt',
-  'czech': 'cs.translation.txt',
-  'divehi': 'dv.translation.txt',
-  'dutch': 'nl.translation.txt',
-  'english': 'en.translation.txt',
-  'french': 'fr.translation.txt',
-  'german': 'de.translation.txt',
-  'hausa': 'ha.translation.txt',
-  'hindi': 'hi.translation.txt',
-  'indonesian': 'id.translation.txt',
-  'italian': 'it.translation.txt',
-  'japanese': 'ja.translation.txt',
-  'korean': 'ko.translation.txt',
-  'kurdish': 'ku.translation.txt',
-  'malay': 'ms.translation.txt',
-  'malayalam': 'ml.translation.txt',
-  'norwegian': 'no.translation.txt',
-  'pashto': 'ps.translation.txt',
-  'persian': 'fa.translation.txt',
-  'polish': 'pl.translation.txt',
-  'portuguese': 'pt.translation.txt',
-  'romanian': 'ro.translation.txt',
-  'russian': 'ru.translation.txt',
-  'sindhi': 'sd.translation.txt',
-  'somali': 'so.translation.txt',
-  'spanish': 'es.translation.txt',
-  'swahili': 'sw.translation.txt',
-  'swedish': 'sv.translation.txt',
-  'tajik': 'tg.translation.txt',
-  'tamil': 'ta.translation.txt',
-  'tatar': 'tt.translation.txt',
-  'thai': 'th.translation.txt',
-  'turkish': 'tr.translation.txt',
-  'urdu': 'ur.translation.txt',
-  'uyghur': 'ug.translation.txt',
-  'uzbek': 'uz.translation.txt'
-};
+let currentSelectedSurah = null;
+let currentSelectedVerse = null;
 
-let languageInfo = {
-  'arabic': { name: 'العربية', flag: '🇸🇦' },
-  'albanian': { name: 'Albanian', flag: '🇦🇱' },
-  'amazigh': { name: 'Amazigh', flag: '🇲🇦' },
-  'amharic': { name: 'Amharic', flag: '🇪🇹' },
-  'azerbaijani': { name: 'Azerbaijani', flag: '🇦🇿' },
-  'bengali': { name: 'Bengali', flag: '🇧🇩' },
-  'bosnian': { name: 'Bosnian', flag: '🇧🇦' },
-  'bulgarian': { name: 'Bulgarian', flag: '🇧🇬' },
-  'chinese_simplified': { name: 'Chinese (S)', flag: '🇨🇳' },
-  'chinese_traditional': { name: 'Chinese (T)', flag: '🇹🇼' },
-  'czech': { name: 'Czech', flag: '🇨🇿' },
-  'divehi': { name: 'Divehi', flag: '🇲🇻' },
-  'dutch': { name: 'Dutch', flag: '🇳🇱' },
-  'english': { name: 'English', flag: '🇺🇸' },
-  'french': { name: 'French', flag: '🇫🇷' },
-  'german': { name: 'German', flag: '🇩🇪' },
-  'hausa': { name: 'Hausa', flag: '🇳🇬' },
-  'hindi': { name: 'Hindi', flag: '🇮🇳' },
-  'indonesian': { name: 'Indonesian', flag: '🇮🇩' },
-  'italian': { name: 'Italian', flag: '🇮🇹' },
-  'japanese': { name: 'Japanese', flag: '🇯🇵' },
-  'korean': { name: 'Korean', flag: '🇰🇷' },
-  'kurdish': { name: 'Kurdish', flag: '🇮🇶' },
-  'malay': { name: 'Malay', flag: '🇲🇾' },
-  'malayalam': { name: 'Malayalam', flag: '🇮🇳' },
-  'norwegian': { name: 'Norwegian', flag: '🇳🇴' },
-  'pashto': { name: 'Pashto', flag: '🇦🇫' },
-  'persian': { name: 'Persian', flag: '🇮🇷' },
-  'polish': { name: 'Polish', flag: '🇵🇱' },
-  'portuguese': { name: 'Portuguese', flag: '🇵🇹' },
-  'romanian': { name: 'Romanian', flag: '🇷🇴' },
-  'russian': { name: 'Russian', flag: '🇷🇺' },
-  'sindhi': { name: 'Sindhi', flag: '🇵🇰' },
-  'somali': { name: 'Somali', flag: '🇸🇴' },
-  'spanish': { name: 'Spanish', flag: '🇪🇸' },
-  'swahili': { name: 'Swahili', flag: '🇹🇿' },
-  'swedish': { name: 'Swedish', flag: '🇸🇪' },
-  'tajik': { name: 'Tajik', flag: '🇹🇯' },
-  'tamil': { name: 'Tamil', flag: '🇮🇳' },
-  'tatar': { name: 'Tatar', flag: '🇷🇺' },
-  'thai': { name: 'Thai', flag: '🇹🇭' },
-  'turkish': { name: 'Turkish', flag: '🇹🇷' },
-  'urdu': { name: 'Urdu', flag: '🇵🇰' },
-  'uyghur': { name: 'Uyghur', flag: '🇨🇳' },
-  'uzbek': { name: 'Uzbek', flag: '🇺🇿' }
-};
+// Language configuration with country flags
+const languages = [
+    { code: 'Albanian', name: 'Albanian', flag: '🇦🇱', file: 'al.albanian.txt' },
+    { code: 'Amazigh', name: 'Amazigh', flag: 'ⵣ', file: 'am.amazigh.txt' },
+    { code: 'Arabic', name: 'Arabic', flag: '🇸🇦', file: 'ar.arabic.txt' },
+    { code: 'Amharic', name: 'Amharic', flag: '🇪🇹', file: 'am.amharic.txt' },
+    { code: 'Azerbaijani', name: 'Azerbaijani', flag: '🇦🇿', file: 'az.azerbaijani.txt' },
+    { code: 'Bengali', name: 'Bengali', flag: '🇧🇩', file: 'bn.bengali.txt' },
+    { code: 'Bosnian', name: 'Bosnian', flag: '🇧🇦', file: 'bs.bosnian.txt' },
+    { code: 'Bulgarian', name: 'Bulgarian', flag: '🇧🇬', file: 'bg.bulgarian.txt' },
+    { code: 'Chinese (Simplified)', name: 'Chinese (Simplified)', flag: '🇨🇳', file: 'zh.chinese.txt' },
+    { code: 'Chinese (Traditional)', name: 'Chinese (Traditional)', flag: '🇹🇼', file: 'zh-tw.chinese.txt' },
+    { code: 'Czech', name: 'Czech', flag: '🇨🇿', file: 'cs.czech.txt' },
+    { code: 'Divehi', name: 'Divehi (Maldivian)', flag: '🇲🇻', file: 'dv.divehi.txt' },
+    { code: 'Dutch', name: 'Dutch', flag: '🇳🇱', file: 'nl.dutch.txt' },
+    { code: 'English', name: 'English', flag: '🇬🇧', file: 'en.pickthall.txt' },
+    { code: 'French', name: 'French', flag: '🇫🇷', file: 'fr.french.txt' },
+    { code: 'German', name: 'German', flag: '🇩🇪', file: 'de.german.txt' },
+    { code: 'Hausa', name: 'Hausa', flag: '🇳🇬', file: 'ha.hausa.txt' },
+    { code: 'Hindi', name: 'Hindi', flag: '🇮🇳', file: 'hi.hindi.txt' },
+    { code: 'Indonesian', name: 'Indonesian', flag: '🇮🇩', file: 'id.indonesian.txt' },
+    { code: 'Italian', name: 'Italian', flag: '🇮🇹', file: 'it.italian.txt' },
+    { code: 'Japanese', name: 'Japanese', flag: '🇯🇵', file: 'ja.japanese.txt' },
+    { code: 'Korean', name: 'Korean', flag: '🇰🇷', file: 'ko.korean.txt' },
+    { code: 'Kurdish', name: 'Kurdish', flag: '🇮🇶', file: 'ku.kurdish.txt' },
+    { code: 'Malay', name: 'Malay', flag: '🇲🇾', file: 'ms.malay.txt' },
+    { code: 'Malayalam', name: 'Malayalam', flag: '🇮🇳', file: 'ml.malayalam.txt' },
+    { code: 'Norwegian', name: 'Norwegian', flag: '🇳🇴', file: 'no.norwegian.txt' },
+    { code: 'Pashto', name: 'Pashto', flag: '🇦🇫', file: 'ps.pashto.txt' },
+    { code: 'Persian', name: 'Persian (Farsi)', flag: '🇮🇷', file: 'fa.persian.txt' },
+    { code: 'Polish', name: 'Polish', flag: '🇵🇱', file: 'pl.polish.txt' },
+    { code: 'Portuguese', name: 'Portuguese', flag: '🇵🇹', file: 'pt.portuguese.txt' },
+    { code: 'Romanian', name: 'Romanian', flag: '🇷🇴', file: 'ro.romanian.txt' },
+    { code: 'Russian', name: 'Russian', flag: '🇷🇺', file: 'ru.russian.txt' },
+    { code: 'Sindhi', name: 'Sindhi', flag: '🇵🇰', file: 'sd.sindhi.txt' },
+    { code: 'Somali', name: 'Somali', flag: '🇸🇴', file: 'so.somali.txt' },
+    { code: 'Spanish', name: 'Spanish', flag: '🇪🇸', file: 'es.spanish.txt' },
+    { code: 'Swahili', name: 'Swahili', flag: '🇹🇿', file: 'sw.swahili.txt' },
+    { code: 'Swedish', name: 'Swedish', flag: '🇸🇪', file: 'sv.swedish.txt' },
+    { code: 'Tajik', name: 'Tajik', flag: '🇹🇯', file: 'tg.tajik.txt' },
+    { code: 'Tamil', name: 'Tamil', flag: '🇮🇳', file: 'ta.tamil.txt' },
+    { code: 'Tatar', name: 'Tatar', flag: '🇷🇺', file: 'tt.tatar.txt' },
+    { code: 'Thai', name: 'Thai', flag: '🇹🇭', file: 'th.thai.txt' },
+    { code: 'Turkish', name: 'Turkish', flag: '🇹🇷', file: 'tr.turkish.txt' },
+    { code: 'Urdu', name: 'Urdu', flag: '🇵🇰', file: 'ur.urdu.txt' },
+    { code: 'Uyghur', name: 'Uyghur', flag: '🇨🇳', file: 'ug.uyghur.txt' },
+    { code: 'Uzbek', name: 'Uzbek', flag: '🇺🇿', file: 'uz.uzbek.txt' }
+];
 
-// Load translation data
-async function loadTranslationData(language) {
-  if (translationData[language]) return translationData[language];
-  
-  const fileName = languageFiles[language];
-  if (!fileName) {
-    console.log(`Translation file not found for language: ${language}`);
-    return null;
-  }
-  
-  let text;
-  try {
-    // Check for embedded document
-    const embedded = document.querySelector(`document[filename="${fileName}"]`);
-    if (embedded) {
-      text = embedded.innerText;
-    } else {
-      // Fallback to fetch if not embedded
-      const response = await fetch(fileName);
-      if (!response.ok) {
-        throw new Error(`Failed to load ${fileName}`);
-      }
-      text = await response.text();
-    }
+// Initialize translation section
+function initializeTranslationSection() {
+    populateSurahSelect();
+    populateLanguageGrid();
+    setupTranslationEventListeners();
+}
+
+// Populate Surah dropdown
+function populateSurahSelect() {
+    const surahSelect = document.getElementById('surahSelect');
+    let html = '<option value="">Select Surah</option>';
     
-    const translations = {};
-    const lines = text.split('\n');
-    lines.forEach(line => {
-      const trimmed = line.trim();
-      if (trimmed) {
-        const parts = trimmed.split('|');
-        if (parts.length >= 3) {
-          const chapter = parseInt(parts[0]);
-          const verse = parseInt(parts[1]);
-          const translation = parts.slice(2).join('|');
-          
-          if (!translations[chapter]) {
-            translations[chapter] = {};
-          }
-          translations[chapter][verse] = translation;
-        }
-      }
+    Object.keys(chapterNames).forEach(chapterNum => {
+        const name = chapterNames[chapterNum];
+        html += `<option value="${chapterNum}">${chapterNum}. ${name}</option>`;
     });
     
-    translationData[language] = translations;
-    return translations;
-  } catch (error) {
-    console.error(`Error loading translation for ${language}:`, error);
-    return null;
-  }
+    surahSelect.innerHTML = html;
 }
 
-// Show translation section for a verse
-function showTranslation(chapterNum, verseNum) {
-  const verseElement = document.querySelector(`[data-chapter="${chapterNum}"][data-verse="${verseNum}"]`);
-  if (!verseElement) return;
-  
-  let translationSection = verseElement.querySelector('.translation-section');
-  if (translationSection) {
-    translationSection.classList.toggle('show');
-    return;
-  }
-  
-  // Create translation section
-  translationSection = document.createElement('div');
-  translationSection.className = 'translation-section';
-  translationSection.innerHTML = `
-    <div class="translation-header">
-      <div class="translation-title">الترجمات - سورة ${chapterNames[chapterNum]} آية ${verseNum}</div>
-      <button class="close-translation" onclick="closeTranslation(this)">×</button>
-    </div>
-    <div class="language-buttons">
-      ${Object.keys(languageInfo).map(lang => `
-        <button class="language-btn" onclick="selectTranslation('${lang}', ${chapterNum}, ${verseNum}, this)">
-          <span class="language-flag">${languageInfo[lang].flag}</span>
-          ${languageInfo[lang].name}
-        </button>
-      `).join('')}
-    </div>
-    <div class="translation-content">
-      <div class="translation-loading">اختر لغة لعرض الترجمة</div>
-    </div>
-  `;
-  
-  verseElement.appendChild(translationSection);
-  setTimeout(() => translationSection.classList.add('show'), 100);
-}
-
-// Close translation section
-function closeTranslation(closeBtn) {
-  const translationSection = closeBtn.closest('.translation-section');
-  translationSection.classList.remove('show');
-  setTimeout(() => translationSection.remove(), 500);
-}
-
-// Select and load translation
-async function selectTranslation(language, chapterNum, verseNum, buttonElement) {
-  const translationSection = buttonElement.closest('.translation-section');
-  const contentDiv = translationSection.querySelector('.translation-content');
-  const allButtons = translationSection.querySelectorAll('.language-btn');
-  
-  // Update button states
-  allButtons.forEach(btn => btn.classList.remove('active'));
-  buttonElement.classList.add('active');
-  
-  // Show loading
-  contentDiv.innerHTML = '<div class="translation-loading">جارٍ تحميل الترجمة...</div>';
-  
-  try {
-    const translations = await loadTranslationData(language);
+// Populate verse dropdown based on selected surah
+function populateVerseSelect(surahNumber) {
+    const verseSelect = document.getElementById('verseSelect');
     
-    if (!translations || !translations[chapterNum] || !translations[chapterNum][verseNum]) {
-      contentDiv.innerHTML = '<div class="translation-error">الترجمة غير متوفرة لهذه الآية</div>';
-      return;
+    if (!surahNumber || !quranData[surahNumber]) {
+        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+        verseSelect.disabled = true;
+        return;
     }
     
-    const translation = translations[chapterNum][verseNum];
-    contentDiv.innerHTML = `<div class="translation-text">${translation}</div>`;
+    const verses = Object.keys(quranData[surahNumber]).map(v => parseInt(v)).sort((a, b) => a - b);
+    let html = '<option value="">Select Verse</option>';
     
-  } catch (error) {
-    console.error('Error loading translation:', error);
-    contentDiv.innerHTML = '<div class="translation-error">خطأ في تحميل الترجمة</div>';
-  }
+    verses.forEach(verseNum => {
+        html += `<option value="${verseNum}">Verse ${verseNum}</option>`;
+    });
+    
+    verseSelect.innerHTML = html;
+    verseSelect.disabled = false;
 }
 
-// Initialize translation system when Quran section loads
-function initializeTranslations() {
-  // Pre-load Arabic translation data
-  loadTranslationData('arabic').then(() => {
-    console.log('Arabic translation loaded');
-  }).catch(error => {
-    console.error('Failed to load Arabic translation:', error);
-  });
-} 
+// Setup event listeners for translation controls
+function setupTranslationEventListeners() {
+    const surahSelect = document.getElementById('surahSelect');
+    const verseSelect = document.getElementById('verseSelect');
+    
+    surahSelect.addEventListener('change', function() {
+        const selectedSurah = this.value;
+        populateVerseSelect(selectedSurah);
+        updateLanguageButtonsState();
+    });
+    
+    verseSelect.addEventListener('change', function() {
+        updateLanguageButtonsState();
+    });
+}
 
+// Populate language grid
+function populateLanguageGrid() {
+    const languageGrid = document.getElementById('languageGrid');
+    let html = '';
+    
+    languages.forEach(lang => {
+        html += `
+            <button class="language-btn disabled" id="lang-${lang.code}" 
+                    onclick="openTranslation('${lang.code}', '${lang.file}', '${lang.name}')">
+                <span class="flag">${lang.flag}</span>
+                <span class="language-name">${lang.name}</span>
+            </button>
+        `;
+    });
+    
+    languageGrid.innerHTML = html;
+}
+
+// Update language buttons state based on selection
+function updateLanguageButtonsState() {
+    const surahSelect = document.getElementById('surahSelect');
+    const verseSelect = document.getElementById('verseSelect');
+    const loadBtn = document.getElementById('loadTranslationBtn');
+    
+    const surahSelected = surahSelect.value !== '';
+    const verseSelected = verseSelect.value !== '';
+    const bothSelected = surahSelected && verseSelected;
+    
+    // Update load button
+    if (loadBtn) {
+        loadBtn.style.opacity = bothSelected ? '1' : '0.5';
+        loadBtn.disabled = !bothSelected;
+    }
+    
+    // Update language buttons
+    const langButtons = document.querySelectorAll('.language-btn');
+    langButtons.forEach(btn => {
+        if (bothSelected && currentSelectedSurah && currentSelectedVerse) {
+            btn.classList.remove('disabled');
+        } else {
+            btn.classList.add('disabled');
+        }
+    });
+}
+
+// Load selected translation values
+function loadSelectedTranslation() {
+    const surahSelect = document.getElementById('surahSelect');
+    const verseSelect = document.getElementById('verseSelect');
+    
+    const surahValue = surahSelect.value;
+    const verseValue = verseSelect.value;
+    
+    if (!surahValue || !verseValue) {
+        alert('Please select both Surah and Verse');
+        return;
+    }
+    
+    currentSelectedSurah = parseInt(surahValue);
+    currentSelectedVerse = parseInt(verseValue);
+    
+    updateLanguageButtonsState();
+    
+    // Show success message
+    const loadBtn = document.getElementById('loadTranslationBtn');
+    const originalText = loadBtn.textContent;
+    loadBtn.textContent = '✓ Loaded!';
+    loadBtn.style.background = 'linear-gradient(145deg, #27ae60, #2ecc71)';
+    
+    setTimeout(() => {
+        loadBtn.textContent = originalText;
+        loadBtn.style.background = '';
+    }, 2000);
+}
+
+// Open translation for specific language
+async function openTranslation(langCode, fileName, langName) {
+    // Check if selection is made
+    if (!currentSelectedSurah || !currentSelectedVerse) {
+        alert('Please select Surah and Verse first, then click "Load Translation"');
+        return;
+    }
+    
+    // Check if button is disabled
+    const button = document.getElementById(`lang-${langCode}`);
+    if (button.classList.contains('disabled')) {
+        return;
+    }
+    
+    try {
+        // Show loading
+        showTranslationLoading(langName);
+        
+        // Load translation data if not already loaded
+        if (!translationData[langCode]) {
+            const response = await fetch(fileName);
+            if (!response.ok) {
+                throw new Error(`Failed to load ${langName} translation`);
+            }
+            const text = await response.text();
+            translationData[langCode] = parseTranslationFile(text);
+        }
+        
+        // Get the specific verse translation
+        const translation = getVerseTranslation(translationData[langCode], currentSelectedSurah, currentSelectedVerse);
+        const arabicVerse = quranData[currentSelectedSurah][currentSelectedVerse];
+        
+        // Show translation
+        showTranslationBox(langName, arabicVerse, translation, currentSelectedSurah, currentSelectedVerse);
+        
+    } catch (error) {
+        console.error('Error loading translation:', error);
+        alert(`Error loading ${langName} translation. Please try again.`);
+        hideTranslationLoading();
+    }
+}
+
+// Parse translation file
+function parseTranslationFile(fileContent) {
+    const translations = {};
+    const lines = fileContent.split('\n');
+    
+    lines.forEach(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine && trimmedLine.includes('|')) {
+            const parts = trimmedLine.split('|');
+            if (parts.length >= 3) {
+                const chapter = parseInt(parts[0]);
+                const verse = parseInt(parts[1]);
+                const translation = parts.slice(2).join('|').trim();
+                
+                if (!translations[chapter]) {
+                    translations[chapter] = {};
+                }
+                translations[chapter][verse] = translation;
+            }
+        }
+    });
+    
+    return translations;
+}
+
+// Get specific verse translation
+function getVerseTranslation(translationData, chapter, verse) {
+    if (translationData[chapter] && translationData[chapter][verse]) {
+        return translationData[chapter][verse];
+    }
+    return 'Translation not available for this verse.';
+}
+
+// Show translation loading
+function showTranslationLoading(langName) {
+    const readingBox = document.getElementById('translationReadingBox');
+    const title = document.getElementById('translationTitle');
+    const arabicDisplay = document.getElementById('arabicVerseDisplay');
+    const translationText = document.getElementById('translationText');
+    
+    title.textContent = `Loading ${langName} Translation...`;
+    arabicDisplay.innerHTML = '<div class="loading" style="margin: 20px auto;"></div>';
+    translationText.innerHTML = '<div class="translation-loading">Please wait while we load the translation...</div>';
+    
+    readingBox.classList.remove('hidden');
+}
+
+// Hide translation loading
+function hideTranslationLoading() {
+    const readingBox = document.getElementById('translationReadingBox');
+    readingBox.classList.add('hidden');
+}
+
+// Show translation box
+function showTranslationBox(langName, arabicVerse, translation, chapter, verse) {
+    const readingBox = document.getElementById('translationReadingBox');
+    const title = document.getElementById('translationTitle');
+    const arabicDisplay = document.getElementById('arabicVerseDisplay');
+    const translationText = document.getElementById('translationText');
+    
+    const chapterName = chapterNames[chapter];
+    
+    title.textContent = `${langName} Translation`;
+    arabicDisplay.innerHTML = `
+        <div style="margin-bottom: 10px; font-size: 0.8em; color: #888;">
+            ${chapterName} - Verse ${verse}
+        </div>
+        ${arabicVerse}
+    `;
+    translationText.textContent = translation;
+    
+    readingBox.classList.remove('hidden');
+}
+
+// Close translation box
+function closeTranslationBox() {
+    const readingBox = document.getElementById('translationReadingBox');
+    readingBox.classList.add('hidden');
+}
+
+// Close translation box when clicking outside
+document.addEventListener('click', function(event) {
+    const readingBox = document.getElementById('translationReadingBox');
+    const target = event.target;
+    
+    if (readingBox && !readingBox.classList.contains('hidden')) {
+        if (!readingBox.contains(target) && !target.classList.contains('language-btn')) {
+            closeTranslationBox();
+        }
+    }
+});
 </script>
 </div>
 </body>
