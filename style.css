@@ -1123,6 +1123,10 @@ font-size: 12px;
   order: 3;
 }
 
+#exegesisBtn {
+  order: 4;
+}
+
 .navigation-menu {
   position: fixed;
   bottom: 80px;
