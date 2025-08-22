@@ -1539,7 +1539,7 @@ display: none;
 /* Navigation Menu Animation */
 .navigation-menu {
   position: fixed;
-  bottom: 50px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
   opacity: 0;
