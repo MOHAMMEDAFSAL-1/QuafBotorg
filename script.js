@@ -2820,10 +2820,7 @@ const exegesisOptions = [
 
 // Exegesis direction configuration (ADD THIS OBJECT)
 const exegesisDirections = {
-    'Tafsir Al Jalalayn': 'rtl', 'Tafsir At-Tabari': 'rtl', 'Tafsir Al-Qurtubi': 'rtl',
-    'Tafsir Al-Baghawi': 'rtl', 'Tafsir Al-Jalalayn': 'rtl', 'Tafsir Fakhr Ar-Razi': 'rtl',
-    'Tafsir As-Sa\'di': 'rtl', 'Tafsir Al-Baydhawi': 'rtl', 'Tafsir An-Nasafi': 'rtl',
-    'Tafsir Al-Khazin': 'rtl', 'At-Tafsir Al-Muyassar': 'rtl', 'At-Tafsir Al-Wasit': 'rtl'
+    'Tafsir Al Jalalayn': 'rtl'
 };
 
 // ADD THESE FUNCTIONS FOR EXEGESIS
