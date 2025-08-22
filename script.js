@@ -2338,7 +2338,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (loadingScreen.style.display !== 'none') {
         hideLoadingScreen();
       }
-    }, 7000); // 8 second maximum
+    }, 6000); // 8 second maximum
   } else {
     // If no video element found, hide loading screen after minimum time
     hideLoadingScreen();
