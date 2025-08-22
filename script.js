@@ -2815,7 +2815,7 @@ let currentSelectedExegesisVerse = null;
 
 // Exegesis configuration with 12 options (ADD THIS ARRAY)
 const exegesisOptions = [
-    { code: 'TafsirIbnKathir', name: 'Tafsir Ibn Kathir', flag: '📖', file: 'ar.jalalayn.txt' }
+    { code: 'TafsirAlJalalayn', name: 'Tafsir Al Jalalayn', flag: '📖', file: 'ar.jalalayn.txt' }
 ];
 
 // Exegesis direction configuration (ADD THIS OBJECT)
