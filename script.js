@@ -9,11 +9,13 @@ function showSection(sectionName) {
   document.getElementById('homeSection').classList.add('hidden');
   document.getElementById('quranSection').classList.add('hidden');
   document.getElementById('translationSection').classList.add('hidden');
+  document.getElementById('exegesisSection').classList.add('hidden'); // ADD THIS LINE
 
   // Remove active class from all buttons
   document.getElementById('homeBtn').classList.remove('active');
   document.getElementById('quranBtn').classList.remove('active');
   document.getElementById('translationBtn').classList.remove('active');
+  document.getElementById('exegesisBtn').classList.remove('active'); // ADD THIS LINE
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
@@ -44,6 +46,19 @@ function showSection(sectionName) {
     if (!window.translationInitialized) {
       initializeTranslationSection();
       window.translationInitialized = true;
+    }
+  // ADD THIS NEW SECTION
+  } else if (sectionName === 'exegesis') {
+    document.getElementById('exegesisSection').classList.remove('hidden');
+    document.getElementById('exegesisBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
+
+    // Initialize exegesis section
+    if (!window.exegesisInitialized) {
+      initializeExegesisSection();
+      window.exegesisInitialized = true;
     }
   }
   
@@ -2358,7 +2373,6 @@ let currentSelectedVerse = null;
 const languages = [
     { code: 'Albanian', name: 'Albanian', flag: '🇦🇱', file: 'sq.nahi.txt' },
     { code: 'Amazigh', name: 'Amazigh', flag: 'ⵣ', file: 'ber.mensur.txt' },
-    { code: 'Arabic', name: 'Arabic', flag: '🇸🇦', file: 'ar.jalalayn.txt' },
     { code: 'Amharic', name: 'Amharic', flag: '🇪🇹', file: 'am.sadiq.txt' },
     { code: 'Azerbaijani', name: 'Azerbaijani', flag: '🇦🇿', file: 'az.musayev.txt' },
     { code: 'Bengali', name: 'Bengali', flag: '🇧🇩', file: 'bn.hoque.txt' },
@@ -2793,3 +2807,282 @@ document.addEventListener('keydown', (e) => {
     toggleMenu();
   }
 });
+
+// Exegesis functionality (ADD THESE VARIABLES)
+let exegesisData = {};
+let currentSelectedExegesisSurah = null;
+let currentSelectedExegesisVerse = null;
+
+// Exegesis configuration with 12 options (ADD THIS ARRAY)
+const exegesisOptions = [
+    { code: 'TafsirIbnKathir', name: 'Tafsir Ibn Kathir', flag: '📖', file: 'ar.jalalayn.txt' }
+];
+
+// Exegesis direction configuration (ADD THIS OBJECT)
+const exegesisDirections = {
+    'Tafsir Ibn Kathir': 'rtl', 'Tafsir At-Tabari': 'rtl', 'Tafsir Al-Qurtubi': 'rtl',
+    'Tafsir Al-Baghawi': 'rtl', 'Tafsir Al-Jalalayn': 'rtl', 'Tafsir Fakhr Ar-Razi': 'rtl',
+    'Tafsir As-Sa\'di': 'rtl', 'Tafsir Al-Baydhawi': 'rtl', 'Tafsir An-Nasafi': 'rtl',
+    'Tafsir Al-Khazin': 'rtl', 'At-Tafsir Al-Muyassar': 'rtl', 'At-Tafsir Al-Wasit': 'rtl'
+};
+
+// ADD THESE FUNCTIONS FOR EXEGESIS
+
+// Initialize exegesis section
+function initializeExegesisSection() {
+    populateExegesisSurahSelect();
+    populateExegesisLanguageGrid();
+    setupExegesisEventListeners();
+}
+
+// Populate Exegesis Surah dropdown
+function populateExegesisSurahSelect() {
+    const surahSelect = document.getElementById('exegesisSurahSelect');
+    let html = '<option value="">Select Surah</option>';
+    
+    Object.keys(chapterNames).forEach(chapterNum => {
+        const name = chapterNames[chapterNum];
+        html += `<option value="${chapterNum}">${chapterNum}. ${name}</option>`;
+    });
+    
+    surahSelect.innerHTML = html;
+}
+
+// Populate exegesis verse dropdown based on selected surah
+function populateExegesisVerseSelect(surahNumber) {
+    const verseSelect = document.getElementById('exegesisVerseSelect');
+    
+    if (!surahNumber) {
+        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+        verseSelect.disabled = true;
+        return;
+    }
+    
+    const surahNum = parseInt(surahNumber);
+    
+    if (!quranData[surahNum]) {
+        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+        verseSelect.disabled = true;
+        return;
+    }
+    
+    const verses = Object.keys(quranData[surahNum]).map(v => parseInt(v)).sort((a, b) => a - b);
+    let html = '<option value="">Select Verse</option>';
+    
+    verses.forEach(verseNum => {
+        html += `<option value="${verseNum}">Verse ${verseNum}</option>`;
+    });
+    
+    verseSelect.innerHTML = html;
+    verseSelect.disabled = false;
+}
+
+// Setup event listeners for exegesis controls
+function setupExegesisEventListeners() {
+    const surahSelect = document.getElementById('exegesisSurahSelect');
+    const verseSelect = document.getElementById('exegesisVerseSelect');
+    
+    if (surahSelect) {
+        surahSelect.addEventListener('change', function() {
+            const selectedSurah = this.value;
+            populateExegesisVerseSelect(selectedSurah);
+            updateExegesisButtonsState();
+        });
+    }
+    
+    if (verseSelect) {
+        verseSelect.addEventListener('change', function() {
+            updateExegesisButtonsState();
+        });
+    }
+}
+
+// Populate exegesis language grid
+function populateExegesisLanguageGrid() {
+    const languageGrid = document.getElementById('exegesisLanguageGrid');
+    let html = '';
+    
+    exegesisOptions.forEach(option => {
+        html += `
+            <button class="language-btn disabled" id="exegesis-${option.code}" 
+                    onclick="openExegesis('${option.code}', '${option.file}', '${option.name}')">
+                <span class="flag">${option.flag}</span>
+                <span class="language-name">${option.name}</span>
+            </button>
+        `;
+    });
+    
+    languageGrid.innerHTML = html;
+}
+
+// Update exegesis buttons state based on selection
+function updateExegesisButtonsState() {
+    const surahSelect = document.getElementById('exegesisSurahSelect');
+    const verseSelect = document.getElementById('exegesisVerseSelect');
+    const loadBtn = document.getElementById('loadExegesisBtn');
+    
+    const surahSelected = surahSelect.value !== '';
+    const verseSelected = verseSelect.value !== '';
+    const bothSelected = surahSelected && verseSelected;
+    
+    // Update load button
+    if (loadBtn) {
+        loadBtn.style.opacity = bothSelected ? '1' : '0.5';
+        loadBtn.disabled = !bothSelected;
+    }
+    
+    // Update exegesis buttons
+    const langButtons = document.querySelectorAll('#exegesisLanguageGrid .language-btn');
+    langButtons.forEach(btn => {
+        if (bothSelected && currentSelectedExegesisSurah && currentSelectedExegesisVerse) {
+            btn.classList.remove('disabled');
+        } else {
+            btn.classList.add('disabled');
+        }
+    });
+}
+
+// Load selected exegesis values
+function loadSelectedExegesis() {
+    const surahSelect = document.getElementById('exegesisSurahSelect');
+    const verseSelect = document.getElementById('exegesisVerseSelect');
+    
+    const surahValue = surahSelect.value;
+    const verseValue = verseSelect.value;
+    
+    if (!surahValue || !verseValue) {
+        alert('Please select both Surah and Verse');
+        return;
+    }
+    
+    currentSelectedExegesisSurah = parseInt(surahValue);
+    currentSelectedExegesisVerse = parseInt(verseValue);
+    
+    updateExegesisButtonsState();
+    
+    // Show success message
+    const loadBtn = document.getElementById('loadExegesisBtn');
+    const originalText = loadBtn.textContent;
+    loadBtn.textContent = '✓ Loaded!';
+    loadBtn.style.background = 'linear-gradient(145deg, #27ae60, #2ecc71)';
+    
+    setTimeout(() => {
+        loadBtn.textContent = originalText;
+        loadBtn.style.background = '';
+    }, 2000);
+}
+
+// Open exegesis for specific option
+async function openExegesis(optionCode, fileName, optionName) {
+    // Check if selection is made
+    if (!currentSelectedExegesisSurah || !currentSelectedExegesisVerse) {
+        alert('Please select Surah and Verse first, then click "Load Exegesis"');
+        return;
+    }
+    
+    // Check if button is disabled
+    const button = document.getElementById(`exegesis-${optionCode}`);
+    if (button.classList.contains('disabled')) {
+        return;
+    }
+    
+    try {
+        // Show loading immediately
+        showExegesisLoading(optionName);
+        
+        setTimeout(async () => {
+            try {
+                // Load exegesis data if not already loaded
+                if (!exegesisData[optionCode]) {
+                    const response = await fetch(fileName);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${optionName} exegesis`);
+                    }
+                    const text = await response.text();
+                    exegesisData[optionCode] = parseTranslationFile(text);
+                }
+                
+                // Get the specific verse exegesis
+                const exegesis = getVerseTranslation(exegesisData[optionCode], currentSelectedExegesisSurah, currentSelectedExegesisVerse);
+                const arabicVerse = quranData[currentSelectedExegesisSurah][currentSelectedExegesisVerse];
+                
+                // Show exegesis with proper direction
+                showExegesisBox(optionName, arabicVerse, exegesis, currentSelectedExegesisSurah, currentSelectedExegesisVerse);
+                
+            } catch (error) {
+                console.error('Error loading exegesis:', error);
+                alert(`Error loading ${optionName} exegesis. Please try again.`);
+                hideExegesisLoading();
+            }
+        }, 10);
+        
+    } catch (error) {
+        console.error('Error loading exegesis:', error);
+        alert(`Error loading ${optionName} exegesis. Please try again.`);
+        hideExegesisLoading();
+    }
+}
+
+// Show exegesis loading
+function showExegesisLoading(optionName) {
+    const readingBox = document.getElementById('exegesisReadingBox');
+    const title = document.getElementById('exegesisTitle');
+    const arabicDisplay = document.getElementById('exegesisArabicVerseDisplay');
+    const exegesisText = document.getElementById('exegesisText');
+    
+    title.textContent = `Loading ${optionName}...`;
+    arabicDisplay.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <div class="loading" style="margin: 0 auto 15px;"></div>
+            <div style="color: #888;">Preparing Arabic text...</div>
+        </div>
+    `;
+    exegesisText.innerHTML = '<div class="translation-loading">Fetching exegesis data...</div>';
+    
+    readingBox.classList.remove('hidden');
+}
+
+// Hide exegesis loading
+function hideExegesisLoading() {
+    const readingBox = document.getElementById('exegesisReadingBox');
+    readingBox.classList.add('hidden');
+}
+
+// Show exegesis box with proper text direction
+function showExegesisBox(optionName, arabicVerse, exegesis, chapter, verse) {
+    const readingBox = document.getElementById('exegesisReadingBox');
+    const title = document.getElementById('exegesisTitle');
+    const arabicDisplay = document.getElementById('exegesisArabicVerseDisplay');
+    const exegesisText = document.getElementById('exegesisText');
+    
+    const chapterName = chapterNames[chapter];
+    const direction = exegesisDirections[optionName] || 'rtl';
+    
+    title.textContent = `${optionName}`;
+    arabicDisplay.innerHTML = `
+        <div style="margin-bottom: 10px; font-size: 0.8em; color: #888;">
+            ${chapterName} - Verse ${verse}
+        </div>
+        ${arabicVerse}
+    `;
+    
+    // Set proper direction and alignment for exegesis text
+    exegesisText.textContent = exegesis;
+    exegesisText.style.direction = direction;
+    exegesisText.style.textAlign = direction === 'rtl' ? 'right' : 'left';
+    exegesisText.style.fontFamily = direction === 'rtl' ? "'Amiri', serif" : "'Inter', sans-serif";
+    
+    // Also set direction for the entire exegesis box content
+    const exegesisContent = readingBox.querySelector('.translation-content');
+    if (exegesisContent) {
+        exegesisContent.style.direction = direction;
+    }
+    
+    readingBox.classList.remove('hidden');
+}
+
+// Close exegesis box
+function closeExegesisBox() {
+    const readingBox = document.getElementById('exegesisReadingBox');
+    readingBox.classList.add('hidden');
+}
