@@ -48,6 +48,9 @@
     <button class="nav-btn" id="translationBtn" onclick="showSection('translation')">
       <i class="fas fa-language"></i>Translation
     </button>
+    <button class="nav-btn" id="exegesisBtn" onclick="showSection('exegesis')">
+      <i class="fas fa-search"></i>Exegesis
+    </button>
   </div>
 
   <!-- Speaker Control -->
@@ -251,6 +254,47 @@
       </div>
     </div>
   </div>
+
+  <!-- EXEGESIS SECTION (ADD THIS ENTIRE SECTION) -->
+<div id="exegesisSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Exegesis (Tafsir)</h1>
+<p>Select Surah and Verse, then choose an Exegesis</p>
+</div>
+
+<!-- Exegesis Controls -->
+<div class="translation-controls">
+<select id="exegesisSurahSelect" class="translation-select">
+<option value="">Select Surah</option>
+</select>
+<select id="exegesisVerseSelect" class="translation-select" disabled>
+<option value="">Select Verse</option>
+</select>
+<button class="quran-btn" id="loadExegesisBtn" onclick="loadSelectedExegesis()">Load Exegesis</button>
+</div>
+
+<!-- Exegesis Language Buttons Grid -->
+<div class="language-grid" id="exegesisLanguageGrid">
+<!-- Exegesis options will be populated here -->
+</div>
+
+<!-- Exegesis Reading Box -->
+<div id="exegesisReadingBox" class="translation-reading-box hidden">
+<div class="translation-header">
+<h3 id="exegesisTitle"></h3>
+<button class="close-translation" onclick="closeExegesisBox()">×</button>
+</div>
+<div class="translation-content">
+<div class="arabic-verse-display" id="exegesisArabicVerseDisplay"></div>
+<div class="translation-text" id="exegesisText"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+  
 </div>
 <script src="script.js"></script>
 </body>
