@@ -1430,6 +1430,52 @@ backdrop-filter: blur(5px);
 display: none;
 } 
 
+/* Translation text direction support */
+.translation-text {
+    transition: all 0.3s ease;
+    font-size: 1.3em;
+    line-height: 1.8;
+    color: #e0e0e0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border-left: 4px solid #4dc0b5;
+}
+
+.translation-text[dir="rtl"] {
+    border-left: none;
+    border-right: 4px solid #4dc0b5;
+    font-family: 'Amiri', serif;
+    font-size: 1.4em;
+    line-height: 2;
+}
+
+.translation-text[dir="ltr"] {
+    font-family: 'Inter', sans-serif;
+    text-align: justify;
+}
+
+/* Loading animation improvements */
+.translation-loading {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.translation-loading::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    border: 3px solid #4dc0b5;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+} 
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -4105,6 +4151,22 @@ const languages = [
     { code: 'Uzbek', name: 'Uzbek', flag: '🇺🇿', file: 'uz.sodik.txt' }
 ];
 
+// Language direction configuration
+const languageDirections = {
+    'Albanian': 'ltr', 'Amazigh': 'rtl', 'Arabic': 'rtl', 'Amharic': 'ltr',
+    'Azerbaijani': 'ltr', 'Bengali': 'ltr', 'Bosnian': 'ltr', 'Bulgarian': 'ltr',
+    'Chinese (Simplified)': 'ltr', 'Chinese (Traditional)': 'ltr', 'Czech': 'ltr',
+    'Divehi': 'rtl', 'Dutch': 'ltr', 'English': 'ltr', 'French': 'ltr',
+    'German': 'ltr', 'Hausa': 'ltr', 'Hindi': 'ltr', 'Indonesian': 'ltr',
+    'Italian': 'ltr', 'Japanese': 'ltr', 'Korean': 'ltr', 'Kurdish': 'rtl',
+    'Malay': 'ltr', 'Malayalam': 'ltr', 'Norwegian': 'ltr', 'Pashto': 'rtl',
+    'Persian (Farsi)': 'rtl', 'Polish': 'ltr', 'Portuguese': 'ltr', 'Romanian': 'ltr',
+    'Russian': 'ltr', 'Sindhi': 'rtl', 'Somali': 'ltr', 'Spanish': 'ltr',
+    'Swahili': 'ltr', 'Swedish': 'ltr', 'Tajik': 'ltr', 'Tamil': 'ltr',
+    'Tatar': 'ltr', 'Thai': 'ltr', 'Turkish': 'ltr', 'Urdu': 'rtl',
+    'Uyghur': 'rtl', 'Uzbek': 'ltr'
+}; 
+
 // Initialize translation section
 function initializeTranslationSection() {
     populateSurahSelect();
@@ -4252,7 +4314,7 @@ function loadSelectedTranslation() {
     }, 2000);
 }
 
-// Open translation for specific language
+// Open translation for specific language with improved performance
 async function openTranslation(langCode, fileName, langName) {
     // Check if selection is made
     if (!currentSelectedSurah || !currentSelectedVerse) {
@@ -4267,25 +4329,35 @@ async function openTranslation(langCode, fileName, langName) {
     }
     
     try {
-        // Show loading
+        // Show loading immediately
         showTranslationLoading(langName);
         
-        // Load translation data if not already loaded
-        if (!translationData[langCode]) {
-            const response = await fetch(fileName);
-            if (!response.ok) {
-                throw new Error(`Failed to load ${langName} translation`);
+        // Use setTimeout to allow UI to update before heavy processing
+        setTimeout(async () => {
+            try {
+                // Load translation data if not already loaded
+                if (!translationData[langCode]) {
+                    const response = await fetch(fileName);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${langName} translation`);
+                    }
+                    const text = await response.text();
+                    translationData[langCode] = parseTranslationFile(text);
+                }
+                
+                // Get the specific verse translation
+                const translation = getVerseTranslation(translationData[langCode], currentSelectedSurah, currentSelectedVerse);
+                const arabicVerse = quranData[currentSelectedSurah][currentSelectedVerse];
+                
+                // Show translation with proper direction
+                showTranslationBox(langName, arabicVerse, translation, currentSelectedSurah, currentSelectedVerse);
+                
+            } catch (error) {
+                console.error('Error loading translation:', error);
+                alert(`Error loading ${langName} translation. Please try again.`);
+                hideTranslationLoading();
             }
-            const text = await response.text();
-            translationData[langCode] = parseTranslationFile(text);
-        }
-        
-        // Get the specific verse translation
-        const translation = getVerseTranslation(translationData[langCode], currentSelectedSurah, currentSelectedVerse);
-        const arabicVerse = quranData[currentSelectedSurah][currentSelectedVerse];
-        
-        // Show translation
-        showTranslationBox(langName, arabicVerse, translation, currentSelectedSurah, currentSelectedVerse);
+        }, 10); // Small delay to allow UI update
         
     } catch (error) {
         console.error('Error loading translation:', error);
@@ -4294,27 +4366,33 @@ async function openTranslation(langCode, fileName, langName) {
     }
 }
 
-// Parse translation file
+// Parse translation file with better performance
 function parseTranslationFile(fileContent) {
     const translations = {};
     const lines = fileContent.split('\n');
     
-    lines.forEach(line => {
-        const trimmedLine = line.trim();
-        if (trimmedLine && trimmedLine.includes('|')) {
-            const parts = trimmedLine.split('|');
-            if (parts.length >= 3) {
-                const chapter = parseInt(parts[0]);
-                const verse = parseInt(parts[1]);
-                const translation = parts.slice(2).join('|').trim();
-                
-                if (!translations[chapter]) {
-                    translations[chapter] = {};
+    // Use a more efficient parsing approach
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line) {
+            const pipeIndex = line.indexOf('|');
+            if (pipeIndex !== -1) {
+                const secondPipeIndex = line.indexOf('|', pipeIndex + 1);
+                if (secondPipeIndex !== -1) {
+                    const chapter = parseInt(line.substring(0, pipeIndex));
+                    const verse = parseInt(line.substring(pipeIndex + 1, secondPipeIndex));
+                    const translation = line.substring(secondPipeIndex + 1).trim();
+                    
+                    if (!isNaN(chapter) && !isNaN(verse)) {
+                        if (!translations[chapter]) {
+                            translations[chapter] = {};
+                        }
+                        translations[chapter][verse] = translation;
+                    }
                 }
-                translations[chapter][verse] = translation;
             }
         }
-    });
+    }
     
     return translations;
 }
@@ -4327,7 +4405,7 @@ function getVerseTranslation(translationData, chapter, verse) {
     return 'Translation not available for this verse.';
 }
 
-// Show translation loading
+// Show translation loading with better UX
 function showTranslationLoading(langName) {
     const readingBox = document.getElementById('translationReadingBox');
     const title = document.getElementById('translationTitle');
@@ -4335,8 +4413,13 @@ function showTranslationLoading(langName) {
     const translationText = document.getElementById('translationText');
     
     title.textContent = `Loading ${langName} Translation...`;
-    arabicDisplay.innerHTML = '<div class="loading" style="margin: 20px auto;"></div>';
-    translationText.innerHTML = '<div class="translation-loading">Please wait while we load the translation...</div>';
+    arabicDisplay.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <div class="loading" style="margin: 0 auto 15px;"></div>
+            <div style="color: #888;">Preparing Arabic text...</div>
+        </div>
+    `;
+    translationText.innerHTML = '<div class="translation-loading">Fetching translation data...</div>';
     
     readingBox.classList.remove('hidden');
 }
@@ -4347,7 +4430,7 @@ function hideTranslationLoading() {
     readingBox.classList.add('hidden');
 }
 
-// Show translation box
+// Show translation box with proper text direction
 function showTranslationBox(langName, arabicVerse, translation, chapter, verse) {
     const readingBox = document.getElementById('translationReadingBox');
     const title = document.getElementById('translationTitle');
@@ -4355,6 +4438,7 @@ function showTranslationBox(langName, arabicVerse, translation, chapter, verse) 
     const translationText = document.getElementById('translationText');
     
     const chapterName = chapterNames[chapter];
+    const direction = languageDirections[langName] || 'ltr';
     
     title.textContent = `${langName} Translation`;
     arabicDisplay.innerHTML = `
@@ -4363,7 +4447,18 @@ function showTranslationBox(langName, arabicVerse, translation, chapter, verse) 
         </div>
         ${arabicVerse}
     `;
+    
+    // Set proper direction and alignment for translation text
     translationText.textContent = translation;
+    translationText.style.direction = direction;
+    translationText.style.textAlign = direction === 'rtl' ? 'right' : 'left';
+    translationText.style.fontFamily = direction === 'rtl' ? "'Amiri', serif" : "'Inter', sans-serif";
+    
+    // Also set direction for the entire translation box content
+    const translationContent = readingBox.querySelector('.translation-content');
+    if (translationContent) {
+        translationContent.style.direction = direction;
+    }
     
     readingBox.classList.remove('hidden');
 }
