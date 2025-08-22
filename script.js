@@ -2732,3 +2732,64 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
+// Menu Toggle Functionality
+const menuToggle = document.getElementById('menuToggle');
+const navigationMenu = document.querySelector('.navigation-menu');
+const menuBackdrop = document.getElementById('menuBackdrop');
+let isMenuOpen = false;
+
+function toggleMenu() {
+  isMenuOpen = !isMenuOpen;
+  
+  if (isMenuOpen) {
+    // Open menu
+    menuToggle.classList.add('active');
+    navigationMenu.classList.add('show');
+    menuBackdrop.classList.add('show');
+    
+    // Add stagger animation to menu buttons
+    const menuBtns = document.querySelectorAll('.nav-btn');
+    menuBtns.forEach((btn, index) => {
+      btn.style.transform = 'translateY(20px)';
+      btn.style.opacity = '0';
+      
+      setTimeout(() => {
+        btn.style.transform = 'translateY(0)';
+        btn.style.opacity = '1';
+        btn.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      }, index * 100 + 200);
+    });
+  } else {
+    // Close menu
+    menuToggle.classList.remove('active');
+    navigationMenu.classList.remove('show');
+    menuBackdrop.classList.remove('show');
+    
+    // Reset button animations
+    const menuBtns = document.querySelectorAll('.nav-btn');
+    menuBtns.forEach(btn => {
+      btn.style.transition = '';
+    });
+  }
+}
+
+// Event listeners
+menuToggle.addEventListener('click', toggleMenu);
+menuBackdrop.addEventListener('click', toggleMenu);
+
+// Close menu when clicking on a nav button
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (isMenuOpen) {
+      setTimeout(() => toggleMenu(), 150); // Small delay for better UX
+    }
+  });
+});
+
+// Close menu on escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isMenuOpen) {
+    toggleMenu();
+  }
+});
