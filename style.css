@@ -156,7 +156,7 @@ min-height: 100vh;
   direction: rtl; /* Right to left text direction */
   border-left: 3px solid #e2e8f0; /* Blinking cursor effect */
   animation: typing 2s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite;
-  background: linear-gradient(45deg, #667eea, #764ba2, #a8e6cf);
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd, #ff7675, #fd79a8, #fdcb6e, #6c5ce7);
   background-size: 200% 200%;
   -webkit-background-clip: text; 
   -webkit-text-fill-color: transparent;
