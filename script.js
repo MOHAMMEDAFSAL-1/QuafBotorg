@@ -9,13 +9,13 @@ function showSection(sectionName) {
   document.getElementById('homeSection').classList.add('hidden');
   document.getElementById('quranSection').classList.add('hidden');
   document.getElementById('translationSection').classList.add('hidden');
-  document.getElementById('exegesisSection').classList.add('hidden'); // ADD THIS LINE
+  document.getElementById('exegesisSection').classList.add('hidden');
 
   // Remove active class from all buttons
   document.getElementById('homeBtn').classList.remove('active');
   document.getElementById('quranBtn').classList.remove('active');
   document.getElementById('translationBtn').classList.remove('active');
-  document.getElementById('exegesisBtn').classList.remove('active'); // ADD THIS LINE
+  document.getElementById('exegesisBtn').classList.remove('active');
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
@@ -42,12 +42,18 @@ function showSection(sectionName) {
     document.documentElement.setAttribute('lang', 'en');
     document.body.style.overflow = 'auto';
 
-    // Initialize translation section
-    if (!window.translationInitialized) {
+    // Wait for Quran data to load before initializing translation
+    if (!window.quranLoaded) {
+      loadQuranData().then(() => {
+        if (!window.translationInitialized) {
+          initializeTranslationSection();
+          window.translationInitialized = true;
+        }
+      });
+    } else if (!window.translationInitialized) {
       initializeTranslationSection();
       window.translationInitialized = true;
     }
-  // ADD THIS NEW SECTION
   } else if (sectionName === 'exegesis') {
     document.getElementById('exegesisSection').classList.remove('hidden');
     document.getElementById('exegesisBtn').classList.add('active');
@@ -55,8 +61,15 @@ function showSection(sectionName) {
     document.documentElement.setAttribute('lang', 'en');
     document.body.style.overflow = 'auto';
 
-    // Initialize exegesis section
-    if (!window.exegesisInitialized) {
+    // Wait for Quran data to load before initializing exegesis
+    if (!window.quranLoaded) {
+      loadQuranData().then(() => {
+        if (!window.exegesisInitialized) {
+          initializeExegesisSection();
+          window.exegesisInitialized = true;
+        }
+      });
+    } else if (!window.exegesisInitialized) {
       initializeExegesisSection();
       window.exegesisInitialized = true;
     }
@@ -1463,29 +1476,31 @@ window.quranLoaded = false;
 
 // Load Quran data from JSON file
 async function loadQuranData() {
-try {
-const response = await fetch('quran_structured.json');
-quranData = await response.json();
+  try {
+    const response = await fetch('quran_structured.json');
+    const rawData = await response.json();
 
-// Convert verse numbers from strings to integers for easier handling
-Object.keys(quranData).forEach(chapterNum => {
-const chapter = quranData[chapterNum];
-const newChapter = {};
-Object.keys(chapter).forEach(verseNum => {
-newChapter[parseInt(verseNum)] = chapter[verseNum];
-});
-quranData[parseInt(chapterNum)] = newChapter;
-});
+    // Convert verse numbers from strings to integers for easier handling
+    Object.keys(rawData).forEach(chapterNum => {
+      const chapter = rawData[chapterNum];
+      const newChapter = {};
+      Object.keys(chapter).forEach(verseNum => {
+        newChapter[parseInt(verseNum)] = chapter[verseNum];
+      });
+      quranData[parseInt(chapterNum)] = newChapter;
+    });
 
-window.quranLoaded = true;
-displayPage();
-populateChapterSelector();
-loadQuranPreferences();
-} catch (error) {
-console.error('Error loading Quran data:', error);
-document.getElementById('content').innerHTML = 
-'<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">خطأ في تحميل البيانات</p>';
-}
+    window.quranLoaded = true;
+    displayPage();
+    populateChapterSelector();
+    loadQuranPreferences();
+    return Promise.resolve(); // Return resolved promise
+  } catch (error) {
+    console.error('Error loading Quran data:', error);
+    document.getElementById('content').innerHTML = 
+      '<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">خطأ في تحميل البيانات</p>';
+    return Promise.reject(error);
+  }
 }
 
 // Display current page instead of chapter
@@ -2457,7 +2472,7 @@ function populateSurahSelect() {
 function populateVerseSelect(surahNumber) {
     const verseSelect = document.getElementById('verseSelect');
     
-    if (!surahNumber) {
+    if (!surahNumber || !quranData) {
         verseSelect.innerHTML = '<option value="">Select Verse</option>';
         verseSelect.disabled = true;
         return;
@@ -2849,7 +2864,7 @@ function populateExegesisSurahSelect() {
 function populateExegesisVerseSelect(surahNumber) {
     const verseSelect = document.getElementById('exegesisVerseSelect');
     
-    if (!surahNumber) {
+    if (!surahNumber || !quranData) {
         verseSelect.innerHTML = '<option value="">Select Verse</option>';
         verseSelect.disabled = true;
         return;
