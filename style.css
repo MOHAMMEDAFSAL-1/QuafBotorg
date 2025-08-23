@@ -156,7 +156,7 @@ min-height: 100vh;
   direction: rtl; /* Right to left text direction */
   border-left: 3px solid #e2e8f0; /* Blinking cursor effect */
   animation: typing 2s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd, #ff7675, #fd79a8, #fdcb6e, #6c5ce7);
+  background: linear-gradient(45deg, #667eea, #764ba2, #a8e6cf);
   background-size: 200% 200%;
   -webkit-background-clip: text; 
   -webkit-text-fill-color: transparent;
@@ -516,7 +516,7 @@ transform: translateY(0);
 
 .navigation-menu {
   position: fixed;
-  bottom: 80px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.3);
@@ -536,7 +536,7 @@ transform: translateY(0);
   background: transparent;
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 12px; /* instead of 12px 20px */
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
@@ -545,9 +545,8 @@ transform: translateY(0);
   display: flex;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
-  min-width: fit-content;
   position: relative;
+  min-width: auto; /* remove fit-content so it doesn't force width */
 }
 
 /* Add specific positioning for each button */
@@ -1051,10 +1050,12 @@ gap: 6px;
 }
 
 .nav-btn {
-padding: 10px 16px;
-font-size: 13px;
-border-radius: 15px;
-}
+    padding: 10px;         /* equal padding */
+    font-size: 16px;       /* adjust icon size if needed */
+    border-radius: 50%;    /* optional: makes them round */
+    width: 44px;           /* fixed size for consistency */
+    height: 44px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1075,9 +1076,12 @@ gap: 4px;
 }
 
 .nav-btn {
-padding: 8px 12px;
-font-size: 12px;
-}
+    padding: 8px;          /* equal padding */
+    font-size: 14px;
+    border-radius: 50%;    /* optional */
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @keyframes pulse {
@@ -1087,7 +1091,7 @@ font-size: 12px;
 }
 
 .nav-btn i {
-  margin-right: 8px;
+  margin: 0; /* no extra spacing */
   font-size: 16px;
   transition: all 0.3s ease;
   flex-shrink: 0;
@@ -1099,14 +1103,14 @@ font-size: 12px;
 
 @media (max-width: 768px) {
   .nav-btn i {
-    margin-right: 6px;
+    margin: 0; /* remove leftover margin */
     font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .nav-btn i {
-    margin-right: 4px;
+    margin: 0; /* remove leftover margin */
     font-size: 12px;
   }
 }
@@ -1129,7 +1133,7 @@ font-size: 12px;
 
 .navigation-menu {
   position: fixed;
-  bottom: 80px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.3);
@@ -1467,6 +1471,7 @@ display: none;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 } 
+
 /* Hamburger Menu Button */
 .menu-toggle {
   position: fixed;
@@ -1539,7 +1544,7 @@ display: none;
 /* Navigation Menu Animation */
 .navigation-menu {
   position: fixed;
-  bottom: 80px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
   opacity: 0;
