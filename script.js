@@ -10,12 +10,14 @@ function showSection(sectionName) {
   document.getElementById('quranSection').classList.add('hidden');
   document.getElementById('translationSection').classList.add('hidden');
   document.getElementById('exegesisSection').classList.add('hidden');
+  document.getElementById('documentsSection').classList.add('hidden'); // ADD THIS LINE
 
   // Remove active class from all buttons
   document.getElementById('homeBtn').classList.remove('active');
   document.getElementById('quranBtn').classList.remove('active');
   document.getElementById('translationBtn').classList.remove('active');
   document.getElementById('exegesisBtn').classList.remove('active');
+  document.getElementById('documentsBtn').classList.remove('active'); // ADD THIS LINE
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
@@ -72,6 +74,20 @@ function showSection(sectionName) {
     } else if (!window.exegesisInitialized) {
       initializeExegesisSection();
       window.exegesisInitialized = true;
+    }
+  } 
+  // ADD THIS NEW SECTION
+  else if (sectionName === 'documents') {
+    document.getElementById('documentsSection').classList.remove('hidden');
+    document.getElementById('documentsBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
+
+    // Initialize documents if not already loaded
+    if (!window.documentsInitialized) {
+      initializeDocumentsSection();
+      window.documentsInitialized = true;
     }
   }
   
@@ -3097,4 +3113,106 @@ function showExegesisBox(optionName, arabicVerse, exegesis, chapter, verse) {
 function closeExegesisBox() {
     const readingBox = document.getElementById('exegesisReadingBox');
     readingBox.classList.add('hidden');
+}
+
+let documentsData = [
+  {
+    id: 1,
+    title: "The Compilation of the Holy Quran",
+    filename: "https://drive.google.com/uc?export=download&id=YOUR_FILE_ID", // Google Drive direct link
+    size: "2.3 MB",
+    description: "Historical analysis of Quranic compilation"
+  },
+  {
+    id: 2,
+    title: "Islamic Jurisprudence and Modern Law",
+    filename: "https://www.dropbox.com/s/YOUR_FILE_ID/islamic_jurisprudence.pdf?dl=1", // Dropbox direct link
+    size: "1.8 MB",
+    description: "Contemporary applications of Islamic law"
+  },
+  // ... continue for all files
+];
+
+// Initialize documents section
+function initializeDocumentsSection() {
+  populateDocumentsGrid();
+}
+
+// Populate documents grid
+function populateDocumentsGrid() {
+  const documentsGrid = document.getElementById('documentsGrid');
+  
+  // Show loading first
+  documentsGrid.innerHTML = '<div class="documents-loading">Loading documents...</div>';
+  
+  // Simulate loading delay for better UX
+  setTimeout(() => {
+    let html = '';
+    
+    documentsData.forEach(doc => {
+      html += `
+        <div class="document-card" data-aos="fade-up" data-aos-delay="${doc.id * 100}">
+          <div class="document-icon">
+            <i class="fas fa-file-pdf"></i>
+          </div>
+          <div class="document-title">${doc.title}</div>
+          <div class="document-info">
+            <span>PDF Document</span>
+            <span class="document-size">${doc.size}</span>
+          </div>
+          <button class="download-btn" onclick="downloadDocument('${doc.filename}', '${doc.title}')">
+            <i class="fas fa-download"></i>
+            Download PDF
+          </button>
+        </div>
+      `;
+    });
+    
+    documentsGrid.innerHTML = html;
+  }, 500);
+}
+
+function downloadDocument(fileUrl, title) {
+  // Create a temporary anchor element for download
+  const link = document.createElement('a');
+  link.href = fileUrl;
+  link.target = '_blank';
+  
+  // Extract filename from URL for download attribute
+  const urlParts = fileUrl.split('/');
+  const filename = urlParts[urlParts.length - 1] || `${title.replace(/\s+/g, '_')}.pdf`;
+  link.download = filename;
+  
+  // Add some visual feedback
+  const downloadBtn = event.target.closest('.download-btn');
+  const originalText = downloadBtn.innerHTML;
+  
+  downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
+  downloadBtn.disabled = true;
+  
+  // For external URLs, we might need to open in new tab instead of direct download
+  if (fileUrl.startsWith('http') && !fileUrl.includes(window.location.hostname)) {
+    // External URL - open in new tab
+    window.open(fileUrl, '_blank');
+  } else {
+    // Local file - trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  
+  // Reset button after delay
+  setTimeout(() => {
+    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
+    downloadBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+    
+    setTimeout(() => {
+      downloadBtn.innerHTML = originalText;
+      downloadBtn.style.background = '';
+      downloadBtn.disabled = false;
+    }, 2000);
+  }, 1000);
+  
+  // Log download for analytics (optional)
+  console.log(`Downloaded: ${title} (${fileUrl})`);
 }
