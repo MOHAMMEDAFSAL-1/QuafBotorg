@@ -1463,29 +1463,32 @@ window.quranLoaded = false;
 
 // Load Quran data from JSON file
 async function loadQuranData() {
-try {
-const response = await fetch('quran_structured.json');
-quranData = await response.json();
+    try {
+        const response = await fetch('quran_structured.json');
+        quranData = await response.json();
 
-// Convert verse numbers from strings to integers for easier handling
-Object.keys(quranData).forEach(chapterNum => {
-const chapter = quranData[chapterNum];
-const newChapter = {};
-Object.keys(chapter).forEach(verseNum => {
-newChapter[parseInt(verseNum)] = chapter[verseNum];
-});
-quranData[parseInt(chapterNum)] = newChapter;
-});
+        // Convert verse numbers from strings to integers for easier handling
+        Object.keys(quranData).forEach(chapterNum => {
+            const chapter = quranData[chapterNum];
+            const newChapter = {};
+            Object.keys(chapter).forEach(verseNum => {
+                newChapter[parseInt(verseNum)] = chapter[verseNum];
+            });
+            quranData[parseInt(chapterNum)] = newChapter;
+        });
 
-window.quranLoaded = true;
-displayPage();
-populateChapterSelector();
-loadQuranPreferences();
-} catch (error) {
-console.error('Error loading Quran data:', error);
-document.getElementById('content').innerHTML = 
-'<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">خطأ في تحميل البيانات</p>';
-}
+        window.quranLoaded = true;
+        displayPage();
+        populateChapterSelector();
+        loadQuranPreferences();
+        
+        return Promise.resolve(); // Return resolved promise
+    } catch (error) {
+        console.error('Error loading Quran data:', error);
+        document.getElementById('content').innerHTML = 
+            '<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">خطأ في تحميل البيانات</p>';
+        return Promise.reject(error); // Return rejected promise
+    }
 }
 
 // Display current page instead of chapter
@@ -2435,9 +2438,18 @@ const languageDirections = {
 
 // Initialize translation section
 function initializeTranslationSection() {
-    populateSurahSelect();
-    populateLanguageGrid();
-    setupTranslationEventListeners();
+    // Wait for Quran data to load if not already loaded
+    if (!window.quranLoaded) {
+        loadQuranData().then(() => {
+            populateSurahSelect();
+            populateLanguageGrid();
+            setupTranslationEventListeners();
+        });
+    } else {
+        populateSurahSelect();
+        populateLanguageGrid();
+        setupTranslationEventListeners();
+    }
 }
 
 // Populate Surah dropdown
@@ -2455,33 +2467,6 @@ function populateSurahSelect() {
 
 // Populate verse dropdown based on selected surah
 function populateVerseSelect(surahNumber) {
-    const verseSelect = document.getElementById('verseSelect');
-    
-    if (!surahNumber) {
-        verseSelect.innerHTML = '<option value="">Select Verse</option>';
-        verseSelect.disabled = true;
-        return;
-    }
-    
-    // Convert to integer
-    const surahNum = parseInt(surahNumber);
-    
-    if (!quranData[surahNum]) {
-        verseSelect.innerHTML = '<option value="">Select Verse</option>';
-        verseSelect.disabled = true;
-        return;
-    }
-    
-    const verses = Object.keys(quranData[surahNum]).map(v => parseInt(v)).sort((a, b) => a - b);
-    let html = '<option value="">Select Verse</option>';
-    
-    verses.forEach(verseNum => {
-        html += `<option value="${verseNum}">Verse ${verseNum}</option>`;
-    });
-    
-    verseSelect.innerHTML = html;
-    verseSelect.disabled = false;
-}
 
 // Setup event listeners for translation controls
 function setupTranslationEventListeners() {
@@ -2827,9 +2812,18 @@ const exegesisDirections = {
 
 // Initialize exegesis section
 function initializeExegesisSection() {
-    populateExegesisSurahSelect();
-    populateExegesisLanguageGrid();
-    setupExegesisEventListeners();
+    // Wait for Quran data to load if not already loaded
+    if (!window.quranLoaded) {
+        loadQuranData().then(() => {
+            populateExegesisSurahSelect();
+            populateExegesisLanguageGrid();
+            setupExegesisEventListeners();
+        });
+    } else {
+        populateExegesisSurahSelect();
+        populateExegesisLanguageGrid();
+        setupExegesisEventListeners();
+    }
 }
 
 // Populate Exegesis Surah dropdown
@@ -2857,8 +2851,9 @@ function populateExegesisVerseSelect(surahNumber) {
     
     const surahNum = parseInt(surahNumber);
     
-    if (!quranData[surahNum]) {
-        verseSelect.innerHTML = '<option value="">Select Verse</option>';
+    // Check if Quran data is loaded and chapter exists
+    if (!window.quranLoaded || !quranData || !quranData[surahNum]) {
+        verseSelect.innerHTML = '<option value="">Loading verses...</option>';
         verseSelect.disabled = true;
         return;
     }
