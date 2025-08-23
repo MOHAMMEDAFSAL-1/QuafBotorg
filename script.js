@@ -78,18 +78,18 @@ function showSection(sectionName) {
   } 
   // ADD THIS NEW SECTION
   else if (sectionName === 'documents') {
-    document.getElementById('documentsSection').classList.remove('hidden');
-    document.getElementById('documentsBtn').classList.add('active');
-    document.documentElement.setAttribute('dir', 'ltr');
-    document.documentElement.setAttribute('lang', 'en');
-    document.body.style.overflow = 'auto';
+  document.getElementById('documentsSection').classList.remove('hidden');
+  document.getElementById('documentsBtn').classList.add('active');
+  document.documentElement.setAttribute('dir', 'ltr'); // Changed to LTR
+  document.documentElement.setAttribute('lang', 'en');
+  document.body.style.overflow = 'auto';
 
-    // Initialize documents if not already loaded
-    if (!window.documentsInitialized) {
-      initializeDocumentsSection();
-      window.documentsInitialized = true;
-    }
+  // Initialize documents if not already loaded
+  if (!window.documentsInitialized) {
+    initializeDocumentsSection();
+    window.documentsInitialized = true;
   }
+}
   
   // Ensure navigation menu stays visible and properly positioned
   const navMenu = document.querySelector('.navigation-menu');
@@ -3115,104 +3115,229 @@ function closeExegesisBox() {
     readingBox.classList.add('hidden');
 }
 
+// Enhanced documents data with categories
 let documentsData = [
   {
     id: 1,
-    title: "The Compilation of the Holy Quran",
-    filename: "https://drive.google.com/uc?export=download&id=YOUR_FILE_ID", // Google Drive direct link
+    title: "The Science of Tajweed and Quranic Recitation",
+    category: "tajweed",
     size: "2.3 MB",
-    description: "Historical analysis of Quranic compilation"
+    filename: "tajweed_science.pdf",
+    url: "https://example.com/documents/tajweed_science.pdf"
   },
   {
     id: 2,
-    title: "Islamic Jurisprudence and Modern Law",
-    filename: "https://www.dropbox.com/s/YOUR_FILE_ID/islamic_jurisprudence.pdf?dl=1", // Dropbox direct link
+    title: "Principles of Tajweed for Beginners",
+    category: "tajweed", 
     size: "1.8 MB",
-    description: "Contemporary applications of Islamic law"
+    filename: "tajweed_principles.pdf",
+    url: "https://example.com/documents/tajweed_principles.pdf"
   },
-  // ... continue for all files
+  {
+    id: 3,
+    title: "Sciences of the Quran - Uloom ul Quran",
+    category: "uloom",
+    size: "3.1 MB", 
+    filename: "uloom_quran.pdf",
+    url: "https://drive.google.com/file/d/1aLV0K4S514QJQbnIZK0trAWPmM9UUqZF/view?usp=drive_link"
+  },
+  {
+    id: 4,
+    title: "History and Compilation of the Quran",
+    category: "uloom",
+    size: "2.7 MB",
+    filename: "quran_compilation.pdf", 
+    url: "https://example.com/documents/quran_compilation.pdf"
+  },
+  {
+    id: 5,
+    title: "Islamic Jurisprudence in Modern Context",
+    category: "articles",
+    size: "1.9 MB",
+    filename: "islamic_jurisprudence.pdf",
+    url: "https://example.com/documents/islamic_jurisprudence.pdf"
+  },
+  {
+    id: 6,
+    title: "Contemporary Issues in Islamic Ethics",
+    category: "articles",
+    size: "2.2 MB",
+    filename: "islamic_ethics.pdf",
+    url: "https://example.com/documents/islamic_ethics.pdf"
+  }
 ];
+
+let filteredDocuments = [...documentsData];
 
 // Initialize documents section
 function initializeDocumentsSection() {
   populateDocumentsGrid();
+  setupDocumentsEventListeners();
 }
 
-// Populate documents grid
+// Setup event listeners for documents
+function setupDocumentsEventListeners() {
+  const categoryDropdown = document.getElementById('categoryDropdown');
+  
+  if (categoryDropdown) {
+    categoryDropdown.addEventListener('change', function() {
+      filterDocumentsByCategory(this.value);
+    });
+  }
+}
+
+// Search documents function
+function searchDocuments(event) {
+  const query = event.target.value.toLowerCase().trim();
+  const selectedCategory = document.getElementById('categoryDropdown').value;
+  
+  // Filter by category first
+  let filtered = selectedCategory === 'all' ? 
+    [...documentsData] : 
+    documentsData.filter(doc => doc.category === selectedCategory);
+  
+  // Then filter by search query
+  if (query.length > 0) {
+    filtered = filtered.filter(doc => 
+      doc.title.toLowerCase().includes(query) ||
+      doc.category.toLowerCase().includes(query)
+    );
+  }
+  
+  filteredDocuments = filtered;
+  populateDocumentsGrid();
+}
+
+// Filter documents by category
+function filterDocumentsByCategory(category) {
+  const searchInput = document.getElementById('documentsSearchInput');
+  const query = searchInput.value.toLowerCase().trim();
+  
+  // Filter by category
+  let filtered = category === 'all' ? 
+    [...documentsData] : 
+    documentsData.filter(doc => doc.category === category);
+  
+  // Apply search if exists
+  if (query.length > 0) {
+    filtered = filtered.filter(doc => 
+      doc.title.toLowerCase().includes(query) ||
+      doc.category.toLowerCase().includes(query)
+    );
+  }
+  
+  filteredDocuments = filtered;
+  populateDocumentsGrid();
+}
+
+// Populate documents grid with enhanced design
 function populateDocumentsGrid() {
   const documentsGrid = document.getElementById('documentsGrid');
   
-  // Show loading first
-  documentsGrid.innerHTML = '<div class="documents-loading">Loading documents...</div>';
-  
-  // Simulate loading delay for better UX
-  setTimeout(() => {
-    let html = '';
-    
-    documentsData.forEach(doc => {
-      html += `
-        <div class="document-card" data-aos="fade-up" data-aos-delay="${doc.id * 100}">
-          <div class="document-icon">
-            <i class="fas fa-file-pdf"></i>
-          </div>
-          <div class="document-title">${doc.title}</div>
-          <div class="document-info">
-            <span>PDF Document</span>
-            <span class="document-size">${doc.size}</span>
-          </div>
-          <button class="download-btn" onclick="downloadDocument('${doc.filename}', '${doc.title}')">
-            <i class="fas fa-download"></i>
-            Download PDF
-          </button>
-        </div>
-      `;
-    });
-    
-    documentsGrid.innerHTML = html;
-  }, 500);
-}
-
-function downloadDocument(fileUrl, title) {
-  // Create a temporary anchor element for download
-  const link = document.createElement('a');
-  link.href = fileUrl;
-  link.target = '_blank';
-  
-  // Extract filename from URL for download attribute
-  const urlParts = fileUrl.split('/');
-  const filename = urlParts[urlParts.length - 1] || `${title.replace(/\s+/g, '_')}.pdf`;
-  link.download = filename;
-  
-  // Add some visual feedback
-  const downloadBtn = event.target.closest('.download-btn');
-  const originalText = downloadBtn.innerHTML;
-  
-  downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Downloading...';
-  downloadBtn.disabled = true;
-  
-  // For external URLs, we might need to open in new tab instead of direct download
-  if (fileUrl.startsWith('http') && !fileUrl.includes(window.location.hostname)) {
-    // External URL - open in new tab
-    window.open(fileUrl, '_blank');
-  } else {
-    // Local file - trigger download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  if (filteredDocuments.length === 0) {
+    documentsGrid.innerHTML = `
+      <div class="no-documents">
+        <i class="fas fa-search"></i>
+        <p>No documents found matching your criteria.</p>
+        <p style="font-size: 0.9em; color: #666;">Try adjusting your search or category filter.</p>
+      </div>
+    `;
+    return;
   }
   
-  // Reset button after delay
-  setTimeout(() => {
-    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
-    downloadBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-    
-    setTimeout(() => {
-      downloadBtn.innerHTML = originalText;
-      downloadBtn.style.background = '';
-      downloadBtn.disabled = false;
-    }, 2000);
-  }, 1000);
+  let html = '';
   
-  // Log download for analytics (optional)
+  filteredDocuments.forEach((doc, index) => {
+    const categoryName = getCategoryName(doc.category);
+    
+    html += `
+      <div class="document-card" style="animation-delay: ${index * 100}ms">
+        <div class="document-icon">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="document-title">${doc.title}</div>
+        <div class="document-info">
+          <span class="document-category">${categoryName}</span>
+          <span class="document-size">${doc.size}</span>
+        </div>
+        <button class="download-btn" onclick="downloadDocument('${doc.url}', '${doc.title}', this)">
+          <i class="fas fa-download"></i>
+          <span>Download</span>
+          <div class="download-progress"></div>
+        </button>
+      </div>
+    `;
+  });
+  
+  documentsGrid.innerHTML = html;
+}
+
+// Get category display name
+function getCategoryName(category) {
+  const categoryNames = {
+    'tajweed': 'Tajweed',
+    'uloom': 'Uloom ul Quran', 
+    'articles': 'Articles'
+  };
+  return categoryNames[category] || category;
+}
+
+// Enhanced download function with WhatsApp-like animation
+function downloadDocument(fileUrl, title, buttonElement) {
+  const btn = buttonElement;
+  const icon = btn.querySelector('i');
+  const text = btn.querySelector('span');
+  const progress = btn.querySelector('.download-progress');
+  
+  // Start download animation
+  btn.classList.add('downloading');
+  icon.className = 'fas fa-spinner fa-spin';
+  text.textContent = 'Downloading...';
+  
+  // Simulate download progress
+  let progressWidth = 0;
+  const progressInterval = setInterval(() => {
+    progressWidth += Math.random() * 30;
+    if (progressWidth > 100) progressWidth = 100;
+    progress.style.width = progressWidth + '%';
+    
+    if (progressWidth >= 100) {
+      clearInterval(progressInterval);
+      
+      // Complete download
+      setTimeout(() => {
+        btn.classList.remove('downloading');
+        btn.classList.add('downloaded');
+        icon.className = 'fas fa-check';
+        text.textContent = 'Downloaded!';
+        progress.style.width = '0%';
+        
+        // Trigger actual download
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.target = '_blank';
+        link.download = title.replace(/\s+/g, '_') + '.pdf';
+        
+        // Handle different URL types
+        if (fileUrl.startsWith('http') && !fileUrl.includes(window.location.hostname)) {
+          window.open(fileUrl, '_blank');
+        } else {
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+        
+        // Reset button after delay
+        setTimeout(() => {
+          btn.classList.remove('downloaded');
+          icon.className = 'fas fa-download';
+          text.textContent = 'Download';
+        }, 3000);
+        
+      }, 500);
+    }
+  }, 200);
+  
+  // Log download for analytics
   console.log(`Downloaded: ${title} (${fileUrl})`);
 }
