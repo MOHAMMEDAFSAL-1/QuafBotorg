@@ -4298,7 +4298,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (loadingScreen.style.display !== 'none') {
         hideLoadingScreen();
       }
-    }, 7000); // 8 second maximum
+    }, 6000); // 8 second maximum
   } else {
     // If no video element found, hide loading screen after minimum time
     hideLoadingScreen();
@@ -4318,7 +4318,6 @@ let currentSelectedVerse = null;
 const languages = [
     { code: 'Albanian', name: 'Albanian', flag: '🇦🇱', file: 'sq.nahi.txt' },
     { code: 'Amazigh', name: 'Amazigh', flag: 'ⵣ', file: 'ber.mensur.txt' },
-    { code: 'Arabic', name: 'Arabic', flag: '🇸🇦', file: 'ar.jalalayn.txt' },
     { code: 'Amharic', name: 'Amharic', flag: '🇪🇹', file: 'am.sadiq.txt' },
     { code: 'Azerbaijani', name: 'Azerbaijani', flag: '🇦🇿', file: 'az.musayev.txt' },
     { code: 'Bengali', name: 'Bengali', flag: '🇧🇩', file: 'bn.hoque.txt' },
@@ -4365,7 +4364,7 @@ const languages = [
 
 // Language direction configuration
 const languageDirections = {
-    'Albanian': 'ltr', 'Amazigh': 'rtl', 'Arabic': 'rtl', 'Amharic': 'ltr',
+    'Albanian': 'ltr', 'Amazigh': 'rtl','Amharic': 'ltr',
     'Azerbaijani': 'ltr', 'Bengali': 'ltr', 'Bosnian': 'ltr', 'Bulgarian': 'ltr',
     'Chinese (Simplified)': 'ltr', 'Chinese (Traditional)': 'ltr', 'Czech': 'ltr',
     'Divehi': 'rtl', 'Dutch': 'ltr', 'English': 'ltr', 'French': 'ltr',
@@ -4761,26 +4760,12 @@ let currentSelectedExegesisVerse = null;
 
 // Exegesis configuration with 12 options (ADD THIS ARRAY)
 const exegesisOptions = [
-    { code: 'TafsirIbnKathir', name: 'Tafsir Ibn Kathir', flag: '📖', file: 'tafsir_ibn_kathir.txt' },
-    { code: 'TafsirTabari', name: 'Tafsir At-Tabari', flag: '📚', file: 'tafsir_tabari.txt' },
-    { code: 'TafsirQurtubi', name: 'Tafsir Al-Qurtubi', flag: '📜', file: 'tafsir_qurtubi.txt' },
-    { code: 'TafsirBaghawi', name: 'Tafsir Al-Baghawi', flag: '📋', file: 'tafsir_baghawi.txt' },
-    { code: 'TafsirJalalayn', name: 'Tafsir Al-Jalalayn', flag: '📄', file: 'tafsir_jalalayn.txt' },
-    { code: 'TafsirRazi', name: 'Tafsir Fakhr Ar-Razi', flag: '📓', file: 'tafsir_razi.txt' },
-    { code: 'TafsirSaadi', name: 'Tafsir As-Sa\'di', flag: '📗', file: 'tafsir_saadi.txt' },
-    { code: 'TafsirBaydhawi', name: 'Tafsir Al-Baydhawi', flag: '📘', file: 'tafsir_baydhawi.txt' },
-    { code: 'TafsirNasafi', name: 'Tafsir An-Nasafi', flag: '📙', file: 'tafsir_nasafi.txt' },
-    { code: 'TafsirKhazin', name: 'Tafsir Al-Khazin', flag: '📕', file: 'tafsir_khazin.txt' },
-    { code: 'TafsirMuyassar', name: 'At-Tafsir Al-Muyassar', flag: '📒', file: 'tafsir_muyassar.txt' },
-    { code: 'TafsirWasit', name: 'At-Tafsir Al-Wasit', flag: '📔', file: 'tafsir_wasit.txt' }
+    { code: 'TafsirAlJalalayn', name: 'Tafsir Al Jalalayn', flag: '📖', file: 'ar.jalalayn.txt' }
 ];
 
 // Exegesis direction configuration (ADD THIS OBJECT)
 const exegesisDirections = {
-    'Tafsir Ibn Kathir': 'rtl', 'Tafsir At-Tabari': 'rtl', 'Tafsir Al-Qurtubi': 'rtl',
-    'Tafsir Al-Baghawi': 'rtl', 'Tafsir Al-Jalalayn': 'rtl', 'Tafsir Fakhr Ar-Razi': 'rtl',
-    'Tafsir As-Sa\'di': 'rtl', 'Tafsir Al-Baydhawi': 'rtl', 'Tafsir An-Nasafi': 'rtl',
-    'Tafsir Al-Khazin': 'rtl', 'At-Tafsir Al-Muyassar': 'rtl', 'At-Tafsir Al-Wasit': 'rtl'
+    'Tafsir Al Jalalayn': 'rtl'
 };
 
 // ADD THESE FUNCTIONS FOR EXEGESIS
@@ -5043,6 +5028,7 @@ function closeExegesisBox() {
     const readingBox = document.getElementById('exegesisReadingBox');
     readingBox.classList.add('hidden');
 }
+
 </script>
 </div>
 </body>
