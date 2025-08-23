@@ -37,7 +37,7 @@
 <!-- Main Content Container -->
 <div id="mainContent" class="main-content-hidden">
 
-  <!-- Navigation Menu -->
+ <!-- Navigation Menu -->
 <div class="navigation-menu">
   <button class="nav-btn" id="homeBtn" onclick="showSection('home')">
     <i class="fas fa-home"></i>
@@ -48,9 +48,12 @@
   <button class="nav-btn" id="translationBtn" onclick="showSection('translation')">
     <i class="fas fa-language"></i>
   </button>
-  <!-- Exegesis button -->
   <button class="nav-btn" id="exegesisBtn" onclick="showSection('exegesis')">
     <i class="fas fa-search"></i>
+  </button>
+  <!-- ADD THIS NEW BUTTON -->
+  <button class="nav-btn" id="documentsBtn" onclick="showSection('documents')">
+    <i class="fas fa-file-alt"></i>
   </button>
 </div>
 
@@ -295,6 +298,23 @@
 </div>
 </div>
 </div>
+
+<!-- DOCUMENTS SECTION (ADD THIS ENTIRE SECTION) -->
+<div id="documentsSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Research Papers & Documents</h1>
+<p>Download Islamic research papers and academic documents</p>
+</div>
+
+<!-- Documents Grid -->
+<div class="documents-grid" id="documentsGrid">
+<!-- PDF files will be populated here -->
+</div>
+</div>
+</div>
+</div>  
   
 </div>
 <script src="script.js"></script>
