@@ -1143,9 +1143,13 @@ gap: 4px;
   order: 4;
 }
 
-/* ADD THIS NEW ORDER */
 #documentsBtn {
   order: 5;
+}
+
+/* ADD THIS NEW ORDER */
+#mediaBtn {
+  order: 6;
 }
 
 .navigation-menu {
@@ -2088,6 +2092,107 @@ display: none;
   }
 }
 
+/* Media Section Specific Styles */
+.media-card {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+}
+
+.media-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(77, 192, 181, 0.3);
+  border-color: rgba(77, 192, 181, 0.5);
+}
+
+.media-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #4dc0b5, #3a9b91);
+  border-radius: 15px 15px 0 0;
+}
+
+.media-card.audio-card::before {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.media-card.video-card::before {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.media-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.media-icon.audio-icon {
+  color: #667eea;
+}
+
+.media-icon.video-icon {
+  color: #f5576c;
+}
+
+.media-duration {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.play-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.play-btn.video-btn {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.play-btn.video-btn:hover {
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+}
+
+.play-btn:active {
+  transform: scale(0.98);
+}
+
 </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -2130,9 +2235,12 @@ display: none;
   <button class="nav-btn" id="exegesisBtn" onclick="showSection('exegesis')">
     <i class="fas fa-search"></i>
   </button>
-  <!-- ADD THIS NEW BUTTON -->
   <button class="nav-btn" id="documentsBtn" onclick="showSection('documents')">
     <i class="fas fa-file-alt"></i>
+  </button>
+  <!-- ADD THIS NEW BUTTON -->
+  <button class="nav-btn" id="mediaBtn" onclick="showSection('media')">
+    <i class="fas fa-headphones"></i>
   </button>
 </div>
 
@@ -2449,6 +2557,39 @@ style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10
 </div>
 </div>
 
+<!-- MEDIA SECTION (ADD THIS ENTIRE SECTION AFTER DOCUMENTS SECTION) -->
+<div id="mediaSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Audio & Video Library</h1>
+<p>Access Islamic audio lectures and video content</p>
+</div>
+
+<!-- Media Header with Search and Filter -->
+<div class="documents-header">
+<select id="mediaCategoryDropdown" class="category-dropdown">
+<option value="audio">Audio Files</option>
+<option value="video">Video Files</option>
+</select>
+
+<div class="documents-search-container">
+<input type="text" 
+       id="mediaSearchInput" 
+       class="documents-search-input" 
+       placeholder="Search media files..."
+       onkeyup="searchMediaFiles(event)">
+</div>
+</div>
+
+<!-- Media Grid -->
+<div class="documents-grid" id="mediaGrid" dir="ltr">
+<!-- Media files will be populated here -->
+</div>
+</div>
+</div>
+</div>
+
 <script>
 
  setTimeout(() => {
@@ -2463,14 +2604,16 @@ function showSection(sectionName) {
   document.getElementById('quranSection').classList.add('hidden');
   document.getElementById('translationSection').classList.add('hidden');
   document.getElementById('exegesisSection').classList.add('hidden');
-  document.getElementById('documentsSection').classList.add('hidden'); // ADD THIS LINE
+  document.getElementById('documentsSection').classList.add('hidden');
+  document.getElementById('mediaSection').classList.add('hidden'); // ADD THIS LINE
 
   // Remove active class from all buttons
   document.getElementById('homeBtn').classList.remove('active');
   document.getElementById('quranBtn').classList.remove('active');
   document.getElementById('translationBtn').classList.remove('active');
   document.getElementById('exegesisBtn').classList.remove('active');
-  document.getElementById('documentsBtn').classList.remove('active'); // ADD THIS LINE
+  document.getElementById('documentsBtn').classList.remove('active');
+  document.getElementById('mediaBtn').classList.remove('active'); // ADD THIS LINE
 
   // Show selected section and activate corresponding button
   if (sectionName === 'home') {
@@ -2528,21 +2671,33 @@ function showSection(sectionName) {
       initializeExegesisSection();
       window.exegesisInitialized = true;
     }
-  } 
-  // ADD THIS NEW SECTION
-  else if (sectionName === 'documents') {
-  document.getElementById('documentsSection').classList.remove('hidden');
-  document.getElementById('documentsBtn').classList.add('active');
-  document.documentElement.setAttribute('dir', 'ltr'); // Changed to LTR
-  document.documentElement.setAttribute('lang', 'en');
-  document.body.style.overflow = 'auto';
+  } else if (sectionName === 'documents') {
+    document.getElementById('documentsSection').classList.remove('hidden');
+    document.getElementById('documentsBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
 
-  // Initialize documents if not already loaded
-  if (!window.documentsInitialized) {
-    initializeDocumentsSection();
-    window.documentsInitialized = true;
+    // Initialize documents if not already loaded
+    if (!window.documentsInitialized) {
+      initializeDocumentsSection();
+      window.documentsInitialized = true;
+    }
   }
-}
+  // ADD THIS NEW SECTION
+  else if (sectionName === 'media') {
+    document.getElementById('mediaSection').classList.remove('hidden');
+    document.getElementById('mediaBtn').classList.add('active');
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.body.style.overflow = 'auto';
+
+    // Initialize media if not already loaded
+    if (!window.mediaInitialized) {
+      initializeMediaSection();
+      window.mediaInitialized = true;
+    }
+  }
   
   // Ensure navigation menu stays visible and properly positioned
   const navMenu = document.querySelector('.navigation-menu');
@@ -5795,6 +5950,209 @@ function downloadDocument(fileUrl, title, buttonElement) {
   console.log(`Downloaded: ${title} (${fileUrl})`);
 }
 
+// Media functionality
+let mediaData = [
+  // Audio files
+  {
+    id: 1,
+    title: "Surah Al-Fatiha Recitation by Sheikh Abdul Rahman Al-Sudais",
+    type: "audio",
+    duration: "2:35",
+    size: "3.8 MB",
+    filename: "surah_fatiha_sudais.mp3",
+    url: "https://example.com/audio/surah_fatiha_sudais.mp3"
+  },
+  {
+    id: 2,
+    title: "Complete Quran Recitation by Sheikh Mishary Rashid",
+    type: "audio", 
+    duration: "18:45:30",
+    size: "1.2 GB",
+    filename: "complete_quran_mishary.mp3",
+    url: "https://example.com/audio/complete_quran_mishary.mp3"
+  },
+  {
+    id: 3,
+    title: "Islamic Lecture: The Importance of Prayer",
+    type: "audio",
+    duration: "45:20",
+    size: "42.5 MB", 
+    filename: "importance_of_prayer.mp3",
+    url: "https://example.com/audio/importance_of_prayer.mp3"
+  },
+  // Video files
+  {
+    id: 4,
+    title: "How to Perform Wudu (Ablution) - Step by Step Guide",
+    type: "video",
+    duration: "8:15",
+    size: "125 MB",
+    filename: "wudu_guide.mp4",
+    url: "https://example.com/video/wudu_guide.mp4"
+  },
+  {
+    id: 5,
+    title: "Tajweed Rules Explained with Examples",
+    type: "video",
+    duration: "25:40",
+    size: "380 MB",
+    filename: "tajweed_rules.mp4",
+    url: "https://example.com/video/tajweed_rules.mp4"
+  },
+  {
+    id: 6,
+    title: "Beautiful Quran Recitation with English Translation",
+    type: "video",
+    duration: "12:30",
+    size: "200 MB",
+    filename: "quran_with_translation.mp4",
+    url: "https://example.com/video/quran_with_translation.mp4"
+  }
+];
+
+let filteredMediaFiles = [];
+let currentMediaType = 'audio';
+
+// Initialize media section
+function initializeMediaSection() {
+  // Default to audio files
+  currentMediaType = 'audio';
+  document.getElementById('mediaCategoryDropdown').value = 'audio';
+  filterMediaByType('audio');
+  setupMediaEventListeners();
+}
+
+// Setup event listeners for media
+function setupMediaEventListeners() {
+  const categoryDropdown = document.getElementById('mediaCategoryDropdown');
+  
+  if (categoryDropdown) {
+    categoryDropdown.addEventListener('change', function() {
+      currentMediaType = this.value;
+      filterMediaByType(this.value);
+    });
+  }
+}
+
+// Search media files function
+function searchMediaFiles(event) {
+  const query = event.target.value.toLowerCase().trim();
+  
+  // Filter by current media type first
+  let filtered = mediaData.filter(media => media.type === currentMediaType);
+  
+  // Then filter by search query
+  if (query.length > 0) {
+    filtered = filtered.filter(media => 
+      media.title.toLowerCase().includes(query)
+    );
+  }
+  
+  filteredMediaFiles = filtered;
+  populateMediaGrid();
+}
+
+// Filter media by type
+function filterMediaByType(type) {
+  const searchInput = document.getElementById('mediaSearchInput');
+  const query = searchInput.value.toLowerCase().trim();
+  
+  // Filter by type
+  let filtered = mediaData.filter(media => media.type === type);
+  
+  // Apply search if exists
+  if (query.length > 0) {
+    filtered = filtered.filter(media => 
+      media.title.toLowerCase().includes(query)
+    );
+  }
+  
+  filteredMediaFiles = filtered;
+  populateMediaGrid();
+}
+
+// Populate media grid
+function populateMediaGrid() {
+  const mediaGrid = document.getElementById('mediaGrid');
+  
+  if (filteredMediaFiles.length === 0) {
+    const mediaType = currentMediaType === 'audio' ? 'audio files' : 'video files';
+    mediaGrid.innerHTML = `
+      <div class="no-documents">
+        <i class="fas fa-${currentMediaType === 'audio' ? 'music' : 'video'}"></i>
+        <p>No ${mediaType} found matching your search.</p>
+        <p style="font-size: 0.9em; color: #666;">Try adjusting your search terms.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  
+  filteredMediaFiles.forEach((media, index) => {
+    const isAudio = media.type === 'audio';
+    const cardClass = isAudio ? 'audio-card' : 'video-card';
+    const iconClass = isAudio ? 'audio-icon' : 'video-icon';
+    const icon = isAudio ? 'fas fa-music' : 'fas fa-play';
+    const btnClass = isAudio ? '' : 'video-btn';
+    const btnText = isAudio ? 'Play Audio' : 'Play Video';
+    
+    html += `
+      <div class="document-card media-card ${cardClass}" style="animation-delay: ${index * 100}ms">
+        <div class="media-icon ${iconClass}">
+          <i class="${icon}"></i>
+        </div>
+        <div class="document-title">${media.title}</div>
+        <div class="document-info">
+          <span class="media-duration">${media.duration}</span>
+          <span class="document-size">${media.size}</span>
+        </div>
+        <button class="play-btn ${btnClass}" onclick="playMedia('${media.url}', '${media.title}', '${media.type}', this)">
+          <i class="fas fa-play"></i>
+          <span>${btnText}</span>
+        </button>
+      </div>
+    `;
+  });
+  
+  mediaGrid.innerHTML = html;
+}
+
+// Play media function
+function playMedia(fileUrl, title, type, buttonElement) {
+  const btn = buttonElement;
+  const icon = btn.querySelector('i');
+  const text = btn.querySelector('span');
+  
+  // Start playing animation
+  icon.className = 'fas fa-spinner fa-spin';
+  text.textContent = type === 'audio' ? 'Loading Audio...' : 'Loading Video...';
+  btn.style.opacity = '0.7';
+  
+  // Simulate loading and then open media
+  setTimeout(() => {
+    // Reset button
+    btn.style.opacity = '1';
+    icon.className = 'fas fa-play';
+    text.textContent = type === 'audio' ? 'Play Audio' : 'Play Video';
+    
+    // Open media in new tab/window
+    window.open(fileUrl, '_blank');
+    
+    // Log play action
+    console.log(`Playing ${type}: ${title} (${fileUrl})`);
+    
+    // Show success feedback
+    icon.className = 'fas fa-check';
+    text.textContent = type === 'audio' ? 'Playing Audio' : 'Playing Video';
+    
+    setTimeout(() => {
+      icon.className = 'fas fa-play';
+      text.textContent = type === 'audio' ? 'Play Audio' : 'Play Video';
+    }, 2000);
+    
+  }, 1000);
+}
 </script>
 </div>
 </body>
