@@ -5,98 +5,119 @@ setTimeout(() => {
     
 // Section management
 function showSection(sectionName) {
+  // List all sections and buttons
+  const sections = [
+    "homeSection",
+    "quranSection",
+    "translationSection",
+    "exegesisSection",
+    "documentsSection"
+  ];
+  const buttons = [
+    "homeBtn",
+    "quranBtn",
+    "translationBtn",
+    "exegesisBtn",
+    "documentsBtn"
+  ];
+
   // Hide all sections
-  document.getElementById('homeSection').classList.add('hidden');
-  document.getElementById('quranSection').classList.add('hidden');
-  document.getElementById('translationSection').classList.add('hidden');
-  document.getElementById('exegesisSection').classList.add('hidden');
-  document.getElementById('documentsSection').classList.add('hidden'); // ADD THIS LINE
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
 
   // Remove active class from all buttons
-  document.getElementById('homeBtn').classList.remove('active');
-  document.getElementById('quranBtn').classList.remove('active');
-  document.getElementById('translationBtn').classList.remove('active');
-  document.getElementById('exegesisBtn').classList.remove('active');
-  document.getElementById('documentsBtn').classList.remove('active'); // ADD THIS LINE
+  buttons.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove("active");
+  });
 
-  // Show selected section and activate corresponding button
-  if (sectionName === 'home') {
-    document.getElementById('homeSection').classList.remove('hidden');
-    document.getElementById('homeBtn').classList.add('active');
-    document.documentElement.setAttribute('dir', 'ltr');
-    document.documentElement.setAttribute('lang', 'en');
-    document.body.style.overflow = 'auto';
-  } else if (sectionName === 'quran') {
-    document.getElementById('quranSection').classList.remove('hidden');
-    document.getElementById('quranBtn').classList.add('active');
-    document.documentElement.setAttribute('dir', 'ltr');
-    document.documentElement.setAttribute('lang', 'ar');
-    document.body.style.overflow = 'auto';
+  // Handle section logic
+  switch (sectionName) {
+    case "home":
+      document.getElementById("homeSection").classList.remove("hidden");
+      document.getElementById("homeBtn").classList.add("active");
+      document.documentElement.setAttribute("dir", "ltr");
+      document.documentElement.setAttribute("lang", "en");
+      document.body.style.overflow = "auto";
+      break;
 
-    // Initialize Quran if not already loaded
-    if (!window.quranLoaded) {
-      loadQuranData();
-    }
-  } else if (sectionName === 'translation') {
-    document.getElementById('translationSection').classList.remove('hidden');
-    document.getElementById('translationBtn').classList.add('active');
-    document.documentElement.setAttribute('dir', 'ltr');
-    document.documentElement.setAttribute('lang', 'en');
-    document.body.style.overflow = 'auto';
+    case "quran":
+      document.getElementById("quranSection").classList.remove("hidden");
+      document.getElementById("quranBtn").classList.add("active");
+      document.documentElement.setAttribute("dir", "rtl"); // Quran is Arabic
+      document.documentElement.setAttribute("lang", "ar");
+      document.body.style.overflow = "auto";
 
-    // Wait for Quran data to load before initializing translation
-    if (!window.quranLoaded) {
-      loadQuranData().then(() => {
-        if (!window.translationInitialized) {
-          initializeTranslationSection();
-          window.translationInitialized = true;
-        }
-      });
-    } else if (!window.translationInitialized) {
-      initializeTranslationSection();
-      window.translationInitialized = true;
-    }
-  } else if (sectionName === 'exegesis') {
-    document.getElementById('exegesisSection').classList.remove('hidden');
-    document.getElementById('exegesisBtn').classList.add('active');
-    document.documentElement.setAttribute('dir', 'ltr');
-    document.documentElement.setAttribute('lang', 'en');
-    document.body.style.overflow = 'auto';
+      if (!window.quranLoaded) {
+        loadQuranData();
+      }
+      break;
 
-    // Wait for Quran data to load before initializing exegesis
-    if (!window.quranLoaded) {
-      loadQuranData().then(() => {
-        if (!window.exegesisInitialized) {
-          initializeExegesisSection();
-          window.exegesisInitialized = true;
-        }
-      });
-    } else if (!window.exegesisInitialized) {
-      initializeExegesisSection();
-      window.exegesisInitialized = true;
-    }
-  } 
-  // ADD THIS NEW SECTION
-  else if (sectionName === 'documents') {
-  document.getElementById('documentsSection').classList.remove('hidden');
-  document.getElementById('documentsBtn').classList.add('active');
-  document.documentElement.setAttribute('dir', 'ltr'); // Changed to LTR
-  document.documentElement.setAttribute('lang', 'en');
-  document.body.style.overflow = 'auto';
+    case "translation":
+      document.getElementById("translationSection").classList.remove("hidden");
+      document.getElementById("translationBtn").classList.add("active");
+      document.documentElement.setAttribute("dir", "ltr");
+      document.documentElement.setAttribute("lang", "en");
+      document.body.style.overflow = "auto";
 
-  // Initialize documents if not already loaded
-  if (!window.documentsInitialized) {
-    initializeDocumentsSection();
-    window.documentsInitialized = true;
+      if (!window.quranLoaded) {
+        loadQuranData().then(() => {
+          if (!window.translationInitialized) {
+            initializeTranslationSection();
+            window.translationInitialized = true;
+          }
+        });
+      } else if (!window.translationInitialized) {
+        initializeTranslationSection();
+        window.translationInitialized = true;
+      }
+      break;
+
+    case "exegesis":
+      document.getElementById("exegesisSection").classList.remove("hidden");
+      document.getElementById("exegesisBtn").classList.add("active");
+      document.documentElement.setAttribute("dir", "ltr");
+      document.documentElement.setAttribute("lang", "en");
+      document.body.style.overflow = "auto";
+
+      if (!window.quranLoaded) {
+        loadQuranData().then(() => {
+          if (!window.exegesisInitialized) {
+            initializeExegesisSection();
+            window.exegesisInitialized = true;
+          }
+        });
+      } else if (!window.exegesisInitialized) {
+        initializeExegesisSection();
+        window.exegesisInitialized = true;
+      }
+      break;
+
+    case "documents":
+      document.getElementById("documentsSection").classList.remove("hidden");
+      document.getElementById("documentsBtn").classList.add("active");
+      document.documentElement.setAttribute("dir", "ltr");
+      document.documentElement.setAttribute("lang", "en");
+      document.body.style.overflow = "auto";
+
+      if (!window.documentsInitialized) {
+        initializeDocumentsSection();
+        window.documentsInitialized = true;
+      }
+      break;
+
+    default:
+      console.warn("Unknown section:", sectionName);
   }
-}
-  
-  // Ensure navigation menu stays visible and properly positioned
-  const navMenu = document.querySelector('.navigation-menu');
+
+  // Keep navigation menu fixed
+  const navMenu = document.querySelector(".navigation-menu");
   if (navMenu) {
-    navMenu.style.display = 'flex';
-    navMenu.style.zIndex = '1000';
-    navMenu.style.position = 'fixed';
+    navMenu.style.display = "flex";
+    navMenu.style.zIndex = "1000";
+    navMenu.style.position = "fixed";
   }
 }
 
