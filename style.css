@@ -323,7 +323,7 @@ background-size: 1000% 1000%;
 -webkit-text-fill-color: transparent;
 background-clip: text;
 color: transparent;
-animation: gradientShift 3s ease-in-out infinite;
+animation: gradientShift 5s ease-in-out infinite;
 position: relative;
 z-index: 2;
 }
@@ -338,7 +338,7 @@ color: transparent;
 margin-left: 0.2em;
 position: relative;
 z-index: 2;
-animation: botTextShift 7s ease-in-out infinite reverse;
+animation: botTextShift 10s ease-in-out infinite reverse;
 }
 
 @keyframes gradientShift {
