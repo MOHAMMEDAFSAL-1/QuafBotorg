@@ -1,0 +1,343 @@
+    :root {
+            --primary-dark: #0a1929;
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --accent: #4299e1;
+            --accent-light: #63b3ed;
+            --text-light: #e2e8f0;
+            --success: #38a169;
+            --warning: #dd6b20;
+            --danger: #e53e3e;
+        }
+        
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+        
+        .active-page {
+            display: block;
+        }
+        
+        .card {
+            background-color: var(--primary);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+        }
+        
+        .input-field {
+            background-color: var(--primary-light);
+            border: 2px solid var(--accent);
+            border-radius: 0.5rem;
+            color: white;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        
+        .input-field:focus {
+            border-color: var(--accent-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        
+        .btn {
+            align-items: center;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            font-weight: 600;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-light);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .subject-card {
+            background-color: var(--primary-light);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            background-color: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .option-btn {
+            background-color: var(--primary-light);
+            border: 2px solid var(--accent);
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            position: relative;
+            text-align: left;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .option-btn:hover {
+            background-color: rgba(66, 153, 225, 0.2);
+        }
+        
+        .option-selected {
+            background-color: var(--accent);
+            border-color: white;
+            font-weight: bold;
+        }
+        
+        .option-correct {
+            background-color: var(--success);
+            border-color: white;
+        }
+        
+        .option-incorrect {
+            background-color: var(--danger);
+            border-color: white;
+        }
+        
+        .timer-bar {
+            background-color: var(--accent);
+            height: 8px;
+            width: 100%;
+            animation: timerAnimation 15s linear forwards;
+        }
+        
+        @keyframes timerAnimation {
+            from {
+                width: 100%;
+                background-color: var(--accent);
+            }
+            to {
+                width: 0%;
+                background-color: var(--danger);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 200px;
+            margin: 0 auto;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .circle-bg {
+            fill: none;
+            stroke: var(--primary-light);
+        }
+        
+        .circle {
+            fill: none;
+            stroke: var(--accent);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 153, 225, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+            }
+        }
+        
+        /* Add these styles to your existing CSS */
+@media (max-width: 1024px) {
+    .chart-container {
+        height: 180px;
+        width: 180px;
+    }
+    
+    .app-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 160px;
+        width: 160px;
+    }
+    
+    .app-container {
+        padding: 0.75rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    
+    .subject-card {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .text-2xl {
+        font-size: 1.5rem;
+    }
+    
+    .text-xl {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .chart-container {
+        height: 140px;
+        width: 140px;
+    }
+    
+    .app-container {
+        padding: 0.5rem;
+    }
+    
+    .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .sm\:grid-cols-2 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .flex-col {
+        flex-direction: column;
+    }
+    
+    .md\:flex-row {
+        flex-direction: column;
+    }
+    
+    .lg\:flex-row {
+        flex-direction: column;
+    }
+}
+
+/* Quiz page responsive improvements */
+@media (max-width: 768px) {
+    #quiz-page .card {
+        padding: 1rem;
+    }
+    
+    #question-text {
+        font-size: 1.125rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .option-btn {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+    
+    #quiz-page .flex.justify-between {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+    
+    #quiz-page .flex.justify-between > div {
+        width: 100%;
+        text-align: left;
+    }
+    
+    #quiz-page .flex.justify-between > div:last-child {
+        text-align: right;
+    }
+}
+
+@media (max-width: 640px) {
+    #question-text {
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .option-btn {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    #quiz-page .flex.justify-between {
+        font-size: 0.875rem;
+    }
+}
+
+/* Ensure bottom info stays at bottom */
+#quiz-page .card {
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+#quiz-page .card > div:last-child {
+    margin-top: auto;
+}
