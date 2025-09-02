@@ -46,7 +46,7 @@ function showSection(sectionName) {
     case "quran":
       document.getElementById("quranSection").classList.remove("hidden");
       document.getElementById("quranBtn").classList.add("active");
-      document.documentElement.setAttribute("dir", "rtl"); // Quran is Arabic
+      document.documentElement.setAttribute("dir", "ltr"); // Quran is Arabic
       document.documentElement.setAttribute("lang", "ar");
       document.body.style.overflow = "auto";
 
