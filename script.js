@@ -3114,3 +3114,28 @@ function closeExegesisBox() {
     const readingBox = document.getElementById('exegesisReadingBox');
     readingBox.classList.add('hidden');
 }
+
+  // Disable right-click
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+
+  // Disable common inspect shortcuts
+  document.addEventListener("keydown", function (e) {
+    // F12
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+    // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
+      e.preventDefault();
+    }
+    // Ctrl+U (View source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      e.preventDefault();
+    }
+    // Ctrl+S (Save page)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      e.preventDefault();
+    }
+  });
