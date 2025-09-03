@@ -1,0 +1,198 @@
+        .islamic-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-16.569 13.431-30 30-30v60c-16.569 0-30-13.431-30-30z'/%3E%3Cpath d='M0 30c0-16.569 13.431-30 30-30v60C13.431 60 0 46.569 0 30z'/%3E%3Cpath d='M15 0h30v30H15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .course-step {
+    display: none;
+}
+.course-step.active {
+    display: block;
+}
+
+/* Add these new responsive styles for course modal */
+#courseModal .bg-white {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#courseContent {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+#courseContent p {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
+}
+
+#courseContent .bg-green-50 {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #courseModal .max-w-2xl {
+        max-width: 95vw;
+        margin: 10px;
+    }
+    
+    #courseContent {
+        font-size: 0.9rem;
+    }
+    
+    #courseContent .p-6 {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #courseModal .max-w-2xl {
+        max-width: 98vw;
+        margin: 5px;
+    }
+    
+    #courseContent {
+        font-size: 0.85rem;
+    }
+    
+    #courseContent .p-6 {
+        padding: 0.75rem;
+    }
+    
+    #courseContent h4 {
+        font-size: 1.1rem;
+    }
+}
+        .calendar-day {
+            min-height: 80px;
+            border: 1px solid #e5e7eb;
+        }
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #059669;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .chart-container {
+    position: relative;
+    height: 300px !important;
+    width: 100% !important;
+}
+
+#taskChart, #courseChart, #activityChart {
+    height: 300px !important;
+    max-height: 300px !important;
+}
+
+.status-card {
+    min-height: 400px;
+}
+
+.timetable-cell {
+    min-height: 60px;
+    transition: all 0.3s ease;
+}
+
+.timetable-cell:hover {
+    background-color: #f0f9ff;
+    transform: scale(1.02);
+}
+
+.subject-islamic { background-color: #dbeafe; color: #1e40af; }
+.subject-language { background-color: #dcfce7; color: #166534; }
+.subject-science { background-color: #f3e8ff; color: #7c3aed; }
+.subject-break { background-color: #fed7aa; color: #ea580c; }
+.subject-free { background-color: #f3f4f6; color: #6b7280; }
+.subject-rest { background-color: #fef3c7; color: #d97706; }
+
+@media (max-width: 768px) {
+    .timetable-cell {
+        min-height: 50px;
+        font-size: 0.75rem;
+        padding: 4px 2px;
+    }
+    
+    .timetable-cell div {
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 640px) {
+    .timetable-cell {
+        min-height: 45px;
+        font-size: 0.7rem;
+        padding: 2px 1px;
+    }
+}
+
+.calendar-day {
+    min-height: 60px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+    background-color: #f0f9ff;
+    transform: scale(1.02);
+}
+
+.calendar-day[style*="cursor: pointer"]:hover {
+    background-color: #ecfdf5;
+    border-color: #059669;
+}
+
+.event-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    background-color: #059669;
+    border-radius: 50%;
+    pointer-events: none; /* Prevent event bubbling */
+    transition: all 0.2s ease;
+}
+
+.event-indicator.multiple {
+    background: linear-gradient(45deg, #059669 50%, #dc2626 50%);
+}
+
+@media (max-width: 640px) {
+    .calendar-day {
+        min-height: 50px;
+        font-size: 0.75rem;
+    }
+    
+    .event-indicator {
+        width: 6px;
+        height: 6px;
+        top: 1px;
+        right: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 45px;
+        font-size: 0.7rem;
+        padding: 2px;
+    }
+    
+    .event-indicator {
+        width: 5px;
+        height: 5px;
+    }
+}
