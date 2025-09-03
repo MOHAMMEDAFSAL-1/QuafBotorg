@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Huda Academy - Islamic Learning Platform</title>
+    <title>Huda Academy</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,11 +19,69 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .course-step {
-            display: none;
-        }
-        .course-step.active {
-            display: block;
-        }
+    display: none;
+}
+.course-step.active {
+    display: block;
+}
+
+/* Add these new responsive styles for course modal */
+#courseModal .bg-white {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#courseContent {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+#courseContent p {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
+}
+
+#courseContent .bg-green-50 {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #courseModal .max-w-2xl {
+        max-width: 95vw;
+        margin: 10px;
+    }
+    
+    #courseContent {
+        font-size: 0.9rem;
+    }
+    
+    #courseContent .p-6 {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #courseModal .max-w-2xl {
+        max-width: 98vw;
+        margin: 5px;
+    }
+    
+    #courseContent {
+        font-size: 0.85rem;
+    }
+    
+    #courseContent .p-6 {
+        padding: 0.75rem;
+    }
+    
+    #courseContent h4 {
+        font-size: 1.1rem;
+    }
+}
         .calendar-day {
             min-height: 80px;
             border: 1px solid #e5e7eb;
@@ -86,6 +144,66 @@
         min-height: 45px;
         font-size: 0.7rem;
         padding: 2px 1px;
+    }
+}
+
+.calendar-day {
+    min-height: 60px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+    background-color: #f0f9ff;
+    transform: scale(1.02);
+}
+
+.calendar-day[style*="cursor: pointer"]:hover {
+    background-color: #ecfdf5;
+    border-color: #059669;
+}
+
+.event-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    background-color: #059669;
+    border-radius: 50%;
+    pointer-events: none; /* Prevent event bubbling */
+    transition: all 0.2s ease;
+}
+
+.event-indicator.multiple {
+    background: linear-gradient(45deg, #059669 50%, #dc2626 50%);
+}
+
+@media (max-width: 640px) {
+    .calendar-day {
+        min-height: 50px;
+        font-size: 0.75rem;
+    }
+    
+    .event-indicator {
+        width: 6px;
+        height: 6px;
+        top: 1px;
+        right: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 45px;
+        font-size: 0.7rem;
+        padding: 2px;
+    }
+    
+    .event-indicator {
+        width: 5px;
+        height: 5px;
     }
 }
 
@@ -189,54 +307,74 @@
                 </div>
 
                 <!-- Course Modal -->
-                <div id="courseModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-90vh overflow-y-auto">
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 id="courseTitle" class="text-xl font-bold text-green-600"></h3>
-                                <button onclick="closeCourseModal()" class="text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div id="courseContent" class="mb-6">
-                                <!-- Course steps will be loaded here -->
-                            </div>
-                            <div class="flex justify-between">
-                                <button id="prevBtn" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition duration-300">
-                                    <i class="fas fa-chevron-left mr-2"></i>Previous
-                                </button>
-                                <span id="stepIndicator" class="text-gray-600"></span>
-                                <button id="nextBtn" onclick="nextStep()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300">
-                                    Next<i class="fas fa-chevron-right ml-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="courseModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-2 sm:mx-4 max-h-90vh overflow-hidden flex flex-col">
+        <div class="p-4 sm:p-6 flex-1 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="courseTitle" class="text-lg sm:text-xl font-bold text-green-600 flex-1 pr-4"></h3>
+                <button onclick="closeCourseModal()" class="text-gray-500 hover:text-gray-700 flex-shrink-0">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div id="courseContent" class="mb-6 overflow-hidden">
+                <!-- Course steps will be loaded here -->
+            </div>
+        </div>
+        <div class="p-4 sm:p-6 border-t bg-gray-50 flex justify-between items-center flex-shrink-0">
+            <button id="prevBtn" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-3 sm:px-4 py-2 rounded hover:bg-gray-400 transition duration-300 text-sm sm:text-base">
+                <i class="fas fa-chevron-left mr-1 sm:mr-2"></i>Previous
+            </button>
+            <span id="stepIndicator" class="text-gray-600 text-sm sm:text-base font-medium"></span>
+            <button id="nextBtn" onclick="nextStep()" class="bg-green-600 text-white px-3 sm:px-4 py-2 rounded hover:bg-green-700 transition duration-300 text-sm sm:text-base">
+                Next<i class="fas fa-chevron-right ml-1 sm:ml-2"></i>
+            </button>
+        </div>
+    </div>
+</div>
             </div>
 
             <!-- Events Page -->
-            <div id="eventsPage" class="page-content hidden">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h2 class="text-2xl font-bold mb-6 text-green-600">
-                        <i class="fas fa-calendar mr-2"></i>Events & Programs
-                    </h2>
-                    <div class="mb-6 flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <button onclick="changeMonth(-1)" class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <h3 id="currentMonth" class="text-lg font-semibold"></h3>
-                            <button onclick="changeMonth(1)" class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
+<div id="eventsPage" class="page-content hidden">
+    <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-green-600">
+            <i class="fas fa-calendar mr-2"></i>Events & Programs
+        </h2>
+        <div class="mb-4 sm:mb-6 flex items-center justify-between">
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <button onclick="changeMonth(-1)" class="bg-green-600 text-white px-2 sm:px-3 py-1 sm:py-2 rounded hover:bg-green-700 text-sm sm:text-base">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="currentMonth" class="text-base sm:text-lg font-semibold min-w-32 text-center"></h3>
+                <button onclick="changeMonth(1)" class="bg-green-600 text-white px-2 sm:px-3 py-1 sm:py-2 rounded hover:bg-green-700 text-sm sm:text-base">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div id="calendar" class="grid grid-cols-7 gap-1 sm:gap-2">
+            <!-- Calendar will be generated dynamically -->
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-90vh overflow-y-auto">
+            <div class="p-4 sm:p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1 pr-4">
+                        <h3 id="eventTitle" class="text-lg sm:text-xl font-bold text-green-600 mb-2"></h3>
+                        <div id="eventDateTime" class="text-sm text-gray-600 mb-3"></div>
                     </div>
-                    <div id="calendar" class="grid grid-cols-7 gap-1">
-                        <!-- Calendar will be generated dynamically -->
-                    </div>
+                    <button onclick="closeEventModal()" class="text-gray-500 hover:text-gray-700 flex-shrink-0">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                <div id="eventDetails" class="space-y-3">
+                    <!-- Event details will be loaded here -->
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
             <!-- Time Table Page -->
 <div id="timetablePage" class="page-content hidden">
@@ -415,12 +553,23 @@ let dataCache = {
 class GoogleSheetsAPI {
     constructor() {
         this.apiUrl = "https://script.google.com/macros/s/AKfycbzvftf-azjEqwaB_7Ov2bP6ZyqSY0VG6zvoU9PmJblQFQKgMweQNufJ_s1fM4XaBPmD7w/exec";
+        this.cache = new Map();
+        this.cacheTimeout = 2 * 60 * 1000; // 2 minutes cache
     }
 
-    async getSheet(sheetName) {
+    async getSheet(sheetName, useCache = true) {
+        const cacheKey = sheetName;
+        
+        // Check cache first
+        if (useCache && this.cache.has(cacheKey)) {
+            const cached = this.cache.get(cacheKey);
+            if (Date.now() - cached.timestamp < this.cacheTimeout) {
+                return cached.data;
+            }
+        }
+
         try {
             const url = `${this.apiUrl}?sheet=${encodeURIComponent(sheetName)}&cachebust=${Date.now()}`;
-            console.log('Fetching:', url);
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -434,10 +583,15 @@ class GoogleSheetsAPI {
             }
             
             const text = await response.text();
-            console.log('Response text:', text);
-            
             const data = JSON.parse(text);
-            console.log('Parsed data:', data);
+            
+            // Cache the result
+            if (useCache) {
+                this.cache.set(cacheKey, {
+                    data: data,
+                    timestamp: Date.now()
+                });
+            }
             
             return data;
         } catch (error) {
@@ -446,40 +600,42 @@ class GoogleSheetsAPI {
         }
     }
 
+    clearCache() {
+        this.cache.clear();
+    }
+
     async addRow(sheetName, row) {
-    try {
-        console.log('Adding row to:', sheetName, 'Data:', row);
-        
-        const response = await fetch(this.apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                sheet: sheetName,
-                data: JSON.stringify(row)
-            })
-        });
-        
-        const text = await response.text();
-        console.log('Add row response text:', text);
-        
-        let result;
-        try {
-            result = JSON.parse(text);
-        } catch (parseError) {
-            // If it's not JSON, treat as plain text response
-            result = { message: text };
+        try {            
+            const response = await fetch(this.apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    sheet: sheetName,
+                    data: JSON.stringify(row)
+                })
+            });
+            
+            const text = await response.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (parseError) {
+                result = { message: text };
+            }
+            
+            // Clear relevant cache entries after adding data
+            this.cache.delete(sheetName);
+            
+            return result;
+        } catch (error) {
+            console.error('Error adding row:', error);
+            return { error: error.message };
         }
-        
-        console.log('Add row parsed result:', result);
-        return result;
-    } catch (error) {
-        console.error('Error adding row:', error);
-        return { error: error.message };
     }
 }
-}
+
 
 const api = new GoogleSheetsAPI();
 
@@ -610,13 +766,17 @@ function showPage(page) {
 // ✅ Optimized Tasks
 // =============================
 async function loadTasks() {
+    const tasksContainer = document.getElementById('tasksList');
+    
+    // Show loading state
+    tasksContainer.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin mr-2"></i>Loading tasks...</div>';
+
     try {
         const [tasks, progress] = await Promise.all([
             api.getSheet("tasks_master"),
             api.getSheet(`${currentUser.username}_progress`)
         ]);
         
-        const tasksContainer = document.getElementById('tasksList');
         tasksContainer.innerHTML = '';
 
         if (!tasks || tasks.length === 0) {
@@ -652,7 +812,7 @@ async function loadTasks() {
         tasksContainer.appendChild(fragment);
     } catch (error) {
         console.error('Error loading tasks:', error);
-        document.getElementById('tasksList').innerHTML = '<p class="text-red-500">Error loading tasks.</p>';
+        tasksContainer.innerHTML = '<p class="text-red-500">Error loading tasks.</p>';
     }
 }
 
@@ -663,35 +823,44 @@ async function submitTasks() {
     submitBtn.disabled = true;
 
     try {
+        // Get selected tasks first
+        const selectedTasks = [];
+        document.querySelectorAll('input[type="checkbox"]:checked:not(:disabled)').forEach(checkbox => {
+            const taskId = checkbox.id.replace('task-', '');
+            selectedTasks.push(taskId);
+        });
+
+        if (selectedTasks.length === 0) {
+            alert('No new tasks were selected.');
+            return;
+        }
+
         const [tasks, progress] = await Promise.all([
             api.getSheet("tasks_master"),
             api.getSheet(`${currentUser.username}_progress`)
         ]);
         
-        let updatedCount = 0;
         const promises = [];
+        let updatedCount = 0;
 
-        for (let task of tasks) {
-            const checkbox = document.getElementById(`task-${task.task_id}`);
-            if (checkbox && checkbox.checked && !checkbox.disabled) {
-                const existingTask = progress.find(p => 
-                    String(p.item_id) === String(task.task_id) && 
-                    p.item_type === "task" && 
-                    p.status === "complete"
-                );
+        for (let taskId of selectedTasks) {
+            const existingTask = progress.find(p => 
+                String(p.item_id) === String(taskId) && 
+                p.item_type === "task" && 
+                p.status === "complete"
+            );
+            
+            if (!existingTask) {
+                const rowData = [
+                    taskId,
+                    "task",
+                    "complete",
+                    new Date().toISOString().split('T')[0],
+                    "100"
+                ];
                 
-                if (!existingTask) {
-                    const rowData = [
-                        task.task_id,
-                        "task",
-                        "complete",
-                        new Date().toISOString().split('T')[0],
-                        "100"
-                    ];
-                    
-                    promises.push(api.addRow(`${currentUser.username}_progress`, rowData));
-                    updatedCount++;
-                }
+                promises.push(api.addRow(`${currentUser.username}_progress`, rowData));
+                updatedCount++;
             }
         }
 
@@ -703,7 +872,7 @@ async function submitTasks() {
                 await loadStatusCharts();
             }
         } else {
-            alert('No new tasks were selected or all selected tasks are already completed.');
+            alert('All selected tasks are already completed.');
         }
     } catch (error) {
         console.error('Error submitting tasks:', error);
@@ -718,13 +887,17 @@ async function submitTasks() {
 // 📚 Optimized Courses
 // =============================
 async function loadCourses() {
+    const container = document.getElementById('coursesList');
+    
+    // Show loading state
+    container.innerHTML = '<div class="col-span-3 text-center py-8"><i class="fas fa-spinner fa-spin mr-2"></i>Loading courses...</div>';
+
     try {
         const [courses, progress] = await Promise.all([
             api.getSheet("courses_master"),
             api.getSheet(`${currentUser.username}_progress`)
         ]);
         
-        const container = document.getElementById('coursesList');
         container.innerHTML = '';
 
         if (!courses || courses.length === 0) {
@@ -769,7 +942,7 @@ async function loadCourses() {
         container.appendChild(fragment);
     } catch (error) {
         console.error('Error loading courses:', error);
-        document.getElementById('coursesList').innerHTML = '<p class="text-red-500 col-span-3">Error loading courses.</p>';
+        container.innerHTML = '<p class="text-red-500 col-span-3">Error loading courses.</p>';
     }
 }
 
@@ -813,13 +986,17 @@ function loadCourseStep() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
+    // Get the current step content from the course data
+    const stepKey = `step${currentStep + 1}`;
+    const stepContent = currentCourse[stepKey] || `Step ${currentStep + 1} content`;
+    
     content.innerHTML = `
-        <div class="bg-green-50 p-6 rounded-lg">
-            <h4 class="font-semibold text-green-600 mb-3">${currentCourse.title}</h4>
-            <p class="text-gray-700 leading-relaxed">${currentCourse.description}</p>
-            <div class="mt-4 p-4 bg-white rounded border-l-4 border-green-500">
-                <p class="text-sm text-gray-600">This is step ${currentStep + 1} of the course. Continue through the lessons to complete your learning journey.</p>
+        <div class="bg-green-50 p-4 sm:p-6 rounded-lg overflow-hidden">
+            <h4 class="font-semibold text-green-600 mb-3 text-base sm:text-lg break-words">Step ${currentStep + 1}: ${currentCourse.title}</h4>
+            <div class="text-gray-700 leading-relaxed mb-4 overflow-hidden">
+                <p class="whitespace-pre-wrap break-words text-sm sm:text-base">${stepContent}</p>
             </div>
+            
         </div>
     `;
     
@@ -827,13 +1004,13 @@ function loadCourseStep() {
     stepIndicator.textContent = `Step ${currentStep + 1} of ${totalSteps}`;
 
     prevBtn.disabled = currentStep === 0;
-    prevBtn.className = `px-4 py-2 rounded transition duration-300 ${currentStep === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`;
+    prevBtn.className = `px-3 sm:px-4 py-2 rounded transition duration-300 text-sm sm:text-base ${currentStep === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`;
     
     if (currentStep === totalSteps - 1) {
-        nextBtn.textContent = 'Complete Course';
+        nextBtn.innerHTML = 'Complete<i class="fas fa-check ml-1 sm:ml-2"></i>';
         nextBtn.onclick = completeCourse;
     } else {
-        nextBtn.textContent = 'Next';
+        nextBtn.innerHTML = 'Next<i class="fas fa-chevron-right ml-1 sm:ml-2"></i>';
         nextBtn.onclick = nextStep;
     }
 }
@@ -923,6 +1100,11 @@ async function loadEvents() {
     }
 }
 
+function changeMonth(direction) {
+    currentDate.setMonth(currentDate.getMonth() + direction);
+    loadCalendar();
+}
+
 async function loadCalendar() {
     const events = window.eventsData || await api.getSheet("events_master");
     const calendar = document.getElementById('calendar');
@@ -939,7 +1121,7 @@ async function loadCalendar() {
     
     dayHeaders.forEach(day => {
         const dayHeader = document.createElement('div');
-        dayHeader.className = 'text-center font-semibold text-gray-600 py-2';
+        dayHeader.className = 'text-center font-semibold text-gray-600 py-2 text-xs sm:text-sm';
         dayHeader.textContent = day;
         fragment.appendChild(dayHeader);
     });
@@ -954,10 +1136,10 @@ async function loadCalendar() {
         const day = new Date(startDate);
         day.setDate(startDate.getDate() + i);
         const dayElement = document.createElement('div');
-        dayElement.className = 'calendar-day p-2 text-sm';
+        dayElement.className = 'calendar-day p-1 sm:p-2 text-xs sm:text-sm';
 
         if (day.getMonth() !== currentDate.getMonth()) {
-            dayElement.classList.add('text-gray-300');
+            dayElement.classList.add('text-gray-300', 'bg-gray-50');
         } else {
             dayElement.classList.add('hover:bg-green-50');
         }
@@ -968,24 +1150,123 @@ async function loadCalendar() {
             return eventDate.toDateString() === day.toDateString();
         });
 
+        // Make entire day cell clickable if it has events
+        if (dayEvents.length > 0) {
+            dayElement.style.cursor = 'pointer';
+            dayElement.onclick = () => openEventModal(day.toISOString().split('T')[0]);
+        }
+
         dayElement.innerHTML = `
             <div class="font-medium">${day.getDate()}</div>
-            ${dayEvents.map(event => `
-                <div class="text-xs mt-1 p-1 bg-green-100 rounded">
-                    <span class="event-dot"></span>${event.title}
+            ${dayEvents.length > 0 ? `
+                <div class="event-indicator ${dayEvents.length > 1 ? 'multiple' : ''}" 
+                     title="${dayEvents.length} event(s)">
                 </div>
-            `).join('')}
+            ` : ''}
         `;
+        
         fragment.appendChild(dayElement);
     }
     
     calendar.appendChild(fragment);
 }
 
-function changeMonth(direction) {
-    currentDate.setMonth(currentDate.getMonth() + direction);
-    loadCalendar();
+function openEventModal(dateString) {
+    const events = window.eventsData || [];
+    const dayEvents = events.filter(event => {
+        if (!event.date) return false;
+        const eventDate = new Date(event.date);
+        return eventDate.toISOString().split('T')[0] === dateString;
+    });
+
+    if (dayEvents.length === 0) return;
+
+    const modal = document.getElementById('eventModal');
+    const titleElement = document.getElementById('eventTitle');
+    const dateTimeElement = document.getElementById('eventDateTime');
+    const detailsElement = document.getElementById('eventDetails');
+
+    if (dayEvents.length === 1) {
+        const event = dayEvents[0];
+        titleElement.textContent = event.title || 'Event';
+        
+        const eventDate = new Date(event.date);
+        const formattedDate = eventDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        dateTimeElement.innerHTML = `
+            <i class="fas fa-calendar-day mr-2"></i>${formattedDate}
+            ${event.time ? `<br><i class="fas fa-clock mr-2"></i>${event.time}` : ''}
+        `;
+
+        detailsElement.innerHTML = `
+            ${event.description ? `
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <h4 class="font-semibold text-green-800 mb-2">Description</h4>
+                    <p class="text-gray-700">${event.description}</p>
+                </div>
+            ` : ''}
+            ${event.place ? `
+                <div class="flex items-start space-x-2">
+                    <i class="fas fa-map-marker-alt text-green-600 mt-1"></i>
+                    <div>
+                        <span class="font-semibold text-gray-800">Location:</span>
+                        <span class="text-gray-700 ml-1">${event.place}</span>
+                    </div>
+                </div>
+            ` : ''}
+            ${event.details ? `
+                <div class="flex items-start space-x-2">
+                    <i class="fas fa-info-circle text-green-600 mt-1"></i>
+                    <div>
+                        <span class="font-semibold text-gray-800">Details:</span>
+                        <span class="text-gray-700 ml-1">${event.details}</span>
+                    </div>
+                </div>
+            ` : ''}
+        `;
+    } else {
+        // Multiple events on same day
+        titleElement.textContent = `${dayEvents.length} Events`;
+        
+        const eventDate = new Date(dayEvents[0].date);
+        const formattedDate = eventDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        dateTimeElement.innerHTML = `<i class="fas fa-calendar-day mr-2"></i>${formattedDate}`;
+
+        detailsElement.innerHTML = dayEvents.map(event => `
+            <div class="border-l-4 border-green-500 pl-4 mb-4 last:mb-0">
+                <h4 class="font-semibold text-green-600 mb-1">${event.title || 'Event'}</h4>
+                ${event.time ? `<p class="text-sm text-gray-600 mb-2"><i class="fas fa-clock mr-1"></i>${event.time}</p>` : ''}
+                ${event.description ? `<p class="text-gray-700 text-sm mb-2">${event.description}</p>` : ''}
+                ${event.place ? `<p class="text-sm text-gray-600"><i class="fas fa-map-marker-alt mr-1"></i>${event.place}</p>` : ''}
+                ${event.details ? `<p class="text-sm text-gray-600"><i class="fas fa-info-circle mr-1"></i>${event.details}</p>` : ''}
+            </div>
+        `).join('');
+    }
+
+    modal.classList.remove('hidden');
 }
+
+function closeEventModal() {
+    document.getElementById('eventModal').classList.add('hidden');
+}
+
+// Add click outside to close modal
+document.getElementById('eventModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEventModal();
+    }
+});
 
 // =============================
 // 📊 Optimized Charts & Progress
@@ -1347,7 +1628,7 @@ function showPage(page) {
     // Find the clicked button and highlight it
     const clickedBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
         btn.textContent.toLowerCase().includes(page) || 
-        (page === 'timetable' && btn.textContent.toLowerCase().includes('time table'))
+        (page === 'timetable' && btn.textContent.toLowerCase().includes('schedule'))
     );
     if (clickedBtn) {
         clickedBtn.classList.add('border-green-500', 'text-green-600');
@@ -1356,6 +1637,8 @@ function showPage(page) {
     currentPage = page;
 
     if (page === 'events') {
+        // Reset to current date when switching to events page
+        currentDate = new Date();
         loadCalendar();
     } else if (page === 'status') {
         loadStatusCharts();
@@ -1363,8 +1646,31 @@ function showPage(page) {
         loadTimeTable();
     }
 }
+        // Disable right-click
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+
+  // Disable common inspect shortcuts
+  document.addEventListener("keydown", function (e) {
+    // F12
+    if (e.key === "F12") {
+      e.preventDefault();
+    }
+    // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
+      e.preventDefault();
+    }
+    // Ctrl+U (View source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      e.preventDefault();
+    }
+    // Ctrl+S (Save page)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      e.preventDefault();
+    }
+  });
 </script>
 
 </body>
 </html>
-
